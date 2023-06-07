@@ -41,12 +41,11 @@ plot(landcov1, main = "landcover (lower saxony)")
 #processing for slope data
 #slope data
 dem <- raster("C:/Users/Eyal/Documents/LGraf_EU/data/dem_ls.tif", crs = "EPSG:25832")
-slope = terrain(dem,'slope', unit = 'degrees', neighbors = 8, filename = 'slope.tif', overwrite = T)
-plot(slope)
-slope <- reclassify(slope, c(0,10,1, 10,90,2), include.lowest=F)
-slope[slope == 0 ] <- NA
-slope <- aggregate(slope, fact=4, fun=max)
-origin(slope)<-c(0,0)
+slope_real = terrain(dem,'slope', unit = 'degrees', neighbors = 8, filename = 'slope.tif', overwrite = T)
+slope_real <- reclassify(slope_real, c(0,5,1, 5,10,2, 10,90,3), include.lowest=F)
+slope_real[slope_real == 0 ] <- NA
+slope_real <- aggregate(slope_real, fact=4, fun=max)
+origin(slope_real)<-c(0,0)
 
 ################################################################################
 #processing for soil data
@@ -65,7 +64,6 @@ aglim <- raster("C:/Users/Eyal/Documents/LGraf_EU/data/aglim_ls.tif", crs = "EPS
 aglim[aglim == 0] <- 13
 aglim <- disaggregate(aglim, fact=10)
 aglim <- crop(aglim,slope)
-
 
 
 

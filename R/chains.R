@@ -18,7 +18,7 @@ library(terra)
 
 
 #########################################################
-aglim_trans<-function(ag,landcover){
+aglim_confus<-function(ag,landcover){
 #first order only aglim
 points<-randomPoints(ag, 250)
 
@@ -62,20 +62,21 @@ a[cbind(as.numeric(factor(confusion_matrix$soil_points)),
 cols <- colnames(transition2)[colnames(transition2) %in% colnames(a)]
 rows <- rownames(transition2)[rownames(transition2) %in% rownames(a)]
 transition2[rows, cols] <- a[rows, cols]
-transition2
+return(transition2)
+}
 
 
-#extraction fonfusion matrix
-
+aglim_trans<-function(transition,ag){
 #transition function
+tran <- transition
 transform<-function(x){
   z<- 0
   tranz <- 0
   if(is.na(x) ==FALSE){
     dice <- runif(1, min=0, max=1)
-    for(i in 1:ncol(transition2)){
+    for(i in 1:ncol(tran)){
       if(isTRUE(dice >=tranz)){
-        tranz <- tranz + transition2[x,i]
+        tranz <- tranz + tran[x,i]
       }
       if(isTRUE(dice < tranz)){
         z <- i
@@ -99,13 +100,14 @@ return(transformed_majority)
 }
 
 
-test<-aglim_trans(aglim,landcov1)
-
+mat1<-aglim_confus(aglim,landcov1)
+test<-aglim_trans(mat1,aglim)
+plot(test)
 
 #########################################################
 # only soil
 
-texture_trans<-function(txt,landcover){
+texture_confus<-function(txt,landcover){
   points<-randomPoints(txt, 250)
 
   # Extract at test points the value of the soil map
@@ -148,20 +150,22 @@ texture_trans<-function(txt,landcover){
   cols <- colnames(transition2)[colnames(transition2) %in% colnames(a)]
   rows <- rownames(transition2)[rownames(transition2) %in% rownames(a)]
   transition2[rows, cols] <- a[rows, cols]
-  transition2
+  return(transition2)
+}
 
 
-  #extraction fonfusion matrix
+texture_trans<-function(transition,txt){
 
+  tran <- transition
   #transition function
   transform<-function(x){
     z<- 0
     tranz <- 0
     if(is.na(x) ==FALSE){
       dice <- runif(1, min=0, max=1)
-      for(i in 1:ncol(transition2)){
+      for(i in 1:ncol(tran)){
         if(isTRUE(dice >=tranz)){
-          tranz <- tranz + transition2[x,i]
+          tranz <- tranz + tran[x,i]
         }
         if(isTRUE(dice < tranz)){
           z <- i
@@ -181,7 +185,6 @@ texture_trans<-function(txt,landcover){
 
 
   transformed_reclassify <- reclassify(transformed, cbind(0, NA), right=FALSE)
-  plot(transformed_reclassify)
 
   transformed_majority <- aggregate(transformed_reclassify, fact = 2, fun = modal, na.rm = FALSE) # fact 3
   return(transformed_majority)
@@ -189,8 +192,9 @@ texture_trans<-function(txt,landcover){
 }
 
 
-test<-texture_trans(texture,landcov1)
-
+mat2<-texture_confus(texture,landcov1)
+test2<-texture_trans(mat2,texture)
+plot(test2)
 
 #########################################################
 # slope -> aglim -> kc
@@ -391,6 +395,7 @@ for(valii in vals2){
 }
 
 
+plot(landcov1)
 
 #######################################
 # slope -> aglim -> soil -> lc
