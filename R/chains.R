@@ -105,147 +105,14 @@ test<-trans(mat1,aglim)
 plot(test)
 
 
-#########################################################
-# slope -> aglim -> kc
-
-#clut slope
-slope <- crop(slope,aglim)
-
-#get stratified points
-vals <- unique(slope) # Get all classes
-
-
-#create empty raster (make sure that res works with the clumping variable)
-er <- rast(ext(aglim), resolution=c(200,200), vals = 0)
-er<-raster(er)
-
-
-for(val in vals){
-
-  print(val)
-  #transform to 0 anything that isnt val and transform val to 1
-  myFun<-function(x) {ifelse (x == val,1,0)}
-  nr<-calc(slope ,myFun)
-
-  #multiply new raster with aglim raster
-  nsa <- aglim*nr
-  #turn all 0 in aglim raster to value where no caluclation happens
-  nsa[nsa == 0] <- NA
-
-
-  #do the transofmr matrix on raster
-  nsa_trans<-aglim_trans(nsa,landcov1)
-  plot(nsa_trans)
-
-  #merge with empty raster
-  allrasters <- stack(er, nsa_trans)
-  er <- calc(allrasters,fun=sum,na.rm=T)
-
-
-  plot(er)
-
-}
-
-
-#########################################################
-# soil -> aglim -> lc
-
-
-texture <- crop(texture,aglim)
-
-#get stratified points
-vals <- unique(texture) # Get all classes
-
-
-#create empty raster (make sure that res works with the clumping variable)
-er <- rast(ext(aglim), resolution=c(200,200), vals = 0)
-er<-raster(er)
-
-
-for(val in vals){
-
-  print(val)
-  #transform to 0 anything that isnt val and transform val to 1
-  myFun<-function(x) {ifelse (x == val,1,0)}
-  nr<-calc(texture ,myFun)
-
-  #multiply new raster with aglim raster
-  nsa <- aglim*nr
-  #turn all 0 in aglim raster to value where no caluclation happens
-  nsa[nsa == 0] <- NA
-
-
-  #do the transofmr matrix on raster
-  nsa_trans<-aglim_trans(nsa,landcov1)
-  plot(nsa_trans)
-
-  #merge with empty raster
-  allrasters <- stack(er, nsa_trans)
-  er <- calc(allrasters,fun=sum,na.rm=T)
-
-
-  plot(er)
-
-}
-
-
-#########################################################
-# aglim -> soil -> lc
-
-
-
-aglim <- crop(aglim,texture)
-
-#get stratified points
-vals <- unique(aglim) # Get all classes
-
-
-#create empty raster (make sure that res works with the clumping variable)
-er <- rast(ext(aglim), resolution=c(200,200), vals = 0)
-er<-raster(er)
-
-
-
-
-for(val in vals){
-
-  print(val)
-  #transform to 0 anything that isnt val and transform val to 1
-  myFun<-function(x) {ifelse (x == val,1,0)}
-  nr<-calc(aglim ,myFun)
-
-  #multiply new raster with aglim raster
-  nsa <- texture*nr
-  #turn all 0 in aglim raster to value where no caluclation happens
-  nsa[nsa == 0] <- NA
-
-
-  #do the transofmr matrix on raster
-  nsa_trans<-texture_trans(nsa,landcov1)
-  plot(nsa_trans)
-
-  #merge with empty raster
-  allrasters <- stack(er, nsa_trans)
-  er <- calc(allrasters,fun=sum,na.rm=T)
-
-
-  plot(er)
-
-}
-
-plot(er)
-er <- reclassify(er, cbind(-Inf, 1, NA), right=FALSE)
-plot(er)
-plot(landcov1)
-er_majority <- aggregate(er, fact = 2, fun = modal, na.rm = FALSE) # fact 3
-plot(er_majority)
-
-
 
 #######################################
 # slope -> soil -> aglim -> lc
 
 
+
+
+trans2<-function(texture,slope,aglim){
 
 texture <- crop(texture,aglim)
 slope <- crop(slope,aglim)
@@ -255,7 +122,6 @@ vals1<-unique(slope)
 vals2 <- unique(texture) # Get all classes
 
 
-#create empty raster (make sure that res works with the clumping variable)
 er <- rast(ext(aglim), resolution=c(200,200), vals = 0)
 er<-raster(er)
 
@@ -283,11 +149,11 @@ for(valii in vals2){
   #turn all 0 in aglim raster to value where no caluclation happens
   nsa[nsa == 0] <- NA
 
-
+  #print(nsa)
   #do the transofmr matrix on raster
-  nsa_trans<-aglim_trans(nsa,landcov1)
+  con_nsa<-confus(nsa,landcov1)
+  nsa_trans<-trans(con_nsa,nsa)
 
-  #plot(nsa_trans)
 
   #merge with empty raster
   allrasters <- stack(er, nsa_trans)
@@ -302,69 +168,8 @@ for(valii in vals2){
   plot(er_majority2)
 }
 }
-
-
-plot(landcov1)
-
-#######################################
-# slope -> aglim -> soil -> lc
-
-
-
-texture <- crop(texture,aglim)
-slope <- crop(slope,aglim)
-aglim<-crop(aglim,texture)
-
-#get stratified points
-vals1<-unique(slope)
-vals2 <- unique(aglim)
-
-# Get all classes
-
-
-#create empty raster (make sure that res works with the clumping variable)
-er <- rast(ext(texture), resolution=c(200,200), vals = 0)
-er<-raster(er)
-
-for(vali in vals1){
-  for(valii in vals2){
-
-    print(vali)
-    print(valii)
-    #transform to 0 anything that isnt val and transform val to 1
-    myFun1<-function(x) {ifelse (x == vali,1,0)}
-    nr1<-calc(slope ,myFun1)
-
-    myFun2<-function(x) {ifelse (x == valii,1,0)}
-    nr2<-calc(aglim ,myFun2)
-    plot(nr1)
-
-    #multiply new raster with aglim raster
-    nsa <- aglim*nr1*nr2
-    n <-freq(nsa, useNA = "no")
-    print(nrow(n))
-    print(n)
-
-
-    if(nrow(n) > 1){
-      #turn all 0 in aglim raster to value where no caluclation happens
-      nsa[nsa == 0] <- NA
-
-
-      #do the transofmr matrix on raster
-      nsa_trans<-texture_trans(nsa,landcov1)
-
-      plot(nsa_trans)
-
-      #merge with empty raster
-      allrasters <- stack(er, nsa_trans)
-      er <- calc(allrasters,fun=sum,na.rm=T)
-    }
-
-    plot(er)
-
-  }
 }
 
-
+test<-trans2(texture,slope_real,aglim)
+plot(test)
 
