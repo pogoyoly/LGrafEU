@@ -1,8 +1,18 @@
 
-
-
-
-
+#' Generate using artificial rasters
+#'
+#' Convert artificial rasters into artificial landcover
+#' @param texture_gen artificially generated texture raster
+#' @param slope_gen artificially generated lope raster
+#' @param aglim_gen artificially generated aglim raster
+#' @param texture_real location texture raster
+#' @param slope_real location lope raster
+#' @param aglim_real location aglim raster
+#' @param landcover location landcover raster
+#' @return An artificially generated landcover file
+#' @examples
+#' test<-sl_txt_ag(soil_gen,slope_gen,aglim_gen,aglim,slope_real,texture,landcov1)
+#' @export
 sl_txt_ag<-function(texture_gen,slope_gen,aglim_gen,aglim_real,slope_real,texture_real,landcover){
 
   texture_real <- crop(texture_real,aglim_real)
@@ -74,6 +84,5 @@ sl_txt_ag<-function(texture_gen,slope_gen,aglim_gen,aglim_real,slope_real,textur
   }
   return(er_majority2)
 }
-
 
 test<-sl_txt_ag(soil_gen,slope_gen,aglim_gen,aglim,slope_real,texture,landcov1)

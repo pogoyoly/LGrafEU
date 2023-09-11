@@ -1,6 +1,6 @@
 library(NLMR)
 library(ambient)
-
+library(raster)
 
 
 ################################################
@@ -21,7 +21,7 @@ res(aglim_gen)
 soil_gen <- NLMR::nlm_randomcluster(nrow = 200,
                                      ncol = 200,
                                      p    = 0.5,
-                                     ai   = c(0,1),
+                                     ai   = c(.5,.5),
                                      rescale = FALSE)
 
 plot(soil_gen)
@@ -44,10 +44,10 @@ cell_size <- 1  # Cell size (distance between neighboring pixels)
 perlin_map<-noise_perlin(
   dim = c(map_width, map_height),
   frequency = .01,
-  octaves = 2,
-  lacunarity = 2,
+  octaves = 3,
+  lacunarity = 1,
 )
-perlin_map <-normalise(perlin_map, from = range(perlin_map), to = c(0, 200))
+perlin_map <-normalise(perlin_map, from = range(perlin_map), to = c(0, 300))
 
 # Function to calculate the slope
 calculate_slope <- function(map, x, y, cell_size) {
@@ -90,3 +90,6 @@ raster_data <- raster(slope_map, xmn = 0, xmx = cell_size_x * ncol(slope_map),
 res(raster_data) <- c(cell_size_x, cell_size_y)
 plot(raster_data)
 slope_gen <- reclassify(raster_data, c(0,5,1, 5,10,2, 10,90,3), include.lowest=F)
+plot(slope_gen)
+
+#writeRaster(slope_gen, "C://Users//Eyal//Documents//PhD//antonia//slope2.tif", overwrite = TRUE)
