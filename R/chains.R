@@ -18,12 +18,12 @@ library(terra)
 
 
 #########################################################
-aglim_confus<-function(ag,landcover){
+confus<-function(rst,landcover){
 #first order only aglim
-points<-randomPoints(ag, 250)
+points<-randomPoints(rst, 250)
 
 # Extract at test points the value of the soil map
-soil_points<-extract(ag, points)
+soil_points<-extract(rst, points)
 soil_points<-unlist(soil_points)
 soil_points<-as.data.frame(soil_points)
 
@@ -66,7 +66,7 @@ return(transition2)
 }
 
 
-aglim_trans<-function(transition,ag){
+trans<-function(transition,rst){
 #transition function
 tran <- transition
 transform<-function(x){
@@ -92,7 +92,7 @@ transform<-function(x){
 
 
 #run apply function
-transformed <- calc(ag, transform)
+transformed <- calc(rst, transform)
 transformed_reclassify <- reclassify(transformed, cbind(0, NA), right=FALSE)
 transformed_majority <- aggregate(transformed_reclassify, fact = 2, fun = modal, na.rm = FALSE) # fact 3
 return(transformed_majority)
@@ -100,101 +100,10 @@ return(transformed_majority)
 }
 
 
-mat1<-aglim_confus(aglim,landcov1)
-test<-aglim_trans(mat1,aglim)
+mat1<-confus(aglim,landcov1)
+test<-trans(mat1,aglim)
 plot(test)
 
-#########################################################
-# only soil
-
-texture_confus<-function(txt,landcover){
-  points<-randomPoints(txt, 250)
-
-  # Extract at test points the value of the soil map
-  soil_points<-extract(txt, points)
-  soil_points<-unlist(soil_points)
-  soil_points<-as.data.frame(soil_points)
-
-  # using the same points on the landcover map
-  lc_points<-extract(landcover, points)
-  lc_points<-unlist(lc_points)
-  lc_points<-as.data.frame(lc_points)
-
-  #combine both to a df
-  all_points <- cbind(soil_points, lc_points)
-
-  #aggregate to confusion matrix
-  confusion_matrix<-all_points %>%
-    group_by(soil_points,lc_points) %>%
-    summarise(cnt = n()) %>%
-    mutate(freq = round(cnt / sum(cnt), 3)) %>%
-    arrange(desc(freq)) %>%
-    mutate(lc_points = as.factor(lc_points))
-
-  # results
-  confusion_matrix$lc_points <- factor(confusion_matrix$lc_points, levels = c(1, 2, 3, 4, 5))
-
-
-  transition2 <- matrix(0, nrow = 5, ncol = 5, dimnames = list(1:5, 1:5))
-
-
-  a <- matrix(0, nrow = length(unique(confusion_matrix$soil_points)),
-              ncol = length(unique(confusion_matrix$lc_points)),
-              dimnames = list(sort(unique(confusion_matrix$soil_points)),
-                              sort(unique(confusion_matrix$lc_points))))
-
-  a[cbind(as.numeric(factor(confusion_matrix$soil_points)),
-          as.numeric(factor(confusion_matrix$lc_points)))] <- confusion_matrix$freq
-
-
-  cols <- colnames(transition2)[colnames(transition2) %in% colnames(a)]
-  rows <- rownames(transition2)[rownames(transition2) %in% rownames(a)]
-  transition2[rows, cols] <- a[rows, cols]
-  return(transition2)
-}
-
-
-texture_trans<-function(transition,txt){
-
-  tran <- transition
-  #transition function
-  transform<-function(x){
-    z<- 0
-    tranz <- 0
-    if(is.na(x) ==FALSE){
-      dice <- runif(1, min=0, max=1)
-      for(i in 1:ncol(tran)){
-        if(isTRUE(dice >=tranz)){
-          tranz <- tranz + tran[x,i]
-        }
-        if(isTRUE(dice < tranz)){
-          z <- i
-          tranz <- -1
-        }
-      }
-
-
-    }
-
-    return(z)
-  }
-
-
-  #run apply function
-  transformed <- calc(txt, transform)
-
-
-  transformed_reclassify <- reclassify(transformed, cbind(0, NA), right=FALSE)
-
-  transformed_majority <- aggregate(transformed_reclassify, fact = 2, fun = modal, na.rm = FALSE) # fact 3
-  return(transformed_majority)
-
-}
-
-
-mat2<-texture_confus(texture,landcov1)
-test2<-texture_trans(mat2,texture)
-plot(test2)
 
 #########################################################
 # slope -> aglim -> kc
