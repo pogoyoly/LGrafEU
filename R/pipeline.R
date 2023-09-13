@@ -10,8 +10,6 @@
 #' @param aglim_real location aglim raster
 #' @param landcover location landcover raster
 #' @return An artificially generated landcover file
-#' @examples
-#' test<-sl_txt_ag(soil_gen,slope_gen,aglim_gen,aglim,slope_real,texture,landcov1)
 #' @export
 sl_txt_ag<-function(texture_gen,slope_gen,aglim_gen,aglim_real,slope_real,texture_real,landcover){
 
