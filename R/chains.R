@@ -23,6 +23,7 @@
 #' @param rst
 #' @param landcover
 #'
+#'
 #' @return
 #'
 #' @examples

@@ -6,27 +6,30 @@
 
 ################################################
 #generate aglim map
-aglim_gen <- NLMR::nlm_randomcluster(nrow = 200,
-                                          ncol = 200,
-                                          p    = 0.5,
-                                          ai   = c(0.9, 0.1, 0, 0),
-                                          rescale = FALSE)
+
+#' Title
+#'
+#' @param rows
+#' @param cols
+#' @param p
+#' @param ai
+#' @param rescale
+#'
+#' @return
+#' @export
+#'
+#' @examples
+generate_soil <- function(rows,cols,p,ai,rescale){
+
+                                          NLMR::nlm_randomcluster(nrow = rows,
+                                          ncol = cols,
+                                          p    = p, #0.5
+                                          ai   = ai, #c(0.9, 0.1, 0, 0),
+                                          rescale = rescale) # FALSE)
+}
 
 #plot(aglim_gen)
 #res(aglim_gen)
-
-
-
-#################################################
-#generate soil map
-soil_gen <- NLMR::nlm_randomcluster(nrow = 200,
-                                     ncol = 200,
-                                     p    = 0.5,
-                                     ai   = c(.5,.5),
-                                     rescale = FALSE)
-
-#plot(soil_gen)
-
 
 
 
@@ -35,6 +38,19 @@ soil_gen <- NLMR::nlm_randomcluster(nrow = 200,
 ####################################################################
 #generate slope map
 
+#' Title
+#'
+#' @param width
+#' @param height
+#' @param cellSize
+#' @param frequency
+#' @param octaves
+#' @param lacunarity
+#'
+#' @return
+#' @export
+#'
+#' @examples
 generate_slope<-function(width, height,cellSize, frequency, octaves, lacunarity){
 # Set the parameters
 map_width <- width  # Width of the Perlin noise map
