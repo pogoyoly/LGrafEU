@@ -1,6 +1,7 @@
-library(NLMR)
-library(ambient)
-library(raster)
+
+#library(NLMR)
+#library(ambient)
+#library(raster)
 
 
 ################################################
@@ -11,8 +12,8 @@ aglim_gen <- NLMR::nlm_randomcluster(nrow = 200,
                                           ai   = c(0.9, 0.1, 0, 0),
                                           rescale = FALSE)
 
-plot(aglim_gen)
-res(aglim_gen)
+#plot(aglim_gen)
+#res(aglim_gen)
 
 
 
@@ -24,7 +25,7 @@ soil_gen <- NLMR::nlm_randomcluster(nrow = 200,
                                      ai   = c(.5,.5),
                                      rescale = FALSE)
 
-plot(soil_gen)
+#plot(soil_gen)
 
 
 
@@ -34,18 +35,18 @@ plot(soil_gen)
 ####################################################################
 #generate slope map
 
-
+generate_slope<-function(width, height,cellSize, frequency, octaves, lacunarity){
 # Set the parameters
-map_width <- 200  # Width of the Perlin noise map
-map_height <- 200  # Height of the Perlin noise map
-cell_size <- 1  # Cell size (distance between neighboring pixels)
+map_width <- width  # Width of the Perlin noise map
+map_height <- height  # Height of the Perlin noise map
+cell_size <- cellSize  # Cell size (distance between neighboring pixels)
 
 # Generate Perlin noise map
 perlin_map<-noise_perlin(
   dim = c(map_width, map_height),
-  frequency = .01,
-  octaves = 3,
-  lacunarity = 1,
+  frequency = frequency,
+  octaves = octaves,
+  lacunarity = lacunarity,
 )
 perlin_map <-normalise(perlin_map, from = range(perlin_map), to = c(0, 300))
 
@@ -88,8 +89,9 @@ raster_data <- raster(slope_map, xmn = 0, xmx = cell_size_x * ncol(slope_map),
 
 # Set the cell size
 res(raster_data) <- c(cell_size_x, cell_size_y)
-plot(raster_data)
 slope_gen <- reclassify(raster_data, c(0,5,1, 5,10,2, 10,90,3), include.lowest=F)
-plot(slope_gen)
+return(slope_gen)
+}
 
-#writeRaster(slope_gen, "C://Users//Eyal//Documents//PhD//antonia//slope2.tif", overwrite = TRUE)
+#test<-generate_slope(200,200,1,0.01,2,5)
+#plot(test)

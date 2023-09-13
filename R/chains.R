@@ -1,12 +1,12 @@
 ##################################
 #   Transition functions
 ##################################
-library(dismo)
-library(raster)
-library(dplyr)
-library(sp)
-library(terra)
-
+#library(dismo)
+#library(raster)
+#library(dplyr)
+#library(sp)
+#library(terra)
+#library(lattice)
 #scenarios:
 # 1. only aglim
 # 2. only soil
@@ -18,6 +18,14 @@ library(terra)
 
 
 #########################################################
+#' Title
+#'
+#' @param rst
+#' @param landcover
+#'
+#' @return
+#'
+#' @examples
 confus<-function(rst,landcover){
 #first order only aglim
 points<-randomPoints(rst, 250)
@@ -66,6 +74,14 @@ return(transition2)
 }
 
 
+#' Title
+#'
+#' @param transition
+#' @param rst
+#'
+#' @return
+#'
+#' @examples
 trans<-function(transition,rst){
 #transition function
 tran <- transition
@@ -99,10 +115,25 @@ return(transformed_majority)
 
 }
 
+#' A one layer transformation
+#'
+#' @param rast A type feature raster
+#' @param landcover A landcover raster
+#' @param aggregation A number
+#'
+#' @return A raster transformed
+#' @export
+#'
+#' @examples
+trans_1lr<-function(rast,landcover){
+  con_mat<-confus(rast,landcover)
+  trans_rast<-trans(con_mat,rast)
+  trans_rast <- aggregate(trans_rast, fact = aggregation, fun = modal, na.rm = FALSE) # fact 3
+  return(trans_rast)
+}
 
-mat1<-confus(aglim,landcov1)
-test<-trans(mat1,aglim)
-plot(test)
+#test<-trans_1lr(aglim,landcov1,2)
+#plot(test)
 
 
 
@@ -112,7 +143,17 @@ plot(test)
 
 
 
-trans2<-function(texture,slope,aglim){
+#' A three layer transformation
+#'
+#' @param texture A soil texture raster
+#' @param slope A categorized slope raster
+#' @param aglim A agricultural limitation raster
+#'
+#' @return
+#' @export
+#'
+#' @examples
+trans_3lr<-function(texture,slope,aglim){
 
 texture <- crop(texture,aglim)
 slope <- crop(slope,aglim)
@@ -170,6 +211,6 @@ for(valii in vals2){
 }
 }
 
-test<-trans2(texture,slope_real,aglim)
-plot(test)
+#test<-trans2(texture,slope_real,aglim)
+#plot(test)
 

@@ -85,4 +85,4 @@ sl_txt_ag<-function(texture_gen,slope_gen,aglim_gen,aglim_real,slope_real,textur
   return(er_majority2)
 }
 
-test<-sl_txt_ag(soil_gen,slope_gen,aglim_gen,aglim,slope_real,texture,landcov1)
+#test<-sl_txt_ag(soil_gen,slope_gen,aglim_gen,aglim,slope_real,texture,landcov1)
