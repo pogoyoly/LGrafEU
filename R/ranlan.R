@@ -110,4 +110,3 @@ return(slope_gen)
 }
 
 #test<-generate_slope(200,200,1,0.01,2,5)
-#plot(test)
