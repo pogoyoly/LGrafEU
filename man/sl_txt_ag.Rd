@@ -35,6 +35,3 @@ An artificially generated landcover file
 \description{
 Convert artificial rasters into artificial landcover
 }
-\examples{
-test<-sl_txt_ag(soil_gen,slope_gen,aglim_gen,aglim,slope_real,texture,landcov1)
-}

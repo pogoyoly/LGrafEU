@@ -32,6 +32,28 @@ generate_soil <- function(rows,cols,p,ai,rescale){
 #res(aglim_gen)
 
 
+#' Title
+#'
+#' @param rows
+#' @param cols
+#' @param p
+#' @param ai
+#' @param rescale
+#'
+#' @return
+#' @export
+#'
+#' @examples
+generate_potential_landscape <- function(rows,cols,p,ai,rescale){
+
+  NLMR::nlm_randomcluster(nrow = rows,
+                          ncol = cols,
+                          p    = p, #0.5
+                          ai   = ai, #c(0.9, 0.1, 0, 0),
+                          rescale = rescale) # FALSE)
+}
+
+
 
 
 
