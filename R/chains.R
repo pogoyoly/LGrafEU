@@ -149,12 +149,13 @@ trans_1lr<-function(rast,landcover){
 #' @param texture A soil texture raster
 #' @param slope A categorized slope raster
 #' @param aglim A agricultural limitation raster
+#' @param landcov A categorized landcover raster
 #'
 #' @return
 #' @export
 #'
 #' @examples
-trans_3lr<-function(texture,slope,aglim){
+trans_3lr<-function(texture,slope,aglim,landcov){
 
 texture <- crop(texture,aglim)
 slope <- crop(slope,aglim)
@@ -193,7 +194,7 @@ for(valii in vals2){
 
   #print(nsa)
   #do the transofmr matrix on raster
-  con_nsa<-confus(nsa,landcov1)
+  con_nsa<-confus(nsa,landcov)
   nsa_trans<-trans(con_nsa,nsa)
 
 
