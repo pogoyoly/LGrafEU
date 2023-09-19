@@ -29,7 +29,7 @@
 #' @examples
 confus<-function(rst,landcover){
 #first order only aglim
-points<-randomPoints(rst, 250)
+points<-dismo::randomPoints(rst, 250)
 
 # Extract at test points the value of the soil map
 soil_points<-extract(rst, points)
@@ -129,7 +129,7 @@ return(transformed_majority)
 trans_1lr<-function(rast,landcover){
   con_mat<-confus(rast,landcover)
   trans_rast<-trans(con_mat,rast)
-  trans_rast <- aggregate(trans_rast, fact = aggregation, fun = modal, na.rm = FALSE) # fact 3
+  trans_rast <- aggregate(trans_rast, fact = 2, fun = modal, na.rm = FALSE) # fact 3
   return(trans_rast)
 }
 
@@ -161,8 +161,8 @@ texture <- crop(texture,aglim)
 slope <- crop(slope,aglim)
 
 #get stratified points
-vals1<-unique(slope)
-vals2 <- unique(texture) # Get all classes
+vals1<-raster::unique(slope)
+vals2 <- raster::unique(texture) # Get all classes
 
 
 er <- rast(ext(aglim), resolution=c(200,200), vals = 0)
@@ -203,14 +203,16 @@ for(valii in vals2){
   er <- calc(allrasters,fun=sum,na.rm=T)
   }
 
-  plot(er)
-  er_majority <- aggregate(er, fact = 4, fun = modal, na.rm = FALSE) # fact 3
-  er_majority2 <- aggregate(er_majority, fact = 2, fun = max, na.rm = FALSE) # fact 3
-  er_majority2 <- reclassify(er_majority2, cbind(-Inf, 0.5, NA), right=FALSE)
 
-  plot(er_majority2)
 }
 }
+#plot(er)
+er_majority <- aggregate(er, fact = 4, fun = modal, na.rm = FALSE) # fact 3
+er_majority2 <- aggregate(er_majority, fact = 3, fun = max, na.rm = FALSE) # fact 3
+er_majority2 <- reclassify(er_majority2, cbind(-Inf, 0.5, NA), right=FALSE)
+return(er_majority2)
+
+
 }
 
 #test<-trans2(texture,slope_real,aglim)

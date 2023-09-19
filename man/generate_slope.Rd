@@ -2,13 +2,21 @@
 % Please edit documentation in R/ranlan.R
 \name{generate_slope}
 \alias{generate_slope}
-\title{Title}
+\title{A perlin noise based slope generator}
 \usage{
-generate_slope(width, height, cellSize, frequency, octaves, lacunarity)
+generate_slope(
+  width,
+  height,
+  cellSize,
+  frequency,
+  octaves,
+  lacunarity,
+  categorized
+)
 }
 \arguments{
-\item{lacunarity}{}
+\item{categorized}{TRUE/FLASE tells you if the slope raster returns categorized or smooth}
 }
 \description{
-Title
+A perlin noise based slope generator
 }

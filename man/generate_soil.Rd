@@ -2,7 +2,7 @@
 % Please edit documentation in R/ranlan.R
 \name{generate_soil}
 \alias{generate_soil}
-\title{Title}
+\title{Natural soil cluster generator for artificial aglim and soil texture maps}
 \usage{
 generate_soil(rows, cols, p, ai, rescale)
 }
@@ -10,5 +10,8 @@ generate_soil(rows, cols, p, ai, rescale)
 \item{rescale}{}
 }
 \description{
-Title
+Natural soil cluster generator for artificial aglim and soil texture maps
+}
+\details{
+This is a wramper around the nlmr random cluster function to create naturalist soil raster
 }

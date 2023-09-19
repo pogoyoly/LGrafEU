@@ -4,7 +4,7 @@
 \alias{trans_3lr}
 \title{A three layer transformation}
 \usage{
-trans_3lr(texture, slope, aglim)
+trans_3lr(texture, slope, aglim, landcov)
 }
 \arguments{
 \item{texture}{A soil texture raster}
@@ -12,6 +12,8 @@ trans_3lr(texture, slope, aglim)
 \item{slope}{A categorized slope raster}
 
 \item{aglim}{A agricultural limitation raster}
+
+\item{landcov}{A categorized landcover raster}
 }
 \description{
 A three layer transformation

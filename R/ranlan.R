@@ -7,7 +7,7 @@
 ################################################
 #generate aglim map
 
-#' Title
+#' Natural soil cluster generator for artificial aglim and soil texture maps
 #'
 #' @param rows
 #' @param cols
@@ -15,10 +15,14 @@
 #' @param ai
 #' @param rescale
 #'
+#' @details
+#' This is a wramper around the nlmr random cluster function to create naturalist soil raster
+#'
+#'
 #' @return
 #' @export
 #'
-#' @examples
+#'
 generate_soil <- function(rows,cols,p,ai,rescale){
 
                                           NLMR::nlm_randomcluster(nrow = rows,
@@ -32,13 +36,17 @@ generate_soil <- function(rows,cols,p,ai,rescale){
 #res(aglim_gen)
 
 
-#' Title
+#' A natural agriculture cluster map for creating artificial potential agricultural landscape
 #'
 #' @param rows
 #' @param cols
-#' @param p
-#' @param ai
+#' @param p f
+#' @param ai percentage of each category of landscape
 #' @param rescale
+#'
+#' @description
+#' This is a wramper around the nlmr random cluster function to create naturalist potential agriculture space raster
+#'
 #'
 #' @return
 #' @export
@@ -60,7 +68,7 @@ generate_potential_landscape <- function(rows,cols,p,ai,rescale){
 ####################################################################
 #generate slope map
 
-#' Title
+#' A perlin noise based slope generator
 #'
 #' @param width
 #' @param height
@@ -68,19 +76,31 @@ generate_potential_landscape <- function(rows,cols,p,ai,rescale){
 #' @param frequency
 #' @param octaves
 #' @param lacunarity
+#' @param categorized TRUE/FLASE tells you if the slope raster returns categorized or smooth
 #'
 #' @return
 #' @export
 #'
-#' @examples
-generate_slope<-function(width, height,cellSize, frequency, octaves, lacunarity){
-# Set the parameters
+#'
+#'
+generate_slope<-function(width, height,cellSize, frequency, octaves, lacunarity, categorized){
+
+#check function arguments
+checkmate::assert_count(width, positive = TRUE)
+checkmate::assert_count(height, positive = TRUE)
+checkmate::assert_numeric(cellSize)
+checkmate::assert_numeric(frequency)
+checkmate::assert_numeric(octaves)
+checkmate::assert_numeric(lacunarity)
+checkmate::assert_logical(categorized)
+
+  # Set the parameters
 map_width <- width  # Width of the Perlin noise map
 map_height <- height  # Height of the Perlin noise map
 cell_size <- cellSize  # Cell size (distance between neighboring pixels)
 
 # Generate Perlin noise map
-perlin_map<-noise_perlin(
+perlin_map<-ambient::noise_perlin(
   dim = c(map_width, map_height),
   frequency = frequency,
   octaves = octaves,
@@ -128,7 +148,15 @@ raster_data <- raster(slope_map, xmn = 0, xmx = cell_size_x * ncol(slope_map),
 # Set the cell size
 res(raster_data) <- c(cell_size_x, cell_size_y)
 slope_gen <- reclassify(raster_data, c(0,5,1, 5,10,2, 10,90,3), include.lowest=F)
-return(slope_gen)
+
+if(categorized == TRUE){
+  return(slope_gen)
+
+}
+if(categorized == FALSE){
+  return(raster_data)
+}
 }
 
-#test<-generate_slope(200,200,1,0.01,2,5)
+#test<-LGrafEU::generate_slope(200,200,1,0.01,2,5, TRUE)
+#raster::plot(test)
