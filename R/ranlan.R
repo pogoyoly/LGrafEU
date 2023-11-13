@@ -106,7 +106,7 @@ perlin_map<-ambient::noise_perlin(
   octaves = octaves,
   lacunarity = lacunarity,
 )
-perlin_map <-normalise(perlin_map, from = range(perlin_map), to = c(0, 300))
+perlin_map <-ambient::normalise(perlin_map, from = range(perlin_map), to = c(0, 300))
 
 # Function to calculate the slope
 calculate_slope <- function(map, x, y, cell_size) {

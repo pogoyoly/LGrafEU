@@ -165,7 +165,7 @@ vals1<-raster::unique(slope)
 vals2 <- raster::unique(texture) # Get all classes
 
 
-er <- rast(ext(aglim), resolution=c(200,200), vals = 0)
+er <- terra::rast(terra::ext(aglim), resolution=c(200,200), vals = 0)
 er<-raster(er)
 
 for(vali in vals1){
@@ -207,7 +207,9 @@ for(valii in vals2){
 }
 }
 #plot(er)
+#first aggregate based on majority rule
 er_majority <- aggregate(er, fact = 4, fun = modal, na.rm = FALSE) # fact 3
+#second aggregate based on crop importance by the factor ranking
 er_majority2 <- aggregate(er_majority, fact = 3, fun = max, na.rm = FALSE) # fact 3
 er_majority2 <- reclassify(er_majority2, cbind(-Inf, 0.5, NA), right=FALSE)
 return(er_majority2)
