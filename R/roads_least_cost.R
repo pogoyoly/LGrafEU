@@ -2,10 +2,10 @@
 
 #' Title
 #'
-#' @param road_length
-#' @param slope
+#' @param road_length A number
+#' @param slope A lope raster
 #'
-#' @return
+#' @return A raster
 #' @export
 #'
 #' @examples
