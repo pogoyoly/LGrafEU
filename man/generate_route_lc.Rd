@@ -7,7 +7,12 @@
 generate_route_lc(road_length, slope)
 }
 \arguments{
-\item{slope}{}
+\item{road_length}{A number}
+
+\item{slope}{A lope raster}
+}
+\value{
+A raster
 }
 \description{
 Title
