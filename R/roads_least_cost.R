@@ -20,9 +20,9 @@ generate_route_lc<-function(road_length,slope){
 
   #generate a temp raster that has origin and extent that starts from zero || check with antonia if we can do this for everything from start
   slope_raster <- slope
-  origin(slope_raster)<- 0
-  bb <- extent(0, nrow(slope_raster), 0, ncol(slope_raster))
-  extent(slope_raster) <- bb
+  raster::origin(slope_raster)<- 0
+  bb <- raster::extent(0, nrow(slope_raster), 0, ncol(slope_raster))
+  raster::extent(slope_raster) <- bb
 
   slope_raster[is.na(slope_raster[])] <- 255
   slope_raster[slope_raster == 0] <- 255
@@ -36,7 +36,7 @@ generate_route_lc<-function(road_length,slope){
   realized <- 0
 
   #create a dummay spatial line and then empty it
-  sl <- SpatialLines(LinesList = list(Lines(Line(matrix(0, ncol = 2)), ID = NA)))
+  sl <- sp::SpatialLines(LinesList = list(Lines(Line(matrix(0, ncol = 2)), ID = NA)))
   sl <- sl[0]
 
 
@@ -154,7 +154,7 @@ generate_route_lc<-function(road_length,slope){
     plot(sl)
   }
 
-  r <- raster(extent(sl), resolution=c(1, 1))
+  r <- raster::raster(raster::extent(sl), resolution=c(1, 1))
   r_path <- raster::rasterize(sl, r, field=1)
 
   #bb <- extent(slope)

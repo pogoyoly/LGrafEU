@@ -13,8 +13,8 @@
 #' @export
 sl_txt_ag<-function(texture_gen,slope_gen,aglim_gen,aglim_real,slope_real,texture_real,landcover){
 
-  texture_real <- crop(texture_real,aglim_real)
-  slope_real <- crop(slope_real,aglim_real)
+  texture_real <- raster::crop(texture_real,aglim_real)
+  slope_real <- raster::crop(slope_real,aglim_real)
 
   #get stratified points
   vals1<-unique(slope_gen)
@@ -22,8 +22,8 @@ sl_txt_ag<-function(texture_gen,slope_gen,aglim_gen,aglim_real,slope_real,textur
 
 
   #create empty raster (make sure that res works with the clumping variable)
-  er <- rast(ext(slope_gen), resolution=c(1,1), vals = 0)
-  er<-raster(er)
+  er <- terra::rast(terra::ext(slope_gen), resolution=c(1,1), vals = 0)
+  er<-raster::raster(er)
 
   for(vali in vals1){
     for(valii in vals2){
@@ -32,10 +32,10 @@ sl_txt_ag<-function(texture_gen,slope_gen,aglim_gen,aglim_real,slope_real,textur
       #print(valii)
       #transform to 0 anything that isnt val and transform val to 1
       myFun1<-function(x) {ifelse (x == vali,1,0)}
-      nr1<-calc(slope_gen ,myFun1)
+      nr1<-raster::calc(slope_gen ,myFun1)
 
       myFun2<-function(x) {ifelse (x == valii,1,0)}
-      nr2<-calc(texture_gen ,myFun2)
+      nr2<-raster::calc(texture_gen ,myFun2)
       #plot(nr1)
 
       #multiply new raster with aglim raster
@@ -46,11 +46,11 @@ sl_txt_ag<-function(texture_gen,slope_gen,aglim_gen,aglim_real,slope_real,textur
       #print(n)
 
       #same for real
-      nrr1<-calc(slope_real ,myFun1)
-      nrr2<-calc(texture_real ,myFun2)
+      nrr1<-raster::calc(slope_real ,myFun1)
+      nrr2<-raster::calc(texture_real ,myFun2)
       nsa_real <- aglim_real*nrr1*nrr2
 
-      mat1<-aglim_confus(nsa_real,landcover)
+      mat1<-LGrafEU::confus(nsa_real,landcover)
 
 
 
@@ -62,20 +62,20 @@ sl_txt_ag<-function(texture_gen,slope_gen,aglim_gen,aglim_real,slope_real,textur
 
 
         #do the transofmr matrix on raster
-        nsa_trans<-aglim_trans(mat1,nsa)
+        nsa_trans<-LGrafEU::trans(mat1,nsa)
         plot(nsa_trans)
-        nsa_trans <- disaggregate(nsa_trans, fact=2)
+        nsa_trans <- raster::disaggregate(nsa_trans, fact=2)
         #plot(nsa_trans)
 
         #merge with empty raster
-        allrasters <- stack(er, nsa_trans)
-        er <- calc(allrasters,fun=sum,na.rm=T)
+        allrasters <- raster::stack(er, nsa_trans)
+        er <- raster::calc(allrasters,fun=sum,na.rm=T)
       }
 
       plot(er)
-      er_majority <- aggregate(er, fact = 4, fun = modal, na.rm = FALSE) # fact 3
-      er_majority2 <- aggregate(er_majority, fact = 2, fun = max, na.rm = FALSE) # fact 3
-      er_majority2 <- reclassify(er_majority2, cbind(-Inf, 0.5, NA), right=FALSE)
+      er_majority <- raster::aggregate(er, fact = 4, fun = modal, na.rm = FALSE) # fact 3
+      er_majority2 <- raster::aggregate(er_majority, fact = 2, fun = max, na.rm = FALSE) # fact 3
+      er_majority2 <- raster::reclassify(er_majority2, cbind(-Inf, 0.5, NA), right=FALSE)
 
       plot(er_majority2)
     }

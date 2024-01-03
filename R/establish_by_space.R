@@ -140,8 +140,8 @@ establish_by_space<-function(potential_space,
     print(field_num)
 
     #calculate how much of the space has been filled
-    part_potential <- length(which(values(potential_space) %in% c (2)))
-    part_filled <- length(which(values(land_raster) %in% c (1)))
+    part_potential <- length(which(raster::values(potential_space) %in% c (2)))
+    part_filled <- length(which(raster::values(land_raster) %in% c (1)))
     achieved_percent <- (part_filled / part_potential) * 100
     print(achieved_percent)
 

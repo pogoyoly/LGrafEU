@@ -142,12 +142,12 @@ cell_size_x <- 1  # Cell size in the x direction
 cell_size_y <- 1  # Cell size in the y direction
 
 # Create the raster
-raster_data <- raster(slope_map, xmn = 0, xmx = cell_size_x * ncol(slope_map),
+raster_data <- raster::raster(slope_map, xmn = 0, xmx = cell_size_x * ncol(slope_map),
                       ymn = 0, ymx = cell_size_y * nrow(slope_map))
 
 # Set the cell size
-res(raster_data) <- c(cell_size_x, cell_size_y)
-slope_gen <- reclassify(raster_data, c(0,5,1, 5,10,2, 10,90,3), include.lowest=F)
+raster::res(raster_data) <- c(cell_size_x, cell_size_y)
+slope_gen <- raster::reclassify(raster_data, c(0,5,1, 5,10,2, 10,90,3), include.lowest=F)
 
 if(categorized == TRUE){
   return(slope_gen)

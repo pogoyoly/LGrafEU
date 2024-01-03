@@ -32,12 +32,12 @@ confus<-function(rst,landcover){
 points<-dismo::randomPoints(rst, 250)
 
 # Extract at test points the value of the soil map
-soil_points<-extract(rst, points)
+soil_points<-raster::extract(rst, points)
 soil_points<-unlist(soil_points)
 soil_points<-as.data.frame(soil_points)
 
 # using the same points on the landcover map
-lc_points<-extract(landcov1, points)
+lc_points<-raster::extract(landcover, points)
 lc_points<-unlist(lc_points)
 lc_points<-as.data.frame(lc_points)
 
@@ -46,11 +46,11 @@ all_points <- cbind(soil_points, lc_points)
 
 #aggregate to confusion matrix
 confusion_matrix<-all_points %>%
-  group_by(soil_points,lc_points) %>%
-  summarise(cnt = n()) %>%
-  mutate(freq = round(cnt / sum(cnt), 3)) %>%
-  arrange(desc(freq)) %>%
-  mutate(lc_points = as.factor(lc_points))
+  dplyr::group_by(soil_points,lc_points) %>%
+  dplyr::summarise(cnt = n()) %>%
+  dplyr::mutate(freq = round(cnt / sum(cnt), 3)) %>%
+  dplyr::arrange(desc(freq)) %>%
+  dplyr::mutate(lc_points = as.factor(lc_points))
 
 # results
 confusion_matrix$lc_points <- factor(confusion_matrix$lc_points, levels = c(1, 2, 3, 4, 5))
@@ -109,9 +109,9 @@ transform<-function(x){
 
 
 #run apply function
-transformed <- calc(rst, transform)
-transformed_reclassify <- reclassify(transformed, cbind(0, NA), right=FALSE)
-transformed_majority <- aggregate(transformed_reclassify, fact = 2, fun = modal, na.rm = FALSE) # fact 3
+transformed <- raster::calc(rst, transform)
+transformed_reclassify <- raster::reclassify(transformed, cbind(0, NA), right=FALSE)
+transformed_majority <- raster::aggregate(transformed_reclassify, fact = 2, fun = modal, na.rm = FALSE) # fact 3
 return(transformed_majority)
 
 }
@@ -129,7 +129,7 @@ return(transformed_majority)
 trans_1lr<-function(rast,landcover){
   con_mat<-confus(rast,landcover)
   trans_rast<-trans(con_mat,rast)
-  trans_rast <- aggregate(trans_rast, fact = 2, fun = modal, na.rm = FALSE) # fact 3
+  trans_rast <- raster::aggregate(trans_rast, fact = 2, fun = modal, na.rm = FALSE) # fact 3
   return(trans_rast)
 }
 
@@ -157,8 +157,8 @@ trans_1lr<-function(rast,landcover){
 #' @examples
 trans_3lr<-function(texture,slope,aglim,landcov){
 
-texture <- crop(texture,aglim)
-slope <- crop(slope,aglim)
+texture <- raster::crop(texture,aglim)
+slope <- raster::crop(slope,aglim)
 
 #get stratified points
 vals1<-raster::unique(slope)
@@ -166,7 +166,7 @@ vals2 <- raster::unique(texture) # Get all classes
 
 
 er <- terra::rast(terra::ext(aglim), resolution=c(200,200), vals = 0)
-er<-raster(er)
+er<-raster::raster(er)
 
 for(vali in vals1){
 for(valii in vals2){
@@ -175,10 +175,10 @@ for(valii in vals2){
   #print(valii)
   #transform to 0 anything that isnt val and transform val to 1
   myFun1<-function(x) {ifelse (x == vali,1,0)}
-  nr1<-calc(slope ,myFun1)
+  nr1<-raster::calc(slope ,myFun1)
 
   myFun2<-function(x) {ifelse (x == valii,1,0)}
-  nr2<-calc(texture ,myFun2)
+  nr2<-raster::calc(texture ,myFun2)
   #plot(nr1)
 
   #multiply new raster with aglim raster
@@ -194,13 +194,13 @@ for(valii in vals2){
 
   #print(nsa)
   #do the transofmr matrix on raster
-  con_nsa<-confus(nsa,landcov)
-  nsa_trans<-trans(con_nsa,nsa)
+  con_nsa<-LGrafEU::confus(nsa,landcov)
+  nsa_trans<-LGrafEU::trans(con_nsa,nsa)
 
 
   #merge with empty raster
-  allrasters <- stack(er, nsa_trans)
-  er <- calc(allrasters,fun=sum,na.rm=T)
+  allrasters <- raster::stack(er, nsa_trans)
+  er <- raster::calc(allrasters,fun=sum,na.rm=T)
   }
 
 
@@ -208,10 +208,10 @@ for(valii in vals2){
 }
 #plot(er)
 #first aggregate based on majority rule
-er_majority <- aggregate(er, fact = 4, fun = modal, na.rm = FALSE) # fact 3
+er_majority <- raster::aggregate(er, fact = 4, fun = modal, na.rm = FALSE) # fact 3
 #second aggregate based on crop importance by the factor ranking
-er_majority2 <- aggregate(er_majority, fact = 3, fun = max, na.rm = FALSE) # fact 3
-er_majority2 <- reclassify(er_majority2, cbind(-Inf, 0.5, NA), right=FALSE)
+er_majority2 <- raster::aggregate(er_majority, fact = 3, fun = max, na.rm = FALSE) # fact 3
+er_majority2 <- raster::reclassify(er_majority2, cbind(-Inf, 0.5, NA), right=FALSE)
 return(er_majority2)
 
 
