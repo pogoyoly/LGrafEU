@@ -20,11 +20,12 @@
 #########################################################
 #' Title
 #'
-#' @param rst
-#' @param landcover
+#' @param rst a raster of either soil aglim or slope
+#' @param landcover a categorized landcover map
 #'
 #'
 #' @return
+#' @import dismo
 #'
 #' @examples
 confus<-function(rst,landcover){
@@ -77,10 +78,11 @@ return(transition2)
 
 #' Title
 #'
-#' @param transition
-#' @param rst
+#' @param transition the transition matrix from the confus function
+#' @param rst the raster from which the transition occurs
 #'
 #' @return
+#' @import raster
 #'
 #' @examples
 trans<-function(transition,rst){
@@ -124,6 +126,7 @@ return(transformed_majority)
 #'
 #' @return A raster transformed
 #' @export
+#' @import raster
 #'
 #' @examples
 trans_1lr<-function(rast,landcover){
@@ -153,6 +156,7 @@ trans_1lr<-function(rast,landcover){
 #'
 #' @return
 #' @export
+#' @import raster terra
 #'
 #' @examples
 trans_3lr<-function(texture,slope,aglim,landcov){

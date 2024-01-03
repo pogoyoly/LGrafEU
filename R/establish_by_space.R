@@ -3,16 +3,17 @@
 #' Title
 #'
 #' @param potential_space a map containing potential space for field establishment
-#' @param mean_field_size
-#' @param sd_field_size
-#' @param mean_shape_index
-#' @param sd_shape_index
+#' @param mean_field_size mean field size
+#' @param sd_field_size sd field size
+#' @param mean_shape_index mean shape index
+#' @param sd_shape_index sd shape index
 #' @param percent percent of the potential arabale land that will be filled ranging from 0-100
 #' @param assign_farmers TRUE/FALSE to assign fields to random farmers
 #' @param mean_fields_per_farm mean number of fields owned by each farmer
 #'
 #' @return
 #' @export
+#' @import raster dplyr
 #'
 #' @examples
 establish_by_space<-function(potential_space,

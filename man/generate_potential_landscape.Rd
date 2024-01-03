@@ -4,14 +4,16 @@
 \alias{generate_potential_landscape}
 \title{A natural agriculture cluster map for creating artificial potential agricultural landscape}
 \usage{
-generate_potential_landscape(rows, cols, p, ai, rescale)
+generate_potential_landscape(rows, cols, p, ai)
 }
 \arguments{
-\item{p}{f}
+\item{rows}{nrows of raster}
+
+\item{cols}{ncols of raster}
+
+\item{p}{proportion of element that forms a clustre}
 
 \item{ai}{percentage of each category of landscape}
-
-\item{rescale}{}
 }
 \description{
 This is a wramper around the nlmr random cluster function to create naturalist potential agriculture space raster

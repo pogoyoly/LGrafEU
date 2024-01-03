@@ -9,11 +9,10 @@
 
 #' Natural soil cluster generator for artificial aglim and soil texture maps
 #'
-#' @param rows
-#' @param cols
-#' @param p
-#' @param ai
-#' @param rescale
+#' @param rows number of rows in raster
+#' @param cols number of cols in raster
+#' @param p Defines the proportion of elements randomly selected to form clusters.
+#' @param ai Vector with the cluster type distribution (percentages of occupancy). This directly controls the number of types via the given length.
 #'
 #' @details
 #' This is a wramper around the nlmr random cluster function to create naturalist soil raster
@@ -21,15 +20,16 @@
 #'
 #' @return
 #' @export
+#' @import NLMR
 #'
 #'
-generate_soil <- function(rows,cols,p,ai,rescale){
+generate_soil <- function(rows,cols,p,ai){
 
                                           NLMR::nlm_randomcluster(nrow = rows,
                                           ncol = cols,
                                           p    = p, #0.5
                                           ai   = ai, #c(0.9, 0.1, 0, 0),
-                                          rescale = rescale) # FALSE)
+                                          rescale = FALSE) # FALSE)
 }
 
 #plot(aglim_gen)
@@ -38,11 +38,10 @@ generate_soil <- function(rows,cols,p,ai,rescale){
 
 #' A natural agriculture cluster map for creating artificial potential agricultural landscape
 #'
-#' @param rows
-#' @param cols
-#' @param p f
+#' @param rows nrows of raster
+#' @param cols ncols of raster
+#' @param p proportion of element that forms a clustre
 #' @param ai percentage of each category of landscape
-#' @param rescale
 #'
 #' @description
 #' This is a wramper around the nlmr random cluster function to create naturalist potential agriculture space raster
@@ -50,15 +49,16 @@ generate_soil <- function(rows,cols,p,ai,rescale){
 #'
 #' @return
 #' @export
+#' @import NLMR
 #'
 #' @examples
-generate_potential_landscape <- function(rows,cols,p,ai,rescale){
+generate_potential_landscape <- function(rows,cols,p,ai){
 
   NLMR::nlm_randomcluster(nrow = rows,
                           ncol = cols,
                           p    = p, #0.5
                           ai   = ai, #c(0.9, 0.1, 0, 0),
-                          rescale = rescale) # FALSE)
+                          rescale = FALSE) # FALSE)
 }
 
 
@@ -80,6 +80,7 @@ generate_potential_landscape <- function(rows,cols,p,ai,rescale){
 #'
 #' @return
 #' @export
+#' @import checkmate ambient raster
 #'
 #'
 #'

@@ -11,6 +11,8 @@
 #' @param landcover location landcover raster
 #' @return An artificially generated landcover file
 #' @export
+#' @import terra raster
+#'
 sl_txt_ag<-function(texture_gen,slope_gen,aglim_gen,aglim_real,slope_real,texture_real,landcover){
 
   texture_real <- raster::crop(texture_real,aglim_real)

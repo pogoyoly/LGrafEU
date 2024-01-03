@@ -4,10 +4,16 @@
 \alias{generate_soil}
 \title{Natural soil cluster generator for artificial aglim and soil texture maps}
 \usage{
-generate_soil(rows, cols, p, ai, rescale)
+generate_soil(rows, cols, p, ai)
 }
 \arguments{
-\item{rescale}{}
+\item{rows}{number of rows in raster}
+
+\item{cols}{number of cols in raster}
+
+\item{p}{Defines the proportion of elements randomly selected to form clusters.}
+
+\item{ai}{Vector with the cluster type distribution (percentages of occupancy). This directly controls the number of types via the given length.}
 }
 \description{
 Natural soil cluster generator for artificial aglim and soil texture maps

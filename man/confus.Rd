@@ -7,7 +7,9 @@
 confus(rst, landcover)
 }
 \arguments{
-\item{landcover}{}
+\item{rst}{a raster of either soil aglim or slope}
+
+\item{landcover}{a categorized landcover map}
 }
 \description{
 Title

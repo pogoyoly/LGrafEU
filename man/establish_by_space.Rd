@@ -18,6 +18,14 @@ establish_by_space(
 \arguments{
 \item{potential_space}{a map containing potential space for field establishment}
 
+\item{mean_field_size}{mean field size}
+
+\item{sd_field_size}{sd field size}
+
+\item{mean_shape_index}{mean shape index}
+
+\item{sd_shape_index}{sd shape index}
+
 \item{percent}{percent of the potential arabale land that will be filled ranging from 0-100}
 
 \item{assign_farmers}{TRUE/FALSE to assign fields to random farmers}

@@ -7,7 +7,9 @@
 trans(transition, rst)
 }
 \arguments{
-\item{rst}{}
+\item{transition}{the transition matrix from the confus function}
+
+\item{rst}{the raster from which the transition occurs}
 }
 \description{
 Title

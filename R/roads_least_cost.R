@@ -7,6 +7,7 @@
 #'
 #' @return A raster
 #' @export
+#' @import raster sp gdistance rgeos
 #'
 #' @examples
 #'
