@@ -129,10 +129,10 @@ return(transformed_majority)
 #' @import raster
 #'
 #' @examples
-trans_1lr<-function(rast,landcover){
+trans_1lr<-function(rast,landcover,aggregation){
   con_mat<-confus(rast,landcover)
   trans_rast<-trans(con_mat,rast)
-  trans_rast <- raster::aggregate(trans_rast, fact = 2, fun = modal, na.rm = FALSE) # fact 3
+  trans_rast <- raster::aggregate(trans_rast, fact = aggregation, fun = modal, na.rm = FALSE) # fact 3
   return(trans_rast)
 }
 

@@ -4,7 +4,7 @@
 \alias{trans_1lr}
 \title{A one layer transformation}
 \usage{
-trans_1lr(rast, landcover)
+trans_1lr(rast, landcover, aggregation)
 }
 \arguments{
 \item{rast}{A type feature raster}

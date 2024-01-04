@@ -70,12 +70,12 @@ generate_potential_landscape <- function(rows,cols,p,ai){
 
 #' A perlin noise based slope generator
 #'
-#' @param width
-#' @param height
-#' @param cellSize
-#' @param frequency
-#' @param octaves
-#' @param lacunarity
+#' @param width width of output raster
+#' @param height height of output raster
+#' @param cellSize cellsize of output raster
+#' @param frequency perlin frequency
+#' @param octaves perlin octave
+#' @param lacunarity parlin lacunarity
 #' @param categorized TRUE/FLASE tells you if the slope raster returns categorized or smooth
 #'
 #' @return

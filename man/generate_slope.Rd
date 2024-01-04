@@ -15,6 +15,18 @@ generate_slope(
 )
 }
 \arguments{
+\item{width}{width of output raster}
+
+\item{height}{height of output raster}
+
+\item{cellSize}{cellsize of output raster}
+
+\item{frequency}{perlin frequency}
+
+\item{octaves}{perlin octave}
+
+\item{lacunarity}{parlin lacunarity}
+
 \item{categorized}{TRUE/FLASE tells you if the slope raster returns categorized or smooth}
 }
 \description{
