@@ -11,7 +11,7 @@ trans_1lr(rast, landcover, aggregation)
 
 \item{landcover}{A landcover raster}
 
-\item{aggregation}{A number}
+\item{aggregation}{A number that defines how aggregated he potential space will be}
 }
 \value{
 A raster transformed

@@ -122,7 +122,7 @@ return(transformed_majority)
 #'
 #' @param rast A type feature raster
 #' @param landcover A landcover raster
-#' @param aggregation A number
+#' @param aggregation A number that defines how aggregated he potential space will be
 #'
 #' @return A raster transformed
 #' @export
