@@ -1,6 +1,6 @@
 
 
-#' Title
+#' Heuristic field establishment based on simple geometries
 #'
 #' @param potential_space a map containing potential space for field establishment
 #' @param mean_field_size mean field size
