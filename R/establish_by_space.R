@@ -17,6 +17,8 @@
 #'
 #' @examples
 establish_by_space<-function(potential_space,
+                             road_raster,
+                             use_road_raster,
                              mean_field_size,
                              sd_field_size,
                              mean_shape_index,
@@ -26,18 +28,25 @@ establish_by_space<-function(potential_space,
                              mean_fields_per_farm
 ){
 
-
   achieved_percent <- 0
+  potential_space[is.na(potential_space[])] <- 0
   land = matrix(0, nrow(potential_space), ncol(potential_space))
   land_raster<-raster::raster(land)
   field_num <- 1
   field_list <- list()
+  if(use_road_raster == TRUE){
+    road_raster[is.na(road_raster[])] <- 0
+    road_inside<-road_raster
+  }
+  if(use_road_raster == FALSE){
+    road_inside = matrix(0, nrow(potential_space), ncol(potential_space))
+    road_inside<-raster::raster(road_inside)
 
+  }
 
   while(achieved_percent < percent){
     field_placed <- FALSE
     while(field_placed == FALSE){
-
       #set field size and shape index
       field_size <- max(1, round(rnorm(1, mean=mean_field_size, sd=sd_field_size)))
       shape_index <- rnorm(1, mean=mean_shape_index, sd=sd_shape_index)
@@ -50,6 +59,7 @@ establish_by_space<-function(potential_space,
       field_row_size <- ceiling(shape_index * sqrt(field_size))
       field_col_size <- ceiling(field_size / field_row_size)
 
+      #create empty matrix for fields
 
       check<-0
 
@@ -58,28 +68,29 @@ establish_by_space<-function(potential_space,
         #choose random start location and check if it can be used
         start_row <- sample(1:ncol(potential_space), 1)
         start_col <- sample(1:nrow(potential_space), 1)
-        check<-potential_space[start_row,start_col]
-
+        if(is.na(potential_space[start_row,start_col]) == FALSE){
+          check<-potential_space[start_row,start_col]
+        }
       }
 
 
-      directions <- c("NorthWest", "NorthEast", "SouthWest", "SouthEast")
+      directions <- c("a", "b", "c", "d")
       direction<-sample(directions,1)
 
       switch(direction,
-             "NorthWest" = {
+             "a" = {
                row_range <- seq(from = start_row, to = start_row - field_row_size)
                col_range <- seq(from = start_col, to = start_col - field_col_size)
              },
-             "NorthEast" = {
+             "b" = {
                row_range <- seq(from = start_row, to = start_row - field_row_size)
                col_range <- seq(from = start_col, to = start_col + field_col_size)
              },
-             "SouthWest" = {
+             "c" = {
                row_range <- seq(from = start_row, to = start_row + field_row_size)
                col_range <- seq(from = start_col, to = start_col - field_col_size)
              },
-             "SouthEast" = {
+             "d" = {
                row_range <- seq(from = start_row, to = start_row + field_row_size)
                col_range <- seq(from = start_col, to = start_col + field_col_size)
              },
@@ -94,7 +105,6 @@ establish_by_space<-function(potential_space,
         next
 
       }
-
       #expand field to one direction and check if can be established
       df = expand.grid(a = row_range, b = col_range)
 
@@ -109,10 +119,17 @@ establish_by_space<-function(potential_space,
         }
       }
 
-      #if everything is good field will be established containing the value of 1
+      coverlap_raods<-function(a,b){
+        if(is.na(road_inside[a,b]) == TRUE || road_inside[a,b] != 0){
+          return("overlap")
+        }
+      }
+
+
       val<- potential_space[round(mean(row_range)),round(mean(col_range))]
       qq <- mapply(coverlap, df$a, df$b, SIMPLIFY = TRUE)
-      if ("overlap" %in% qq || val != 2) {
+      qr <-mapply(coverlap_raods, df$a, df$b, SIMPLIFY = TRUE)
+      if ("overlap" %in% qq || "overlap" %in% qr || is.na(val) == TRUE || val != 2) {
         direction<-sample(directions,1)
         #print("repeat")
       } else {
@@ -130,19 +147,18 @@ establish_by_space<-function(potential_space,
 
 
     }
-
     land_raster<-raster::raster(land)
+    #plot(land_raster)
 
 
     #write the information of the field in a field object and add it to the field list
     field_obj <- new("Field", number = field_num, location = list(row_range,col_range), farmer = 1)
     field_list<-c(field_list,field_obj)
     field_num <- field_num + 1
-    print(field_num)
 
     #calculate how much of the space has been filled
-    part_potential <- length(which(raster::values(potential_space) %in% c (2)))
-    part_filled <- length(which(raster::values(land_raster) %in% c (1)))
+    part_potential <- length(which(values(potential_space) %in% c (2)))
+    part_filled <- length(which(values(land_raster) %in% c (1)))
     achieved_percent <- (part_filled / part_potential) * 100
     print(achieved_percent)
 
@@ -156,7 +172,6 @@ establish_by_space<-function(potential_space,
     for(i in 1:num_fields){
       farmer_num<-sample(1:num_farmers, 1)
       field_list[[i]]@farmer <- farmer_num
-      print(field_list[[i]]@farmer)
     }
   }
 
