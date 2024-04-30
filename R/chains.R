@@ -29,50 +29,50 @@
 #'
 #' @examples
 confus<-function(rst,landcover){
-#first order only aglim
-points<-dismo::randomPoints(rst, 250)
+  #first order only aglim
+  points<-dismo::randomPoints(rst, 250)
 
-# Extract at test points the value of the soil map
-soil_points<-raster::extract(rst, points)
-soil_points<-unlist(soil_points)
-soil_points<-as.data.frame(soil_points)
+  # Extract at test points the value of the soil map
+  soil_points<-raster::extract(rst, points)
+  soil_points<-unlist(soil_points)
+  soil_points<-as.data.frame(soil_points)
 
-# using the same points on the landcover map
-lc_points<-raster::extract(landcover, points)
-lc_points<-unlist(lc_points)
-lc_points<-as.data.frame(lc_points)
+  # using the same points on the landcover map
+  lc_points<-raster::extract(landcover, points)
+  lc_points<-unlist(lc_points)
+  lc_points<-as.data.frame(lc_points)
 
-#combine both to a df
-all_points <- cbind(soil_points, lc_points)
+  #combine both to a df
+  all_points <- cbind(soil_points, lc_points)
 
-#aggregate to confusion matrix
-confusion_matrix<-all_points %>%
+  #aggregate to confusion matrix
+  confusion_matrix<-all_points %>%
   dplyr::group_by(soil_points,lc_points) %>%
   dplyr::summarise(cnt = n()) %>%
   dplyr::mutate(freq = round(cnt / sum(cnt), 3)) %>%
   dplyr::arrange(desc(freq)) %>%
   dplyr::mutate(lc_points = as.factor(lc_points))
 
-# results
-confusion_matrix$lc_points <- factor(confusion_matrix$lc_points, levels = c(1, 2, 3, 4, 5))
+  # results
+  confusion_matrix$lc_points <- factor(confusion_matrix$lc_points, levels = c(1, 2, 3, 4, 5))
 
 
-transition2 <- matrix(0, nrow = 13, ncol = 5, dimnames = list(1:13, 1:5))
+  transition2 <- matrix(0, nrow = 13, ncol = 5, dimnames = list(1:13, 1:5))
 
 
-a <- matrix(0, nrow = length(unique(confusion_matrix$soil_points)),
+  a <- matrix(0, nrow = length(unique(confusion_matrix$soil_points)),
             ncol = length(unique(confusion_matrix$lc_points)),
             dimnames = list(sort(unique(confusion_matrix$soil_points)),
                             sort(unique(confusion_matrix$lc_points))))
 
-a[cbind(as.numeric(factor(confusion_matrix$soil_points)),
+  a[cbind(as.numeric(factor(confusion_matrix$soil_points)),
         as.numeric(factor(confusion_matrix$lc_points)))] <- confusion_matrix$freq
 
 
-cols <- colnames(transition2)[colnames(transition2) %in% colnames(a)]
-rows <- rownames(transition2)[rownames(transition2) %in% rownames(a)]
-transition2[rows, cols] <- a[rows, cols]
-return(transition2)
+  cols <- colnames(transition2)[colnames(transition2) %in% colnames(a)]
+  rows <- rownames(transition2)[rownames(transition2) %in% rownames(a)]
+  transition2[rows, cols] <- a[rows, cols]
+  return(transition2)
 }
 
 
@@ -113,8 +113,7 @@ transform<-function(x){
 #run apply function
 transformed <- raster::calc(rst, transform)
 transformed_reclassify <- raster::reclassify(transformed, cbind(0, NA), right=FALSE)
-transformed_majority <- raster::aggregate(transformed_reclassify, fact = 2, fun = modal, na.rm = FALSE) # fact 3
-return(transformed_majority)
+return(transformed_reclassify)
 
 }
 
@@ -159,10 +158,8 @@ trans_1lr<-function(rast,landcover,aggregation){
 #' @import raster terra
 #'
 #' @examples
-trans_3lr<-function(texture,slope,aglim,landcov){
+trans_3lr<-function(texture,slope,aglim,landcov, aggregation){
 
-texture <- raster::crop(texture,aglim)
-slope <- raster::crop(slope,aglim)
 
 #get stratified points
 vals1<-raster::unique(slope)
@@ -212,10 +209,8 @@ for(valii in vals2){
 }
 #plot(er)
 #first aggregate based on majority rule
-er_majority <- raster::aggregate(er, fact = 4, fun = modal, na.rm = FALSE) # fact 3
-#second aggregate based on crop importance by the factor ranking
-er_majority2 <- raster::aggregate(er_majority, fact = 3, fun = max, na.rm = FALSE) # fact 3
-er_majority2 <- raster::reclassify(er_majority2, cbind(-Inf, 0.5, NA), right=FALSE)
+er_majority <- raster::aggregate(er, fact = aggregation, fun = modal, na.rm = FALSE) # fact 3
+er_majority2 <- raster::reclassify(er_majority, cbind(-Inf, 0.5, NA), right=FALSE)
 return(er_majority2)
 
 
