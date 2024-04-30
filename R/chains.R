@@ -131,7 +131,8 @@ return(transformed_reclassify)
 trans_1lr<-function(rast,landcover,aggregation){
   con_mat<-confus(rast,landcover)
   trans_rast<-trans(con_mat,rast)
-  trans_rast <- raster::aggregate(trans_rast, fact = aggregation, fun = modal, na.rm = FALSE) # fact 3
+  trans_rast <- raster::aggregate(trans_rast, fact = aggregation, fun = modal, na.rm = FALSE)
+  trans_rast <- disaggregate(trans_rast, fact=aggregation)
   return(trans_rast)
 }
 
@@ -166,7 +167,9 @@ vals1<-raster::unique(slope)
 vals2 <- raster::unique(texture) # Get all classes
 
 
-er <- terra::rast(terra::ext(aglim), resolution=c(200,200), vals = 0)
+res1<-res(aglim)[1]
+res2<-res(aglim)[2]
+er <- terra::rast(terra::ext(aglim), resolution=c(res1,res2), vals = 0)
 er<-raster::raster(er)
 
 for(vali in vals1){
@@ -209,7 +212,8 @@ for(valii in vals2){
 }
 #plot(er)
 #first aggregate based on majority rule
-er_majority <- raster::aggregate(er, fact = aggregation, fun = modal, na.rm = FALSE) # fact 3
+er_majority <- raster::aggregate(er, fact = aggregation, fun = modal, na.rm = FALSE)
+er_majority <- disaggregate(er_majority, fact=aggregation)
 er_majority2 <- raster::reclassify(er_majority, cbind(-Inf, 0.5, NA), right=FALSE)
 return(er_majority2)
 
