@@ -66,9 +66,9 @@ generate_potential_landscape <- function(rows,cols,p,ai){
 
 
 ####################################################################
-#generate slope map
+#generate perlin noise map
 
-#' A perlin noise based slope generator
+#' A perlin noise based potential space map generator
 #'
 #' @param width width of output raster
 #' @param height height of output raster
@@ -84,14 +84,14 @@ generate_potential_landscape <- function(rows,cols,p,ai){
 #' @import checkmate ambient raster
 #'
 #' @examples
-#' test<-generate_slope(200,200,1,2,3,0.01,FALSE, 10)
+#' test<-generate_perlin_noise(200,200,1,2,3,0.01,FALSE, 10)
 #' plot(test)
 #'
 #'
 #'
 #'
 #'
-generate_slope<-function(width, height,cellSize, frequency, octaves, lacunarity, categorized, lim){
+generate_perlin_noise<-function(width, height,cellSize, frequency, octaves, lacunarity, categorized, lim){
 
 #check function arguments
 checkmate::assert_count(width, positive = TRUE)
