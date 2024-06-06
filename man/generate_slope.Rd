@@ -11,7 +11,8 @@ generate_slope(
   frequency,
   octaves,
   lacunarity,
-  categorized
+  categorized,
+  lim
 )
 }
 \arguments{
@@ -28,7 +29,18 @@ generate_slope(
 \item{lacunarity}{parlin lacunarity}
 
 \item{categorized}{TRUE/FLASE tells you if the slope raster returns categorized or smooth}
+
+\item{lim}{the slope degree cutoff for portential space where 1 will be potential space and 2 non potential space}
 }
 \description{
 A perlin noise based slope generator
+}
+\examples{
+test<-generate_slope(200,200,1,2,3,0.01,FALSE, 10)
+plot(test)
+
+
+
+
+
 }

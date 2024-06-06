@@ -2,10 +2,12 @@
 % Please edit documentation in R/establish_by_space.R
 \name{establish_by_space}
 \alias{establish_by_space}
-\title{Title}
+\title{Heuristic field establishment based on simple geometries}
 \usage{
 establish_by_space(
   potential_space,
+  road_raster,
+  use_road_raster,
   mean_field_size,
   sd_field_size,
   mean_shape_index,
@@ -33,5 +35,5 @@ establish_by_space(
 \item{mean_fields_per_farm}{mean number of fields owned by each farmer}
 }
 \description{
-Title
+Heuristic field establishment based on simple geometries
 }

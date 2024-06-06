@@ -77,14 +77,21 @@ generate_potential_landscape <- function(rows,cols,p,ai){
 #' @param octaves perlin octave
 #' @param lacunarity parlin lacunarity
 #' @param categorized TRUE/FLASE tells you if the slope raster returns categorized or smooth
+#' @param lim the slope degree cutoff for portential space where 1 will be potential space and 2 non potential space
 #'
 #' @return
 #' @export
 #' @import checkmate ambient raster
 #'
+#' @examples
+#' test<-generate_slope(200,200,1,2,3,0.01,FALSE, 10)
+#' plot(test)
 #'
 #'
-generate_slope<-function(width, height,cellSize, frequency, octaves, lacunarity, categorized){
+#'
+#'
+#'
+generate_slope<-function(width, height,cellSize, frequency, octaves, lacunarity, categorized, lim){
 
 #check function arguments
 checkmate::assert_count(width, positive = TRUE)
@@ -148,7 +155,7 @@ raster_data <- raster::raster(slope_map, xmn = 0, xmx = cell_size_x * ncol(slope
 
 # Set the cell size
 raster::res(raster_data) <- c(cell_size_x, cell_size_y)
-slope_gen <- raster::reclassify(raster_data, c(0,5,1, 5,10,2, 10,90,3), include.lowest=F)
+slope_gen <- raster::reclassify(raster_data, c(0,lim,1, lim,90,2), include.lowest=F)
 
 if(categorized == TRUE){
   return(slope_gen)
