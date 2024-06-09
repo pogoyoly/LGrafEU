@@ -16,10 +16,11 @@
 #'
 #' @return
 #' @export
+#' @importFrom magrittr "%>%"
 #'
 #' @examples
-#' r <- setValues(raster(nrows=100, ncols=100), 0)
-#' dead_leaves_texture <- generate_dead_leaves(r,1,0,300,200,.5,.1, 0.75, TRUE,2, 4,4)
+#' r <- setValues(raster(nrows=200, ncols=200), 1)
+#' dead_leaves_texture <- generate_dead_leaves(r,1,1,25,10,.5,.1, 0.75, TRUE,2, 4,4)
 #' plot(dead_leaves_texture$map)
 
 
@@ -243,3 +244,4 @@ generate_dead_leaves <- function(potential_space,
 
   return(result)
 }
+

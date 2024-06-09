@@ -15,10 +15,16 @@ Suggests:
 Imports: 
     ambient,
     checkmate,
+    cli,
     dismo,
     dplyr,
     gdistance,
+    glue,
+    lifecycle,
+    magrittr,
     raster,
     rgeos,
+    rlang,
     sp,
-    terra
+    terra,
+    withr
