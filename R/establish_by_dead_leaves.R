@@ -155,6 +155,8 @@ generate_dead_leaves <- function(potential_space,
   }
 
   if(assign_farmers == TRUE){
+
+    #mode 1 is randomly assign formers
     if(assign_mode == 1){
       num_fields<-length(field_list)
       k <- 1
@@ -177,13 +179,9 @@ generate_dead_leaves <- function(potential_space,
 
       }
 
-      #num_farmers<-round(num_fields/mean_fields_per_farm)
-      #for(i in 1:num_fields){
-      #  farmer_num<-sample(1:num_farmers, 1)
-      #  field_list[[i]]@farmer <- farmer_num
-      #  }
     }
 
+    #mode 2 is ordered assignment
     if(assign_mode == 2){
       sd_fields_per_farm <- sd_fields_per_farm
       num_fields<-length(field_list)
@@ -192,7 +190,7 @@ generate_dead_leaves <- function(potential_space,
                                        dimnames=list(c(), c("Field", "Size"))),
                                 stringsAsFactors=F)
 
-      #have a vector that tells me distance between every field and 0,0
+      #creamte a vector that tells me distance between every field and 0,0
       for(i in 1:num_fields){
         temp_field<-field_list[[i]]
         temp_x<-min(temp_field@location[[1]])
@@ -202,6 +200,8 @@ generate_dead_leaves <- function(potential_space,
         field_touple<-rbind(field_touple,temp_obj)
 
       }
+
+      #order by distance to 0,0
       field_touple <- field_touple[order(field_touple[,2]),]
       k <- 1
       farmer_num <- 1
@@ -232,9 +232,11 @@ generate_dead_leaves <- function(potential_space,
 
   }
 
+  #set extent by input raster
   extent(dead_leves_rast)<-c(0, cell_size*ncol(dead_leves_rast), 0, cell_size*nrow(dead_leves_rast))
 
+  #finalize result into single object
   result<-list(map = dead_leves_rast, field_list = field_list)
-  # Return the canvas
+
   return(result)
 }
