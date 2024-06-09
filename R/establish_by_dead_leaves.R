@@ -18,6 +18,11 @@
 #' @export
 #'
 #' @examples
+#' r <- setValues(raster(nrows=100, ncols=100), 0)
+#' dead_leaves_texture <- generate_dead_leaves(r,1,0,300,200,.5,.1, 0.75, TRUE,2, 4,4)
+#' plot(dead_leaves_texture$map)
+
+
 generate_dead_leaves <- function(potential_space,
                                  cell_size,
                                  includsion_value,
