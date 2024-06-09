@@ -133,9 +133,7 @@ generate_dead_leaves <- function(potential_space,
   }
 
   #reindex
-  for(j in 1:length(unique_list)){
-    dead_leves_rast[dead_leves_rast == unique_list[j]] <- j
-  }
+  sapply(unique_list, function(unique_list) dead_leves_rast[dead_leves_rast == unique_list] <- unique_list)
 
 
   #get patched raster for saving field locations in field list
