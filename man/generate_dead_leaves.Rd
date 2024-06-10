@@ -26,7 +26,8 @@ generate_dead_leaves(
 Title
 }
 \examples{
-r <- setValues(raster(nrows=200, ncols=200), 1)
+r<-raster(matrix(1, nrow=100, ncol=100))
+extent(r)<-c(0,100,0,100)
 dead_leaves_texture <- generate_dead_leaves(r,1,1,25,10,.5,.1, 0.75, TRUE,2, 4,4)
 plot(dead_leaves_texture$map)
 }

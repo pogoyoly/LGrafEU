@@ -19,8 +19,9 @@
 #' @importFrom magrittr "%>%"
 #'
 #' @examples
-#' r <- setValues(raster(nrows=200, ncols=200), 1)
-#' dead_leaves_texture <- generate_dead_leaves(r,1,1,25,10,.5,.1, 0.75, TRUE,2, 4,4)
+#' r<-raster(matrix(1, nrow=100, ncol=100))
+#' extent(r)<-c(0,100,0,100)
+#' dead_leaves_texture <- generate_dead_leaves(r,1,1,50,25,.5,.1, 0.75, TRUE,2, 4,4)
 #' plot(dead_leaves_texture$map)
 
 
@@ -55,7 +56,7 @@ generate_dead_leaves <- function(potential_space,
 
   #setup matrix to be filled
   canvas <- matrix(0, nrow = nrow(potential_space), ncol = ncol(potential_space))
-  potential_space_matrix<-as.matrix(potential_space)
+  potential_space_matrix<-raster::as.matrix(potential_space)
   potential_space_matrix[potential_space_matrix !=includsion_value] <- 0
   potential_space_matrix[potential_space_matrix==includsion_value] <- 1
 
@@ -124,8 +125,10 @@ generate_dead_leaves <- function(potential_space,
   #remove small patches till you reach the percentage that needs to be filled
   patched_raster <- landscapemetrics::get_patches(dead_leves_rast)[[1]]
   patchedf<-landscapemetrics::lsm_p_area(patched_raster, directions = 8)
-  patchedf <- patchedf %>% arrange(value)
-  unique_list<-unique(dead_leves_rast)
+  # patchedf<- patchedf %>% arrange(value)
+  patchedf<-patchedf[order(patchedf$value), ]
+
+  unique_list<-raster::unique(dead_leves_rast)
   realized_patches <- length(dead_leves_rast[dead_leves_rast > 0])
   to_be_filled <- realized_patches * percent
 
@@ -139,14 +142,19 @@ generate_dead_leaves <- function(potential_space,
   }
 
   #reindex
-  sapply(unique_list, function(unique_list) dead_leves_rast[dead_leves_rast == unique_list] <- unique_list)
+  #sapply(unique_list, function(unique_list) dead_leves_rast[dead_leves_rast == unique_list] <- unique_list)
+  for(j in 1:length(unique_list)){
+    dead_leves_rast[dead_leves_rast == unique_list[j]] <- j
+
+  }
 
 
   #get patched raster for saving field locations in field list
   patched_raster <- landscapemetrics::get_patches(dead_leves_rast)[[1]]
 
   for(i in 2:length(patched_raster)){
-    mati <- as.matrix(patched_raster[[i]])
+
+    mati <- raster::as.matrix(patched_raster[[i]])
     dimnames(mati) <- list(x = 1:nrow(mati), y = 1:ncol(mati))
     mydf <- reshape2::melt(mati)
     names(mydf) <- c("x", "y", "Z")  # Rename the columns as per your expected output
@@ -244,4 +252,8 @@ generate_dead_leaves <- function(potential_space,
 
   return(result)
 }
+
+
+
+setClass("Field", slots=list(number="numeric",location="list",farmer="numeric"))
 
