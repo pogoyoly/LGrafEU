@@ -31,7 +31,8 @@
 #' @examples
 confus<-function(rst,landcover){
   #first order only aglim
-  points<-dismo::randomPoints(rst, 250)
+  trf_val<-ncol(rst)*nrow(rst)
+  points<-dismo::randomPoints(rst, trf_val, tryf=10)
 
   # Extract at test points the value of the soil map
   soil_points<-raster::extract(rst, points)
@@ -79,13 +80,14 @@ confus<-function(rst,landcover){
   transition2 <- matrix(0, nrow = 13, ncol = 5, dimnames = list(1:13, 1:5))
 
 
-  a <- matrix(0, nrow = length(unique(confusion_matrix$soil_points)),
-            ncol = length(unique(confusion_matrix$lc_points)),
+
+  a <- matrix(0, nrow = length(na.omit(unique(confusion_matrix$soil_points))),
+            ncol = length(na.omit(unique(confusion_matrix$lc_points))),
             dimnames = list(sort(unique(confusion_matrix$soil_points)),
                             sort(unique(confusion_matrix$lc_points))))
 
-  a[cbind(as.numeric(factor(confusion_matrix$soil_points)),
-        as.numeric(factor(confusion_matrix$lc_points)))] <- confusion_matrix$freq
+  a[cbind(as.numeric(factor(na.omit(confusion_matrix$soil_points))),
+        as.numeric(factor(na.omit(confusion_matrix$lc_points))))] <- confusion_matrix$freq
 
 
   cols <- colnames(transition2)[colnames(transition2) %in% colnames(a)]
