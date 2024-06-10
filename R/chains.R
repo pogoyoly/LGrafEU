@@ -23,9 +23,10 @@
 #' @param rst a raster of either soil aglim or slope
 #' @param landcover a categorized landcover map
 #'
+#' @import dismo
+#' @import dplyr
 #'
 #' @return
-#' @import dismo
 #'
 #' @examples
 confus<-function(rst,landcover){
@@ -46,12 +47,30 @@ confus<-function(rst,landcover){
   all_points <- cbind(soil_points, lc_points)
 
   #aggregate to confusion matrix
-  confusion_matrix<-all_points %>%
-  dplyr::group_by(soil_points,lc_points) %>%
-  dplyr::summarise(cnt = n()) %>%
-  dplyr::mutate(freq = round(cnt / sum(cnt), 3)) %>%
-  dplyr::arrange(desc(freq)) %>%
-  dplyr::mutate(lc_points = as.factor(lc_points))
+  #confusion_matrix<-all_points %>%
+  #dplyr::group_by(soil_points,lc_points) %>%
+  #dplyr::summarise(cnt = n()) %>%
+  #dplyr::mutate(freq = round(cnt / sum(cnt), 3)) %>%
+  #dplyr::arrange(desc(freq)) %>%
+  #dplyr::mutate(lc_points = as.factor(lc_points))
+
+  # Group by soil_points and lc_points
+  grouped_points <- dplyr::group_by(all_points, soil_points, lc_points)
+
+  # Summarize to get the count
+  summarized_points <- dplyr::summarise(grouped_points, cnt = dplyr::n())
+
+  # Mutate to calculate the frequency
+  mutated_points <- dplyr::mutate(summarized_points, freq = round(cnt / sum(cnt), 3))
+
+  # Arrange by descending frequency
+  arranged_points <- dplyr::arrange(mutated_points, desc(freq))
+
+  # Mutate to convert lc_points to factor
+  confusion_matrix <- dplyr::mutate(arranged_points, lc_points = as.factor(lc_points))
+
+
+
 
   # results
   confusion_matrix$lc_points <- factor(confusion_matrix$lc_points, levels = c(1, 2, 3, 4, 5))
@@ -126,6 +145,7 @@ return(transformed_reclassify)
 #' @return A raster transformed
 #' @export
 #' @import raster
+#' @importFrom magrittr %>%
 #'
 #' @examples
 trans_1lr<-function(rast,landcover,aggregation){
@@ -133,6 +153,7 @@ trans_1lr<-function(rast,landcover,aggregation){
   trans_rast<-trans(con_mat,rast)
   trans_rast <- raster::aggregate(trans_rast, fact = aggregation, fun = modal, na.rm = FALSE)
   trans_rast <- disaggregate(trans_rast, fact=aggregation)
+  extent(trans_rast)<-extent(rast)
   return(trans_rast)
 }
 
