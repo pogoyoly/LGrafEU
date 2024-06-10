@@ -19,7 +19,7 @@
 #' @importFrom magrittr "%>%"
 #'
 #' @examples
-#' r<-raster(matrix(1, nrow=100, ncol=100))
+#' r<-raster(matrix(1, nrow=50, ncol=50))
 #' extent(r)<-c(0,100,0,100)
 #' dead_leaves_texture <- generate_dead_leaves(r,1,1,50,25,.5,.1, 0.75, TRUE,2, 4,4)
 #' plot(dead_leaves_texture$map)
