@@ -2,14 +2,22 @@
 
 #' Heuristic field establishment based on simple geometries
 #'
-#' @param potential_space a map containing potential space for field establishment
-#' @param mean_field_size mean field size
-#' @param sd_field_size sd field size
-#' @param mean_shape_index mean shape index
-#' @param sd_shape_index sd shape index
-#' @param percent percent of the potential arabale land that will be filled ranging from 0-100
-#' @param assign_farmers TRUE/FALSE to assign fields to random farmers
-#' @param mean_fields_per_farm mean number of fields owned by each farmer
+
+#'
+#' @param potential_space
+#' @param cell_size
+#' @param includsion_value
+#' @param road_raster
+#' @param use_road_raster
+#' @param mean_field_size
+#' @param sd_field_size
+#' @param mean_shape_index
+#' @param sd_shape_index
+#' @param percent
+#' @param assign_farmers
+#' @param assign_mode
+#' @param mean_fields_per_farm
+#' @param sd_fields_per_farm
 #'
 #' @return
 #' @export
@@ -17,15 +25,18 @@
 #'
 #' @examples
 establish_by_space<-function(potential_space,
-                             road_raster,
-                             use_road_raster,
+                             cell_size,
+                             includsion_value,
+                             additional_lim = NA,
                              mean_field_size,
                              sd_field_size,
                              mean_shape_index,
                              sd_shape_index,
                              percent,
                              assign_farmers,
-                             mean_fields_per_farm
+                             assign_mode,
+                             mean_fields_per_farm,
+                             sd_fields_per_farm
 ){
 
   achieved_percent <- 0
@@ -34,11 +45,11 @@ establish_by_space<-function(potential_space,
   land_raster<-raster::raster(land)
   field_num <- 1
   field_list <- list()
-  if(use_road_raster == TRUE){
-    road_raster[is.na(road_raster[])] <- 0
-    road_inside<-road_raster
+  if(is.na(additional_lim) == FALSE){
+    additional_lim[is.na(additional_lim[])] <- 0
+    road_inside<-additional_lim
   }
-  if(use_road_raster == FALSE){
+  if(is.na(additional_lim) == TRUE){
     road_inside = matrix(0, nrow(potential_space), ncol(potential_space))
     road_inside<-raster::raster(road_inside)
 
@@ -63,7 +74,7 @@ establish_by_space<-function(potential_space,
 
       check<-0
 
-      while(check != 2){
+      while(check != includsion_value){
 
         #choose random start location and check if it can be used
         start_row <- sample(1:ncol(potential_space), 1)
@@ -74,23 +85,23 @@ establish_by_space<-function(potential_space,
       }
 
 
-      directions <- c("a", "b", "c", "d")
+      directions <- c("NorthWest", "NorthEast", "SouthWest", "SouthEast")
       direction<-sample(directions,1)
 
       switch(direction,
-             "a" = {
+             "NorthWest" = {
                row_range <- seq(from = start_row, to = start_row - field_row_size)
                col_range <- seq(from = start_col, to = start_col - field_col_size)
              },
-             "b" = {
+             "NorthEast" = {
                row_range <- seq(from = start_row, to = start_row - field_row_size)
                col_range <- seq(from = start_col, to = start_col + field_col_size)
              },
-             "c" = {
+             "SouthWest" = {
                row_range <- seq(from = start_row, to = start_row + field_row_size)
                col_range <- seq(from = start_col, to = start_col - field_col_size)
              },
-             "d" = {
+             "SouthEast" = {
                row_range <- seq(from = start_row, to = start_row + field_row_size)
                col_range <- seq(from = start_col, to = start_col + field_col_size)
              },
@@ -119,17 +130,26 @@ establish_by_space<-function(potential_space,
         }
       }
 
-      coverlap_raods<-function(a,b){
+      coverlap_roads<-function(a,b){
         if(is.na(road_inside[a,b]) == TRUE || road_inside[a,b] != 0){
           return("overlap")
         }
       }
 
+      coverlap_space<-function(a,b){
+        if(is.na(potential_space[a,b]) == TRUE || potential_space[a,b] != includsion_value){
+          return("overlap")
+        }
+      }
+
+
 
       val<- potential_space[round(mean(row_range)),round(mean(col_range))]
       qq <- mapply(coverlap, df$a, df$b, SIMPLIFY = TRUE)
-      qr <-mapply(coverlap_raods, df$a, df$b, SIMPLIFY = TRUE)
-      if ("overlap" %in% qq || "overlap" %in% qr || is.na(val) == TRUE || val != 2) {
+      qr <-mapply(coverlap_roads, df$a, df$b, SIMPLIFY = TRUE)
+      qs <-mapply(coverlap_space, df$a, df$b, SIMPLIFY = TRUE)
+
+      if ("overlap" %in% qq || "overlap" %in% qr || "overlap" %in% qs|| is.na(val) == TRUE || val != includsion_value) {
         direction<-sample(directions,1)
         #print("repeat")
       } else {
@@ -150,14 +170,15 @@ establish_by_space<-function(potential_space,
     land_raster<-raster::raster(land)
     #plot(land_raster)
 
+    d_temp <- expand.grid(x = row_range, y = col_range)
 
     #write the information of the field in a field object and add it to the field list
-    field_obj <- new("Field", number = field_num, location = list(row_range,col_range), farmer = 1)
+    field_obj <- new("Field", number = field_num, location = list(d_temp$x,d_temp$y), farmer = 1)
     field_list<-c(field_list,field_obj)
     field_num <- field_num + 1
 
     #calculate how much of the space has been filled
-    part_potential <- length(which(values(potential_space) %in% c (2)))
+    part_potential <- length(which(values(potential_space) %in% c (includsion_value)))
     part_filled <- length(which(values(land_raster) %in% c (1)))
     achieved_percent <- (part_filled / part_potential) * 100
     print(achieved_percent)
@@ -167,13 +188,84 @@ establish_by_space<-function(potential_space,
 
   #distribute fields between farmers
   if(assign_farmers == TRUE){
-    num_fields<-length(field_list)
-    num_farmers<-round(num_fields/mean_fields_per_farm)
-    for(i in 1:num_fields){
-      farmer_num<-sample(1:num_farmers, 1)
-      field_list[[i]]@farmer <- farmer_num
+    if(assign_mode == 1){
+      num_fields<-length(field_list)
+      k <- 1
+      farmer_num <- 1
+
+      while(k <= num_fields){
+
+        ran_fields<-rlnorm(1, meanlog = log(mean_fields_per_farm), sdlog = log(sd_fields_per_farm))
+        ran_fields<-ceiling(ran_fields)
+        for(q in 1:ran_fields){
+          if(k > num_fields){
+            break
+          }
+
+          field_list[[k]]@farmer <- farmer_num
+          q <- q + 1
+          k <- k + 1
+        }
+        farmer_num <- farmer_num + 1
+
+      }
+
+      #num_farmers<-round(num_fields/mean_fields_per_farm)
+      #for(i in 1:num_fields){
+      #  farmer_num<-sample(1:num_farmers, 1)
+      #  field_list[[i]]@farmer <- farmer_num
+      #  }
     }
+
+    if(assign_mode == 2){
+      sd_fields_per_farm <- sd_fields_per_farm
+      num_fields<-length(field_list)
+
+      field_touple = data.frame(matrix(vector(), 0, 2,
+                                       dimnames=list(c(), c("Field", "Size"))),
+                                stringsAsFactors=F)
+
+      #have a vector that tells me distance between every field and 0,0
+      for(i in 1:num_fields){
+        temp_field<-field_list[[i]]
+        temp_x<-min(temp_field@location[[1]])
+        temp_y<-min(temp_field@location[[2]])
+        dist<-sqrt(temp_x^2 + temp_y^2)
+        temp_obj<-c(i,dist)
+        field_touple<-rbind(field_touple,temp_obj)
+
+      }
+      field_touple <- field_touple[order(field_touple[,2]),]
+      k <- 1
+      farmer_num <- 1
+
+      while(k <= nrow(field_touple)){
+
+        ran_fields<-rlnorm(1, meanlog = log(mean_fields_per_farm), sdlog = log(sd_fields_per_farm))
+        ran_fields<-ceiling(ran_fields)
+        for(q in 1:ran_fields){
+          loc<-field_touple[k,1]
+          if(is.na(loc)==TRUE){
+            break
+          }
+
+          field_list[[loc]]@farmer <- farmer_num
+          q <- q + 1
+          k <- k + 1
+        }
+        farmer_num <- farmer_num + 1
+
+      }
+
+
+
+      #devide number of fields by field per farmer
+      #start iterating over the list + field per farmer and devide it up
+    }
+
   }
+
+  extent(land_raster)<-c(0, cell_size*ncol(land_raster), 0, cell_size*nrow(land_raster))
 
   result<-list(map = land_raster, field_list = field_list)
 
