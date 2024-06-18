@@ -57,6 +57,19 @@ establish_by_space<-function(potential_space,
 ){
 
 
+  checkmate::assert_numeric(cell_size)
+  checkmate::assert_numeric(includsion_value)
+  checkmate::assert_numeric(mean_field_size)
+  checkmate::assert_numeric(sd_field_size)
+  checkmate::assert_numeric(mean_shape_index)
+  checkmate::assert_numeric(sd_shape_index)
+  checkmate::assert_numeric(percent)
+  checkmate::assert_logical(assign_farmers)
+  checkmate::assert_true(assign_mode == 1 || assign_mode == 2)
+  checkmate::assert_numeric(mean_fields_per_farm)
+  checkmate::assert_numeric(sd_fields_per_farm)
+
+
   #set land raster on which to save the fields
   potential_space[is.na(potential_space[])] <- 0
   land = matrix(0, nrow(potential_space), ncol(potential_space))
