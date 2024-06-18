@@ -1,6 +1,6 @@
 
 
-#' Title
+#' A function for generating artificial roads
 #'
 #' @param road_length A number
 #' @param slope A lope raster

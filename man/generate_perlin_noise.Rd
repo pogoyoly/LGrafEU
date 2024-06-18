@@ -37,7 +37,7 @@ A perlin noise based potential space map generator
 }
 \examples{
 test<-generate_perlin_noise(200,200,1,2,3,0.01,FALSE, 10)
-plot(test)
+raster::plot(test)
 
 
 

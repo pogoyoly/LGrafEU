@@ -51,7 +51,7 @@ generate_potential_clusters <- function(rows,cols,p,ai){
 #'
 #' @examples
 #' test<-generate_perlin_noise(200,200,1,2,3,0.01,FALSE, 10)
-#' plot(test)
+#' raster::plot(test)
 #'
 #'
 #'

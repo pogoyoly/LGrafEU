@@ -19,13 +19,24 @@
 #' @importFrom magrittr "%>%"
 #'
 #' @examples
-#' r<-raster(matrix(1, nrow=50, ncol=50))
-#' extent(r)<-c(0,100,0,100)
-#' dead_leaves_texture <- generate_dead_leaves(r,1,1,50,25,.5,.1, 0.75, TRUE,2, 4,4)
-#' plot(dead_leaves_texture$map)
+#' r<-raster::raster(matrix(1, nrow=50, ncol=50))
+#' raster::extent(r)<-c(0,100,0,100)
+#' dead_leaves_texture <- establish_by_dead_leaves(potential_space = r,
+#'                                                 cell_size = 1,
+#'                                                 includsion_value = 1,
+#'                                                 mean_field_size = 50,
+#'                                                 sd_field_size = 25,
+#'                                                 mean_shape_index = .5,
+#'                                                 sd_shape_index = .1,
+#'                                                 percent = 0.75,
+#'                                                 assign_farmers = TRUE,
+#'                                                 assign_mode = 2,
+#'                                                 mean_fields_per_farm = 4,
+#'                                                 sd_fields_per_farm = 4)
+#' raster::plot(dead_leaves_texture$map)
 
 
-generate_dead_leaves <- function(potential_space,
+establish_by_dead_leaves <- function(potential_space,
                                  cell_size,
                                  includsion_value,
                                  mean_field_size,
@@ -245,7 +256,7 @@ generate_dead_leaves <- function(potential_space,
   }
 
   #set extent by input raster
-  extent(dead_leves_rast)<-c(0, cell_size*ncol(dead_leves_rast), 0, cell_size*nrow(dead_leves_rast))
+  raster::extent(dead_leves_rast)<-c(0, cell_size*ncol(dead_leves_rast), 0, cell_size*nrow(dead_leves_rast))
 
   #finalize result into single object
   result<-list(map = dead_leves_rast, field_list = field_list)

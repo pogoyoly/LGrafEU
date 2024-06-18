@@ -2,7 +2,7 @@
 % Please edit documentation in R/roads_least_cost.R
 \name{generate_route_lc}
 \alias{generate_route_lc}
-\title{Title}
+\title{A function for generating artificial roads}
 \usage{
 generate_route_lc(road_length, slope)
 }
@@ -15,5 +15,5 @@ generate_route_lc(road_length, slope)
 A raster
 }
 \description{
-Title
+A function for generating artificial roads
 }
