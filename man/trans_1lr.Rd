@@ -13,9 +13,6 @@ trans_1lr(rast, landcover, aggregation)
 
 \item{aggregation}{A number that defines how aggregated he potential space will be}
 }
-\value{
-A raster transformed
-}
 \description{
 A one layer transformation
 }

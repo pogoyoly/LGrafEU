@@ -1,5 +1,5 @@
 # Function to generate dead leaves texture
-#' Title
+#' Field establishment based on a dead leave algorithm
 #'
 #' @param potential_space
 #' @param cell_size

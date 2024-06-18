@@ -2,7 +2,7 @@
 % Please edit documentation in R/chains.R
 \name{confus}
 \alias{confus}
-\title{Title}
+\title{Inward facing function}
 \usage{
 confus(rst, landcover)
 }
@@ -12,5 +12,5 @@ confus(rst, landcover)
 \item{landcover}{a categorized landcover map}
 }
 \description{
-Title
+Inward facing function
 }

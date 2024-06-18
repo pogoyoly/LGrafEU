@@ -1,40 +1,6 @@
 
-#library(NLMR)
-#library(ambient)
-#library(raster)
-
-
-################################################
-#generate aglim map
-
-#' Natural soil cluster generator for artificial aglim and soil texture maps
-#'
-#' @param rows number of rows in raster
-#' @param cols number of cols in raster
-#' @param p Defines the proportion of elements randomly selected to form clusters.
-#' @param ai Vector with the cluster type distribution (percentages of occupancy). This directly controls the number of types via the given length.
-#'
-#' @details
-#' This is a wramper around the nlmr random cluster function to create naturalist soil raster
-#'
-#'
-#' @return
-#' @export
-#' @import NLMR
-#'
-#'
-generate_soil <- function(rows,cols,p,ai){
-
-                                          NLMR::nlm_randomcluster(nrow = rows,
-                                          ncol = cols,
-                                          p    = p, #0.5
-                                          ai   = ai, #c(0.9, 0.1, 0, 0),
-                                          rescale = FALSE) # FALSE)
-}
-
-#plot(aglim_gen)
-#res(aglim_gen)
-
+####################################################################
+#generate random cluster potential space map
 
 #' A natural agriculture cluster map for creating artificial potential agricultural landscape
 #'
@@ -52,7 +18,7 @@ generate_soil <- function(rows,cols,p,ai){
 #' @import NLMR
 #'
 #' @examples
-generate_potential_landscape <- function(rows,cols,p,ai){
+generate_potential_clusters <- function(rows,cols,p,ai){
 
   NLMR::nlm_randomcluster(nrow = rows,
                           ncol = cols,

@@ -1,34 +1,13 @@
-##################################
-#   Transition functions
-##################################
-#library(dismo)
-#library(raster)
-#library(dplyr)
-#library(sp)
-#library(terra)
-#library(lattice)
-#scenarios:
-# 1. only aglim
-# 2. only soil
-# 3. aglim + soil
-# 4. aglim + slope
-# 5. soil + slope
-# 6. aglim + soil + slope
 
 
 
 #########################################################
-#' Title
+#' Inward facing function
 #'
 #' @param rst a raster of either soil aglim or slope
 #' @param landcover a categorized landcover map
 #'
-#' @import dismo
-#' @import dplyr
 #'
-#' @return
-#'
-#' @examples
 confus<-function(rst,landcover){
   #first order only aglim
   trf_val<-ncol(rst)*nrow(rst)
@@ -97,15 +76,14 @@ confus<-function(rst,landcover){
 }
 
 
-#' Title
+#' Inward facing function
 #'
 #' @param transition the transition matrix from the confus function
 #' @param rst the raster from which the transition occurs
 #'
-#' @return
-#' @import raster
 #'
-#' @examples
+#'
+#'
 trans<-function(transition,rst){
 #transition function
 tran <- transition
@@ -144,12 +122,7 @@ return(transformed_reclassify)
 #' @param landcover A landcover raster
 #' @param aggregation A number that defines how aggregated he potential space will be
 #'
-#' @return A raster transformed
-#' @export
-#' @import raster
-#' @importFrom magrittr %>%
 #'
-#' @examples
 trans_1lr<-function(rast,landcover,aggregation){
   con_mat<-confus(rast,landcover)
   trans_rast<-trans(con_mat,rast)
@@ -159,13 +132,10 @@ trans_1lr<-function(rast,landcover,aggregation){
   return(trans_rast)
 }
 
-#test<-trans_1lr(aglim,landcov1,2)
-#plot(test)
 
 
 
 #######################################
-# slope -> soil -> aglim -> lc
 
 
 
@@ -177,11 +147,7 @@ trans_1lr<-function(rast,landcover,aggregation){
 #' @param aglim A agricultural limitation raster
 #' @param landcov A categorized landcover raster
 #'
-#' @return
-#' @export
-#' @import raster terra
 #'
-#' @examples
 trans_3lr<-function(texture,slope,aglim,landcov, aggregation){
 
 
@@ -243,6 +209,4 @@ return(er_majority2)
 
 }
 
-#test<-trans2(texture,slope_real,aglim)
-#plot(test)
 

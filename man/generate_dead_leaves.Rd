@@ -2,7 +2,7 @@
 % Please edit documentation in R/establish_by_dead_leaves.R
 \name{generate_dead_leaves}
 \alias{generate_dead_leaves}
-\title{Title}
+\title{Field establishment based on a dead leave algorithm}
 \usage{
 generate_dead_leaves(
   potential_space,
@@ -23,7 +23,7 @@ generate_dead_leaves(
 \item{sd_fields_per_farm}{}
 }
 \description{
-Title
+Field establishment based on a dead leave algorithm
 }
 \examples{
 r<-raster(matrix(1, nrow=50, ncol=50))

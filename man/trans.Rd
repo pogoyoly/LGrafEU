@@ -2,7 +2,7 @@
 % Please edit documentation in R/chains.R
 \name{trans}
 \alias{trans}
-\title{Title}
+\title{Inward facing function}
 \usage{
 trans(transition, rst)
 }
@@ -12,5 +12,5 @@ trans(transition, rst)
 \item{rst}{the raster from which the transition occurs}
 }
 \description{
-Title
+Inward facing function
 }
