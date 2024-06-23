@@ -2,7 +2,7 @@
 % Please edit documentation in R/establish_by_pac.R
 \name{establish_by_place_conquer}
 \alias{establish_by_place_conquer}
-\title{Title}
+\title{Establish landscape by place and conquer}
 \usage{
 establish_by_place_conquer(
   potential_space,
@@ -46,7 +46,7 @@ establish_by_place_conquer(
 \item{sd_fields_per_farmsd}{fields per farmer from a long normal distribution}
 }
 \description{
-Title
+Establish landscape by place and conquer
 }
 \examples{
 r<-generate_perlin_noise(100,100,1,2,3,0.01,TRUE, 10)
