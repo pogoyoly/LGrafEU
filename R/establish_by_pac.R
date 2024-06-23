@@ -1,6 +1,6 @@
 
 
-#' Title
+#' Establish landscape by place and conquer
 #'
 #' @param potential_space a raster including a potential space category for field placement
 #' @param cell_size cell size for output
@@ -146,6 +146,7 @@ establish_by_place_conquer<-function(potential_space,
       #start expansion according to direction
 
       while(placed_cells < max_size && changes != 2){
+        suppressWarnings({
 
         #create block vectors
         vec1<- seq(start_row, start_row + field_row_size - 1, by=1)
@@ -179,7 +180,7 @@ establish_by_place_conquer<-function(potential_space,
           shift_func <- function(vec, shift) {
             vec<- vec + shift
           }
-          shifted_vectors <- mapply(function(shift) shift_vector(vec1, shift), shift_vec, SIMPLIFY = FALSE)
+          shifted_vectors <- mapply(function(shift) shift_func(vec1, shift), shift_vec, SIMPLIFY = FALSE)
           result_matrix <- do.call(rbind, shifted_vectors)
 
 
@@ -254,6 +255,7 @@ establish_by_place_conquer<-function(potential_space,
         #now add to cur_col and start again
 
 
+      })
 
       }
 
@@ -286,11 +288,12 @@ establish_by_place_conquer<-function(potential_space,
 
   }
 
-  land_raster <- raster(land)
+  land_raster <- raster::raster(land)
   patched_raster <- landscapemetrics::get_patches(land_raster)[[1]]
 
+
   for(i in 2:length(patched_raster)){
-    mati <- as.matrix(patched_raster[[i]])
+    mati <- raster::as.matrix(patched_raster[[i]])
     dimnames(mati) <- list(x = 1:nrow(mati), y = 1:ncol(mati))
     mydf <- reshape2::melt(mati)
     names(mydf) <- c("x", "y", "Z")  # Rename the columns as per your expected output
@@ -301,6 +304,7 @@ establish_by_place_conquer<-function(potential_space,
     # Give names to each row and column as well as names of each dimension of the matrix itself.
 
   }
+
 
 
   #distribute fields between farmers
@@ -375,3 +379,6 @@ establish_by_place_conquer<-function(potential_space,
 
   return(result)
 }
+
+
+setClass("Field", slots=list(number="numeric",location="list",farmer="numeric"))
