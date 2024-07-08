@@ -20,7 +20,32 @@ establish_by_dead_leaves(
 )
 }
 \arguments{
-\item{sd_fields_per_farm}{}
+\item{potential_space}{a raster including a potential space category for field placement}
+
+\item{cell_size}{cell size for output}
+
+\item{includsion_value}{inclusion value for the potential space raster}
+
+\item{mean_field_size}{mean field size counted by number of cells from a normal distribution}
+
+\item{sd_field_size}{sd field size counted by number of cells from a normal distribution}
+
+\item{mean_shape_index}{mean shape index calculated by a relation between width/length of placement}
+
+\item{sd_shape_index}{sd shape index calculated by a relation between width/length of placement}
+
+\item{percent}{percent of the potential space to be filled with fields}
+
+\item{assign_farmers}{TRUE/FALSE for farmer assignment in model}
+
+\item{assign_mode}{1 = random assignment 2 = spatially structured assignment}
+
+\item{mean_fields_per_farm}{mean fields per farmer from a long normal distribution}
+
+\item{sd_fields_per_farm}{fields per farmer from a long normal distribution}
+}
+\value{
+LGraf object
 }
 \description{
 Field establishment based on a dead leave algorithm

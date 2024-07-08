@@ -15,6 +15,9 @@ generate_potential_clusters(rows, cols, p, ai)
 
 \item{ai}{percentage of each category of landscape}
 }
+\value{
+A raster
+}
 \description{
 This is a wramper around the nlmr random cluster function to create naturalist potential agriculture space raster
 }

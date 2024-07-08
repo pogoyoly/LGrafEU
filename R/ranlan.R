@@ -13,7 +13,7 @@
 #' This is a wramper around the nlmr random cluster function to create naturalist potential agriculture space raster
 #'
 #'
-#' @return
+#' @return A raster
 #' @export
 #' @import NLMR
 #'

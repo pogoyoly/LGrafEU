@@ -43,7 +43,10 @@ establish_by_place_conquer(
 
 \item{mean_fields_per_farm}{mean fields per farmer from a long normal distribution}
 
-\item{sd_fields_per_farmsd}{fields per farmer from a long normal distribution}
+\item{sd_fields_per_farm}{fields per farmer from a long normal distribution}
+}
+\value{
+LGraf object
 }
 \description{
 Establish landscape by place and conquer

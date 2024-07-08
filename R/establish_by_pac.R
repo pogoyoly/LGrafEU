@@ -13,9 +13,9 @@
 #' @param assign_farmers TRUE/FALSE for farmer assignment in model
 #' @param assign_mode 1 = random assignment 2 = spatially structured assignment
 #' @param mean_fields_per_farm mean fields per farmer from a long normal distribution
-#' @param sd_fields_per_farmsd fields per farmer from a long normal distribution
+#' @param sd_fields_per_farm fields per farmer from a long normal distribution
 #'
-#' @return
+#' @return LGraf object
 #' @export
 #'
 #' @examples

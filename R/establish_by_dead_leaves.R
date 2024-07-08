@@ -1,20 +1,20 @@
 # Function to generate dead leaves texture
 #' Field establishment based on a dead leave algorithm
 #'
-#' @param potential_space
-#' @param cell_size
-#' @param includsion_value
-#' @param mean_field_size
-#' @param sd_field_size
-#' @param mean_shape_index
-#' @param sd_shape_index
-#' @param percent
-#' @param assign_farmers
-#' @param assign_mode
-#' @param mean_fields_per_farm
-#' @param sd_fields_per_farm
+#' @param potential_space a raster including a potential space category for field placement
+#' @param cell_size cell size for output
+#' @param includsion_value inclusion value for the potential space raster
+#' @param mean_field_size mean field size counted by number of cells from a normal distribution
+#' @param sd_field_size sd field size counted by number of cells from a normal distribution
+#' @param mean_shape_index mean shape index calculated by a relation between width/length of placement
+#' @param sd_shape_index sd shape index calculated by a relation between width/length of placement
+#' @param percent percent of the potential space to be filled with fields
+#' @param assign_farmers TRUE/FALSE for farmer assignment in model
+#' @param assign_mode 1 = random assignment 2 = spatially structured assignment
+#' @param mean_fields_per_farm mean fields per farmer from a long normal distribution
+#' @param sd_fields_per_farm fields per farmer from a long normal distribution
 #'
-#' @return
+#' @return LGraf object
 #' @export
 #'
 #' @examples
