@@ -27,6 +27,8 @@ establish_by_place_conquer(
 
 \item{includsion_value}{inclusion value for the potential space raster}
 
+\item{additional_lim}{for use in case of inclusion of a raod raster}
+
 \item{mean_field_size}{mean field size counted by number of cells from a normal distribution}
 
 \item{sd_field_size}{sd field size counted by number of cells from a normal distribution}

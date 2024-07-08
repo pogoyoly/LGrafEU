@@ -2,7 +2,7 @@
 ####################################################################
 #generate random cluster potential space map
 
-#' A natural agriculture cluster map for creating artificial potential agricultural landscape
+#' A NLMR based potential space
 #'
 #' @param rows nrows of raster
 #' @param cols ncols of raster

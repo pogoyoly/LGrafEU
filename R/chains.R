@@ -146,7 +146,7 @@ trans_1lr<-function(rast,landcover,aggregation){
 #' @param slope A categorized slope raster
 #' @param aglim A agricultural limitation raster
 #' @param landcov A categorized landcover raster
-#'
+#' @param aggregation factor for lc aggregation
 #'
 trans_3lr<-function(texture,slope,aglim,landcov, aggregation){
 

@@ -14,6 +14,8 @@ trans_3lr(texture, slope, aglim, landcov, aggregation)
 \item{aglim}{A agricultural limitation raster}
 
 \item{landcov}{A categorized landcover raster}
+
+\item{aggregation}{factor for lc aggregation}
 }
 \description{
 A three layer transformation
