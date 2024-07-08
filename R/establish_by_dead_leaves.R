@@ -16,7 +16,6 @@
 #'
 #' @return
 #' @export
-#' @importFrom magrittr "%>%"
 #'
 #' @examples
 #' r<-raster::raster(matrix(1, nrow=50, ncol=50))
