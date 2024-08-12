@@ -8,7 +8,7 @@
 #' @param additional_lim for use in case of inclusion of a raod raster
 #' @param mean_field_size mean field size counted by number of cells from a normal distribution
 #' @param sd_field_size sd field size counted by number of cells from a normal distribution
-#' @param mean_shape_index mean shape index calculated by a relation between width/length of placement
+#' @param distribution
 #' @param sd_shape_index sd shape index calculated by a relation between width/length of placement
 #' @param percent percent of the potential space to be filled with fields
 #' @param assign_farmers TRUE/FALSE for farmer assignment in model
@@ -26,6 +26,7 @@
 #'                          includsion_value = 1,
 #'                          mean_field_size = 100,
 #'                          sd_field_size = 25,
+#'                          distribution = "norm",
 #'                          mean_shape_index = 1,
 #'                          sd_shape_index = 0.3,
 #'                          percent = 70,
@@ -44,6 +45,7 @@ establish_by_place_conquer<-function(potential_space,
                                      additional_lim = NA,
                                      mean_field_size,
                                      sd_field_size,
+                                     distribution = "norm",
                                      mean_shape_index,
                                      sd_shape_index,
                                      percent,
@@ -99,7 +101,16 @@ establish_by_place_conquer<-function(potential_space,
     while(field_placed == FALSE){
 
       #set field size and shape index
+      if(distribution == "norm"){
       field_size <- max(1, round(rnorm(1, mean=mean_field_size, sd=sd_field_size)))
+      }
+      if(distribution == "lnorm"){
+        mu_N <- log(mean_field_size^2 / sqrt(sd_field_size^2 + mean_field_size^2))
+        sigma_N <- sqrt(log(1 + (sd_field_size^2 / mean_field_size^2)))
+
+        field_size <- max(1, round(rlnorm(1, meanlog = mu_N, sdlog = sigma_N)))
+
+      }
       shape_index <- rnorm(1, mean=mean_shape_index, sd=sd_shape_index)
       if(shape_index <= 0){
         shape_index<-0.1

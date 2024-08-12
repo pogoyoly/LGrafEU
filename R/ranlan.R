@@ -43,21 +43,23 @@ generate_potential_clusters <- function(rows,cols,p,ai){
 #' @param octaves perlin octave
 #' @param lacunarity parlin lacunarity
 #' @param categorized TRUE/FLASE tells you if the slope raster returns categorized or smooth
+#' @param cat_method either by slope_lim or land_percentage
 #' @param lim the slope degree cutoff for portential space where 1 will be potential space and 2 non potential space
+#' @param percetange
 #'
 #' @return
 #' @export
 #' @import checkmate ambient raster
 #'
 #' @examples
-#' test<-generate_perlin_noise(200,200,1,2,3,0.01,FALSE, 10)
+#' test<-generate_perlin_noise(200,200,1,2,3,0.01,TRUE, "land_percentage", percetange = 75)
 #' raster::plot(test)
 #'
 #'
 #'
 #'
 #'
-generate_perlin_noise<-function(width, height,cellSize, frequency, octaves, lacunarity, categorized, lim){
+generate_perlin_noise<-function(width, height,cellSize, frequency, octaves, lacunarity, categorized,cat_method, lim = 0, percetange = 0){
 
 #check function arguments
 checkmate::assert_count(width, positive = TRUE)
@@ -121,7 +123,31 @@ raster_data <- raster::raster(slope_map, xmn = 0, xmx = cell_size_x * ncol(slope
 
 # Set the cell size
 raster::res(raster_data) <- c(cell_size_x, cell_size_y)
+
+if(cat_method == "slope_lim"){
 slope_gen <- raster::reclassify(raster_data, c(0,lim,1, lim,90,2), include.lowest=F)
+}
+if(cat_method == "land_percentage"){
+
+
+    # Flatten the slope map to a vector
+    slope_values <- values(raster_data)
+
+    # Remove NA values if any
+    slope_values <- slope_values[!is.na(slope_values)]
+
+    # Sort the slope values in ascending order
+    sorted_slope_values <- sort(slope_values)
+
+    # Calculate the cutoff index based on the desired percentage
+    cutoff_index <- ceiling((percetange / 100) * length(sorted_slope_values))
+
+    # Determine the cutoff slope value
+    slope_cutoff <- sorted_slope_values[cutoff_index]
+
+    slope_gen <- raster::reclassify(raster_data, c(0,slope_cutoff,1, slope_cutoff,90,2), include.lowest=F)
+
+}
 
 if(categorized == TRUE){
   return(slope_gen)

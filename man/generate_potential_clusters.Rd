@@ -2,7 +2,7 @@
 % Please edit documentation in R/ranlan.R
 \name{generate_potential_clusters}
 \alias{generate_potential_clusters}
-\title{A natural agriculture cluster map for creating artificial potential agricultural landscape}
+\title{A NLMR based potential space}
 \usage{
 generate_potential_clusters(rows, cols, p, ai)
 }

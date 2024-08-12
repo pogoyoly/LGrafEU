@@ -11,6 +11,7 @@ establish_by_place_conquer(
   additional_lim = NA,
   mean_field_size,
   sd_field_size,
+  distribution = "norm",
   mean_shape_index,
   sd_shape_index,
   percent,
@@ -32,8 +33,6 @@ establish_by_place_conquer(
 \item{mean_field_size}{mean field size counted by number of cells from a normal distribution}
 
 \item{sd_field_size}{sd field size counted by number of cells from a normal distribution}
-
-\item{mean_shape_index}{mean shape index calculated by a relation between width/length of placement}
 
 \item{sd_shape_index}{sd shape index calculated by a relation between width/length of placement}
 
@@ -60,6 +59,7 @@ test<-establish_by_place_conquer(potential_space= r,
                          includsion_value = 1,
                          mean_field_size = 100,
                          sd_field_size = 25,
+                         distribution = "norm",
                          mean_shape_index = 1,
                          sd_shape_index = 0.3,
                          percent = 70,
