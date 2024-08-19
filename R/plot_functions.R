@@ -7,12 +7,14 @@
 #'
 #' @examples
 plot_by_farmer<-function(output_obj){
-  land = matrix(0, nrow(output_obj$map), ncol(output_obj$map))
+  map<-output_obj$map
+  obj_main<-output_obj$field_list
+  land = matrix(0, nrow(map), ncol(map))
 
-  for(i in 1:length(output_obj$field_list)){
+  for(i in 1:length(obj_main)){
 
 
-    obj<-output_obj$field_list[[i]]
+    obj<-obj_main[[i]]
     row_range<-obj@location[[1]]
     col_range<-obj@location[[2]]
     farmer<-obj@farmer
@@ -27,7 +29,7 @@ plot_by_farmer<-function(output_obj){
   }
 
   land_raster<-raster::raster(land)
-  extent(land_raster)<-extent(output_obj$map)
+  extent(land_raster)<-extent(map)
 
   ##test
   unique_values <- unique(values(land_raster))
@@ -45,7 +47,7 @@ plot_by_farmer<-function(output_obj){
   #legend("topright", legend=sort(unique_values), fill=random_colors, title="Values")
 
   #end test
-  plot(land_raster)
+  raster::plot(land_raster)
 
 }
 
@@ -86,7 +88,7 @@ plot_by_arable_land<-function(output_obj){
   land_raster<-raster::raster(land)
   extent(land_raster)<-extent(output_obj$map)
 
-  plot(land_raster)
+  raster::plot(land_raster)
 
 }
 
@@ -123,6 +125,48 @@ plot_by_field<-function(output_obj){
   land_raster<-raster::raster(land)
   extent(land_raster)<-extent(output_obj$map)
 
-  plot(land_raster)
+  raster::plot(land_raster)
+
+}
+
+
+
+
+
+
+
+#' Plot by field number
+#'
+#' @param output_obj an output object of one of the establish functions
+#'
+#' @return
+#' @export
+#'
+#' @examples
+plot_by_crop<-function(output_obj){
+  land = matrix(0, nrow(output_obj$map), ncol(output_obj$map))
+
+  for(i in 1:length(output_obj$field_list)){
+
+
+    obj<-output_obj$field_list[[i]]
+    row_range<-obj@location[[1]]
+    col_range<-obj@location[[2]]
+
+    crop<-obj@crop
+
+    for(k in 1:length(col_range)){
+      land[row_range[k], col_range[k]] <- crop
+    }
+
+
+
+
+  }
+
+  land_raster<-raster::raster(land)
+  extent(land_raster)<-extent(output_obj$map)
+
+  raster::plot(land_raster)
 
 }

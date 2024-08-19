@@ -393,4 +393,4 @@ establish_by_place_conquer<-function(potential_space,
 }
 
 
-setClass("Field", slots=list(number="numeric",location="list",farmer="numeric"))
+setClass("Field", slots=list(number="numeric",location="list",farmer="numeric", crop = "numeric"))
