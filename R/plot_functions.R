@@ -135,15 +135,16 @@ plot_by_field<-function(output_obj){
 
 
 
-#' Plot by field number
+#' Plot by crop type
 #'
 #' @param output_obj an output object of one of the establish functions
+#' @param method 1 is plot directly 2 returns a raster of crop type
 #'
 #' @return
 #' @export
 #'
 #' @examples
-plot_by_crop<-function(output_obj){
+plot_by_crop<-function(output_obj, method = 1){
   land = matrix(0, nrow(output_obj$map), ncol(output_obj$map))
 
   for(i in 1:length(output_obj$field_list)){
@@ -165,8 +166,13 @@ plot_by_crop<-function(output_obj){
   }
 
   land_raster<-raster::raster(land)
-  extent(land_raster)<-extent(output_obj$map)
+  raster::extent(land_raster)<-raster::extent(output_obj$map)
 
+  if(method == 1){
   raster::plot(land_raster)
+  }
+  if(method == 2){
+    return(land_raster)
+  }
 
 }
