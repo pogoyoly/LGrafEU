@@ -2,13 +2,15 @@
 % Please edit documentation in R/plot_functions.R
 \name{plot_by_crop}
 \alias{plot_by_crop}
-\title{Plot by field number}
+\title{Plot by crop type}
 \usage{
-plot_by_crop(output_obj)
+plot_by_crop(output_obj, method = 1)
 }
 \arguments{
 \item{output_obj}{an output object of one of the establish functions}
+
+\item{method}{1 is plot directly 2 returns a raster of crop type}
 }
 \description{
-Plot by field number
+Plot by crop type
 }

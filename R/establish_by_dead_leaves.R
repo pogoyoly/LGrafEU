@@ -265,5 +265,5 @@ establish_by_dead_leaves <- function(potential_space,
 
 
 
-setClass("Field", slots=list(number="numeric",location="list",farmer="numeric"))
+setClass("Field", slots=list(number="numeric",location="list",farmer="numeric", crop = "numeric"))
 

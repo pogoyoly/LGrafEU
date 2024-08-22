@@ -291,3 +291,4 @@ establish_by_space<-function(potential_space,
   return(result)
 }
 
+setClass("Field", slots=list(number="numeric",location="list",farmer="numeric", crop = "numeric"))

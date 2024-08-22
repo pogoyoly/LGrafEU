@@ -4,10 +4,12 @@
 \alias{plot_by_farmer}
 \title{Plot by farmer}
 \usage{
-plot_by_farmer(output_obj)
+plot_by_farmer(output_obj, method = 1)
 }
 \arguments{
 \item{output_obj}{and output object of one of the establish functions}
+
+\item{method}{}
 }
 \description{
 Plot by farmer

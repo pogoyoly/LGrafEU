@@ -1,12 +1,13 @@
 #' Plot by farmer
 #'
 #' @param output_obj and output object of one of the establish functions
+#' @param method
 #'
 #' @return
 #' @export
 #'
 #' @examples
-plot_by_farmer<-function(output_obj){
+plot_by_farmer<-function(output_obj, method = 1){
   map<-output_obj$map
   obj_main<-output_obj$field_list
   land = matrix(0, nrow(map), ncol(map))
@@ -47,7 +48,12 @@ plot_by_farmer<-function(output_obj){
   #legend("topright", legend=sort(unique_values), fill=random_colors, title="Values")
 
   #end test
-  raster::plot(land_raster)
+  if(method == 1){
+    raster::plot(land_raster)
+  }
+  if(method == 2){
+    return(land_raster)
+  }
 
 }
 
@@ -61,12 +67,13 @@ plot_by_farmer<-function(output_obj){
 #' Plot by arable land
 #'
 #' @param output_obj an output object of one of the establish functions
+#' @param method
 #'
 #' @return
 #' @export
 #'
 #' @examples
-plot_by_arable_land<-function(output_obj){
+plot_by_arable_land<-function(output_obj, method = 1){
   land = matrix(0, nrow(output_obj$map), ncol(output_obj$map))
 
   for(i in 1:length(output_obj$field_list)){
@@ -88,7 +95,12 @@ plot_by_arable_land<-function(output_obj){
   land_raster<-raster::raster(land)
   extent(land_raster)<-extent(output_obj$map)
 
-  raster::plot(land_raster)
+  if(method == 1){
+    raster::plot(land_raster)
+  }
+  if(method == 2){
+    return(land_raster)
+  }
 
 }
 
@@ -98,12 +110,13 @@ plot_by_arable_land<-function(output_obj){
 #' Plot by field number
 #'
 #' @param output_obj an output object of one of the establish functions
+#' @param method
 #'
 #' @return
 #' @export
 #'
 #' @examples
-plot_by_field<-function(output_obj){
+plot_by_field<-function(output_obj, method = 1){
   land = matrix(0, nrow(output_obj$map), ncol(output_obj$map))
 
   for(i in 1:length(output_obj$field_list)){
@@ -125,7 +138,12 @@ plot_by_field<-function(output_obj){
   land_raster<-raster::raster(land)
   extent(land_raster)<-extent(output_obj$map)
 
-  raster::plot(land_raster)
+  if(method == 1){
+    raster::plot(land_raster)
+  }
+  if(method == 2){
+    return(land_raster)
+  }
 
 }
 

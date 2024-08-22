@@ -4,10 +4,12 @@
 \alias{plot_by_arable_land}
 \title{Plot by arable land}
 \usage{
-plot_by_arable_land(output_obj)
+plot_by_arable_land(output_obj, method = 1)
 }
 \arguments{
 \item{output_obj}{an output object of one of the establish functions}
+
+\item{method}{}
 }
 \description{
 Plot by arable land

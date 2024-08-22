@@ -4,10 +4,12 @@
 \alias{plot_by_field}
 \title{Plot by field number}
 \usage{
-plot_by_field(output_obj)
+plot_by_field(output_obj, method = 1)
 }
 \arguments{
 \item{output_obj}{an output object of one of the establish functions}
+
+\item{method}{}
 }
 \description{
 Plot by field number
