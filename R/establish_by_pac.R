@@ -308,7 +308,7 @@ establish_by_place_conquer<-function(potential_space,
     mati <- raster::as.matrix(patched_raster[[i]])
     dimnames(mati) <- list(x = 1:nrow(mati), y = 1:ncol(mati))
     mydf <- reshape2::melt(mati)
-    names(mydf) <- c("x", "y", "Z")  # Rename the columns as per your expected output
+    names(mydf) <- c("x", "y", "Z")
     newdata <- mydf[which(is.na(mydf$Z) == FALSE),]
     field_obj <- new("Field", number = (i-1), location = list(newdata$x,newdata$y), farmer = 1)
     field_list<-c(field_list,field_obj)

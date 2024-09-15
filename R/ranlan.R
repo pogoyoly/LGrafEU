@@ -131,7 +131,7 @@ if(cat_method == "land_percentage"){
 
 
     # Flatten the slope map to a vector
-    slope_values <- values(raster_data)
+    slope_values <- raster::values(raster_data)
 
     # Remove NA values if any
     slope_values <- slope_values[!is.na(slope_values)]
