@@ -20,7 +20,7 @@
 #' @export
 #'
 #' @examples
-#' r<-generate_perlin_noise(100,100,1,2,3,0.01,TRUE, 10)
+#' r<-generate_perlin_noise(100,100,1,2,3,0.01,TRUE,cat_method = "land_percentage", percetange= 40)
 #' test<-establish_by_place_conquer(potential_space= r,
 #'                          cell_size=1,
 #'                          includsion_value = 1,
@@ -164,7 +164,7 @@ establish_by_place_conquer<-function(potential_space,
         vec1<- seq(start_row, start_row + field_row_size - 1, by=1)
         vec2 <- rep(cur_col, field_col_size)
 
-        #create function to check if there is overlap
+        #function to check if there is overlap
         coverlap<-function(a,b){
           if(is.na(potential_space[a,b]) == TRUE || land[a,b] != 0 ||  potential_space[a,b] != includsion_value){
             return("overlap")
@@ -246,7 +246,12 @@ establish_by_place_conquer<-function(potential_space,
             placed_cells <- placed_cells +length(vec1)
 
             cur_col <- cur_col + dir
-            if(cur_col >= ncol(land) || cur_col <= 1){
+
+            co_vec <- mapply(coverlap, right_vec, cur_col, SIMPLIFY = TRUE)
+            num_co <- sum(co_vec == "overlap")
+
+
+            if(cur_col >= ncol(land) || num_co == length(right_vec)){
               dir <- dir * -1
               cur_col <- start_col + dir
               changes <- changes + 1

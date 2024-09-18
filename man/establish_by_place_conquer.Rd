@@ -53,7 +53,7 @@ LGraf object
 Establish landscape by place and conquer
 }
 \examples{
-r<-generate_perlin_noise(100,100,1,2,3,0.01,TRUE, 10)
+r<-generate_perlin_noise(100,100,1,2,3,0.01,TRUE,cat_method = "land_percentage", percetange= 40)
 test<-establish_by_place_conquer(potential_space= r,
                          cell_size=1,
                          includsion_value = 1,
