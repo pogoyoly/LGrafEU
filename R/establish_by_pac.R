@@ -148,7 +148,6 @@ establish_by_place_conquer<-function(potential_space,
              },
       )
 
-      n_changes<-0
 
       #define max size
       max_size<- field_row_size * field_col_size
