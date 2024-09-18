@@ -148,6 +148,7 @@ establish_by_place_conquer<-function(potential_space,
              },
       )
 
+      n_changes<-0
 
       #define max size
       max_size<- field_row_size * field_col_size
@@ -210,6 +211,7 @@ establish_by_place_conquer<-function(potential_space,
           if(sum(co_vec)== 0){
             dir <- dir * -1
             cur_col <- start_col + dir
+            changes <- changes + 1
           }
           else{
             #choose the one with the lowest value of co_vec without contributing to the shift
