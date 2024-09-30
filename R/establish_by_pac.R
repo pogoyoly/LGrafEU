@@ -62,6 +62,7 @@ establish_by_place_conquer<-function(potential_space,
   checkmate::assert_numeric(sd_field_size)
   checkmate::assert_numeric(mean_shape_index)
   checkmate::assert_numeric(sd_shape_index)
+  checkmate::assert_true(mean_shape_index >= 1 || mean_shape_index <= 2)
   checkmate::assert_numeric(percent)
   checkmate::assert_logical(assign_farmers)
   checkmate::assert_true(assign_mode == 1 || assign_mode == 2)
@@ -112,18 +113,31 @@ establish_by_place_conquer<-function(potential_space,
 
       }
       shape_index <- rnorm(1, mean=mean_shape_index, sd=sd_shape_index)
-      if(shape_index <= 0){
-        shape_index<-0.1
+      if(shape_index <= 1){
+        shape_index<-1
       }
       if(field_size <= 0){
         field_size<-1
       }
-      field_row_size <- ceiling(shape_index * sqrt(field_size))
-      field_col_size <- ceiling(field_size / field_row_size)
+
+      ratio <- (shape_index - 1) / 4
+      axis_exs <- c("horiz", "vert")
+      axis_ex<-sample(axis_exs,1)
+      if(axis_ex == "horiz"){
+        field_col_size <- round(sqrt(field_size) * (1 + ratio))  # More columns as shape_index increases
+        field_row_size <- round(field_size / field_col_size)  # Adjust rows to maintain total_cells
+
+      }
+      if(axis_ex == "vert"){
+        field_row_size <- round(sqrt(field_size) * (1 + ratio))  # More columns as shape_index increases
+        field_col_size <- round(field_size / field_row_size)  # Adjust rows to maintain total_cells
+
+      }
+
 
 
       #choose random start location and check if it can be used
-      check<-0
+      check<-999
       check2 <- 1
       while(check != includsion_value && check2 != 0){
         start_row <- sample(1:ncol(potential_space), 1)
@@ -161,7 +175,7 @@ establish_by_place_conquer<-function(potential_space,
         suppressWarnings({
 
         #create block vectors
-        vec1<- seq(start_row, start_row + field_row_size - 1, by=1)
+        vec1<- seq(start_row, start_row + field_row_size, by=1)
         vec2 <- rep(cur_col, field_col_size)
 
         #function to check if there is overlap
@@ -183,6 +197,8 @@ establish_by_place_conquer<-function(potential_space,
           }
 
           placed_cells <- placed_cells + length(vec1)
+          cur_col <- cur_col + dir
+
         }
         if(num_co > 0){
           #if there are overlaps we try to move the block left and right to see if we can minimize (try with mapply)
