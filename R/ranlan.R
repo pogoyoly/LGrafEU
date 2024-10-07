@@ -123,6 +123,7 @@ raster_data <- raster::raster(slope_map, xmn = 0, xmx = cell_size_x * ncol(slope
 
 # Set the cell size
 raster::res(raster_data) <- c(cell_size_x, cell_size_y)
+raster_data[is.na(raster_data[])] <- 1
 
 if(cat_method == "slope_lim"){
 slope_gen <- raster::reclassify(raster_data, c(0,lim,1, lim,90,2), include.lowest=F)
@@ -146,7 +147,6 @@ if(cat_method == "land_percentage"){
     slope_cutoff <- sorted_slope_values[cutoff_index]
 
     slope_gen <- raster::reclassify(raster_data, c(0,slope_cutoff,1, slope_cutoff,90,2), include.lowest=F)
-
 }
 
 if(categorized == TRUE){
