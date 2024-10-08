@@ -15,7 +15,7 @@
 #'
 #' @return A raster
 #' @export
-#' @import NLMR
+#' @import
 #'
 #' @examples
 generate_potential_clusters <- function(rows,cols,p,ai){
