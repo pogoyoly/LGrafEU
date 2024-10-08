@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-LGrafEU is an artificial landcover generator that is designed to ease the integration of artificial agricultural landcover maps in the work flow of ecological modellers. The package is designed to generate landscapes using different algorithms, and then store the information in an output file that includes both a raster layer, and a list containing all information of the fields. This package allows to systematically generate landscapes in a reproducable and controlled way. 
+LGrafEU is an artificial landcover generator that is designed to ease the integration of artificial agricultural landcover maps in the work flow of ecological modellers. The package is designed to generate landscapes using different algorithms, and then store the information in an output file that includes both a raster layer, and a list containing all information of the fields. This package allows to  generate landscapes in a systematic reproducable  way while controlling for different variables.  
 
 ## Installation
 
@@ -36,6 +36,24 @@ This is a basic example which shows you how to solve a common problem:
 ```{r example}
 library(LGrafEU)
 ## basic example code
+r<-generate_perlin_noise(200,200,1,2,3,0.01,TRUE, "land_percentage", percetange = 75)
+output<-establish_by_place_conquer(potential_space= r,
+                         cell_size=1,
+                         includsion_value = 1,
+                         mean_field_size = 200,
+                         sd_field_size = 100,
+                         distribution = "norm",
+                         mean_shape_index = 3,
+                         sd_shape_index = 0.3,
+                         percent = 70,
+                         assign_farmers = TRUE,
+                         assign_mode = 2,
+                         mean_fields_per_farm = 3,
+                         sd_fields_per_farm = 3)
+
+
+plot_by_field(output)
+
 ```
 
 What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:

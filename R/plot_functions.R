@@ -30,7 +30,7 @@ plot_by_farmer<-function(output_obj, method = 1){
   }
 
   land_raster<-raster::raster(land)
-  extent(land_raster)<-extent(map)
+  raster::extent(land_raster)<-raster::extent(map)
 
   ##test
   unique_values <- unique(values(land_raster))
@@ -96,7 +96,7 @@ plot_by_arable_land<-function(output_obj, method = 1){
   }
 
   land_raster<-raster::raster(land)
-  extent(land_raster)<-extent(output_obj$map)
+  raster::extent(land_raster)<-raster::extent(output_obj$map)
 
   if(method == 1){
     polygons <- raster::rasterToPolygons(land_raster, n=8,fun=function(x){x > 0}, na.rm=TRUE, digits=12, dissolve=TRUE)
@@ -141,7 +141,7 @@ plot_by_field<-function(output_obj, method = 1){
   }
 
   land_raster<-raster::raster(land)
-  extent(land_raster)<-extent(output_obj$map)
+  raster::extent(land_raster)<-raster::extent(output_obj$map)
 
   if(method == 1){
     polygons <- raster::rasterToPolygons(land_raster, n=8,fun=function(x){x > 0}, na.rm=TRUE, digits=12, dissolve=TRUE)

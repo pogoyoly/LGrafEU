@@ -11,8 +11,9 @@ the integration of artificial agricultural landcover maps in the work
 flow of ecological modellers. The package is designed to generate
 landscapes using different algorithms, and then store the information in
 an output file that includes both a raster layer, and a list containing
-all information of the fields. This package allows to systematically
-generate landscapes in a reproducable and controlled way.
+all information of the fields. This package allows to generate
+landscapes in a systematic reproducable way while controlling for
+different variables.
 
 ## Installation
 
@@ -31,7 +32,34 @@ This is a basic example which shows you how to solve a common problem:
 ``` r
 library(LGrafEU)
 ## basic example code
+r<-generate_perlin_noise(200,200,1,2,3,0.01,TRUE, "land_percentage", percetange = 75)
+#> The legacy packages maptools, rgdal, and rgeos, underpinning the sp package,
+#> which was just loaded, will retire in October 2023.
+#> Please refer to R-spatial evolution reports for details, especially
+#> https://r-spatial.org/r/2023/05/15/evolution4.html.
+#> It may be desirable to make the sf package available;
+#> package maintainers should consider adding sf to Suggests:.
+#> The sp package is now running under evolution status 2
+#>      (status 2 uses the sf package in place of rgdal)
+output<-establish_by_place_conquer(potential_space= r,
+                         cell_size=1,
+                         includsion_value = 1,
+                         mean_field_size = 200,
+                         sd_field_size = 100,
+                         distribution = "norm",
+                         mean_shape_index = 3,
+                         sd_shape_index = 0.3,
+                         percent = 70,
+                         assign_farmers = TRUE,
+                         assign_mode = 2,
+                         mean_fields_per_farm = 3,
+                         sd_fields_per_farm = 3)
+
+
+plot_by_field(output)
 ```
+
+<img src="man/figures/README-example-1.png" width="100%" />
 
 What is special about using `README.Rmd` instead of just `README.md`?
 You can include R chunks like so:
