@@ -33,7 +33,7 @@ devtools::install_github("pogoyoly/LGrafEU")
 
 This is a basic example which shows you how to solve a common problem:
 
-```{r example}
+```{r example, message=FALSE, warning=FALSE}
 library(LGrafEU)
 ## basic example code
 r<-generate_perlin_noise(200,200,1,2,3,0.01,TRUE, "land_percentage", percetange = 75)

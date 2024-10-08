@@ -33,14 +33,6 @@ This is a basic example which shows you how to solve a common problem:
 library(LGrafEU)
 ## basic example code
 r<-generate_perlin_noise(200,200,1,2,3,0.01,TRUE, "land_percentage", percetange = 75)
-#> The legacy packages maptools, rgdal, and rgeos, underpinning the sp package,
-#> which was just loaded, will retire in October 2023.
-#> Please refer to R-spatial evolution reports for details, especially
-#> https://r-spatial.org/r/2023/05/15/evolution4.html.
-#> It may be desirable to make the sf package available;
-#> package maintainers should consider adding sf to Suggests:.
-#> The sp package is now running under evolution status 2
-#>      (status 2 uses the sf package in place of rgdal)
 output<-establish_by_place_conquer(potential_space= r,
                          cell_size=1,
                          includsion_value = 1,

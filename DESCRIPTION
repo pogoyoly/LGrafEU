@@ -27,7 +27,6 @@ Imports:
     matrixcalc,
     raster,
     reshape2,
-    rgeos,
     rlang,
     sf,
     sp,
