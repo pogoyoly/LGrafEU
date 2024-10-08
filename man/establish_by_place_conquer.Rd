@@ -53,14 +53,14 @@ LGraf object
 Establish landscape by place and conquer
 }
 \examples{
-r<-generate_perlin_noise(100,100,1,2,3,0.01,TRUE,cat_method = "land_percentage", percetange= 40)
-test<-establish_by_place_conquer(potential_space= r,
+r<-raster::raster(matrix(1, nrow=50, ncol=50))
+output<-establish_by_place_conquer(potential_space= r,
                          cell_size=1,
                          includsion_value = 1,
-                         mean_field_size = 100,
-                         sd_field_size = 25,
+                         mean_field_size = 200,
+                         sd_field_size = 100,
                          distribution = "norm",
-                         mean_shape_index = 1,
+                         mean_shape_index = 3,
                          sd_shape_index = 0.3,
                          percent = 70,
                          assign_farmers = TRUE,
@@ -69,5 +69,5 @@ test<-establish_by_place_conquer(potential_space= r,
                          sd_fields_per_farm = 3)
 
 
-raster::plot(test$map)
+plot_by_field(output)
 }

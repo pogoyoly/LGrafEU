@@ -10,6 +10,7 @@ establish_by_dead_leaves(
   includsion_value,
   mean_field_size,
   sd_field_size,
+  distribution = "norm",
   mean_shape_index,
   sd_shape_index,
   percent,
@@ -29,6 +30,8 @@ establish_by_dead_leaves(
 \item{mean_field_size}{mean field size counted by number of cells from a normal distribution}
 
 \item{sd_field_size}{sd field size counted by number of cells from a normal distribution}
+
+\item{distribution}{distribution type for field size}
 
 \item{mean_shape_index}{mean shape index calculated by a relation between width/length of placement}
 
@@ -53,11 +56,12 @@ Field establishment based on a dead leave algorithm
 \examples{
 r<-raster::raster(matrix(1, nrow=50, ncol=50))
 raster::extent(r)<-c(0,100,0,100)
-dead_leaves_texture <- establish_by_dead_leaves(potential_space = r,
+output <- establish_by_dead_leaves(potential_space = r,
                                                 cell_size = 1,
                                                 includsion_value = 1,
                                                 mean_field_size = 50,
                                                 sd_field_size = 25,
+                                                distribution = "norm",
                                                 mean_shape_index = .5,
                                                 sd_shape_index = .1,
                                                 percent = 0.75,
@@ -65,5 +69,5 @@ dead_leaves_texture <- establish_by_dead_leaves(potential_space = r,
                                                 assign_mode = 2,
                                                 mean_fields_per_farm = 4,
                                                 sd_fields_per_farm = 4)
-raster::plot(dead_leaves_texture$map)
+plot_by_field(output)
 }

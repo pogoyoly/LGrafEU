@@ -6,6 +6,7 @@
 #' @param includsion_value inclusion value for the potential space raster
 #' @param mean_field_size mean field size counted by number of cells from a normal distribution
 #' @param sd_field_size sd field size counted by number of cells from a normal distribution
+#' @param distribution distribution type for field size
 #' @param mean_shape_index mean shape index calculated by a relation between width/length of placement
 #' @param sd_shape_index sd shape index calculated by a relation between width/length of placement
 #' @param percent percent of the potential space to be filled with fields
@@ -20,11 +21,12 @@
 #' @examples
 #' r<-raster::raster(matrix(1, nrow=50, ncol=50))
 #' raster::extent(r)<-c(0,100,0,100)
-#' dead_leaves_texture <- establish_by_dead_leaves(potential_space = r,
+#' output <- establish_by_dead_leaves(potential_space = r,
 #'                                                 cell_size = 1,
 #'                                                 includsion_value = 1,
 #'                                                 mean_field_size = 50,
 #'                                                 sd_field_size = 25,
+#'                                                 distribution = "norm",
 #'                                                 mean_shape_index = .5,
 #'                                                 sd_shape_index = .1,
 #'                                                 percent = 0.75,
@@ -32,7 +34,7 @@
 #'                                                 assign_mode = 2,
 #'                                                 mean_fields_per_farm = 4,
 #'                                                 sd_fields_per_farm = 4)
-#' raster::plot(dead_leaves_texture$map)
+#' plot_by_field(output)
 
 
 establish_by_dead_leaves <- function(potential_space,
@@ -40,6 +42,7 @@ establish_by_dead_leaves <- function(potential_space,
                                  includsion_value,
                                  mean_field_size,
                                  sd_field_size,
+                                 distribution = "norm",
                                  mean_shape_index,
                                  sd_shape_index,
                                  percent,
@@ -84,14 +87,37 @@ establish_by_dead_leaves <- function(potential_space,
   # Generate patches
   while(realized_patches < to_be_filled) {
 
-    #choose patch size
-    field_size <- max(1, round(rnorm(1, mean=mean_field_size, sd=sd_field_size)))
+    #set field size and shape index
+    if(distribution == "norm"){
+      field_size <- max(1, round(rnorm(1, mean=mean_field_size, sd=sd_field_size)))
+    }
+    if(distribution == "lnorm"){
+      mu_N <- log(mean_field_size^2 / sqrt(sd_field_size^2 + mean_field_size^2))
+      sigma_N <- sqrt(log(1 + (sd_field_size^2 / mean_field_size^2)))
+
+      field_size <- max(1, round(rlnorm(1, meanlog = mu_N, sdlog = sigma_N)))
+
+    }
     shape_index <- rnorm(1, mean=mean_shape_index, sd=sd_shape_index)
-    if(shape_index <= 0){
-      shape_index<-0.1
+    if(shape_index <= 1){
+      shape_index<-1
     }
     if(field_size <= 0){
       field_size<-1
+    }
+
+    ratio <- (shape_index - 1) / 4
+    axis_exs <- c("horiz", "vert")
+    axis_ex<-sample(axis_exs,1)
+    if(axis_ex == "horiz"){
+      field_col_size <- round(sqrt(field_size) * (1 + ratio))  # More columns as shape_index increases
+      field_row_size <- round(field_size / field_col_size)  # Adjust rows to maintain total_cells
+
+    }
+    if(axis_ex == "vert"){
+      field_row_size <- round(sqrt(field_size) * (1 + ratio))  # More columns as shape_index increases
+      field_col_size <- round(field_size / field_row_size)  # Adjust rows to maintain total_cells
+
     }
 
 
@@ -99,9 +125,8 @@ establish_by_dead_leaves <- function(potential_space,
     realized_patches <- length(canvas[canvas > 0])
 
 
-    #decide on row size and col size
-    field_row_size <- ceiling(shape_index * sqrt(field_size))
-    field_col_size <- ceiling(field_size / field_row_size)
+
+
     if(field_row_size > nrow(potential_space) | field_col_size > ncol(potential_space)){
       next
     }
