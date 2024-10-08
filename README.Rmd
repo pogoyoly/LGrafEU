@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of LGrafEU is to ...
+LGrafEU is an artificial landcover generator that is designed to ease the integration of artificial agricultural landcover maps in the work flow of ecological modellers. The package is designed to generate landscapes using different algorithms, and then store the information in an output file that includes both a raster layer, and a list containing all information of the fields. This package allows to systematically generate landscapes in a reproducable and controlled way. 
 
 ## Installation
 
