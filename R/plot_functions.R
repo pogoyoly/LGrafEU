@@ -145,7 +145,7 @@ plot_by_field<-function(output_obj, method = 1){
 
   if(method == 1){
     polygons <- raster::rasterToPolygons(land_raster, n=8,fun=function(x){x > 0}, na.rm=TRUE, digits=12, dissolve=TRUE)
-    raster::plot(land_raster)
+    raster::plot(land_raster, legend = FALSE)
     raster::plot(polygons, add = TRUE, border = "black", lwd = 1)
   }
   if(method == 2){
