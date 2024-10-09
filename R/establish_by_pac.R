@@ -139,7 +139,7 @@ establish_by_place_conquer<-function(potential_space,
       #choose random start location and check if it can be used
       check<-999
       check2 <- 1
-      while(check != includsion_value && check2 != 0){
+      while(check != includsion_value || check2 != 0){
         start_row <- sample(1:ncol(potential_space), 1)
         start_col <- sample(1:nrow(potential_space), 1)
         if(is.na(potential_space[start_row,start_col]) == FALSE){
@@ -201,7 +201,7 @@ establish_by_place_conquer<-function(potential_space,
 
         }
         if(num_co > 0){
-          #if there are overlaps we try to move the block left and right to see if we can minimize (try with mapply)
+          #if there are overlaps we try to move the block left and right to see if we can minimize
 
           #fist we create a matrix of the possible shift
           shift_vec<-seq( - field_row_size, field_row_size, by = 1)
