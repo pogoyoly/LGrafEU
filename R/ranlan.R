@@ -1,35 +1,4 @@
 
-####################################################################
-#generate random cluster potential space map
-
-#' A NLMR based potential space
-#'
-#' @param rows nrows of raster
-#' @param cols ncols of raster
-#' @param p proportion of element that forms a clustre
-#' @param ai percentage of each category of landscape
-#'
-#' @description
-#' This is a wramper around the nlmr random cluster function to create naturalist potential agriculture space raster
-#'
-#'
-#' @return A raster
-#' @export
-#' @import
-#'
-#' @examples
-generate_potential_clusters <- function(rows,cols,p,ai){
-
-  NLMR::nlm_randomcluster(nrow = rows,
-                          ncol = cols,
-                          p    = p, #0.5
-                          ai   = ai, #c(0.9, 0.1, 0, 0),
-                          rescale = FALSE) # FALSE)
-}
-
-
-
-
 
 ####################################################################
 #generate perlin noise map
