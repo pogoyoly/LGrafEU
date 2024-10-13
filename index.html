@@ -76,7 +76,7 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">LGrafEU</span><span class="op">)</span></span>
 <span><span class="co">## basic example code</span></span>
-<span><span class="va">r</span><span class="op">&lt;-</span><span class="fu"><a href="reference/generate_perlin_noise.html">generate_perlin_noise</a></span><span class="op">(</span><span class="fl">200</span>,<span class="fl">200</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">0.01</span>,<span class="cn">TRUE</span>, <span class="st">"land_percentage"</span>, percetange <span class="op">=</span> <span class="fl">75</span><span class="op">)</span></span>
+<span><span class="va">r</span><span class="op">&lt;-</span><span class="fu"><a href="reference/generate_perlin_noise.html">generate_perlin_noise</a></span><span class="op">(</span><span class="fl">200</span>,<span class="fl">200</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">0.01</span>,<span class="cn">TRUE</span>, <span class="st">"land_percentage"</span>, percetange <span class="op">=</span> <span class="fl">90</span><span class="op">)</span></span>
 <span><span class="va">output</span><span class="op">&lt;-</span><span class="fu"><a href="reference/establish_by_place_conquer.html">establish_by_place_conquer</a></span><span class="op">(</span>potential_space<span class="op">=</span> <span class="va">r</span>,</span>
 <span>                         cell_size<span class="op">=</span><span class="fl">1</span>,</span>
 <span>                         includsion_value <span class="op">=</span> <span class="fl">1</span>,</span>
@@ -85,7 +85,7 @@
 <span>                         distribution <span class="op">=</span> <span class="st">"norm"</span>,</span>
 <span>                         mean_shape_index <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>                         sd_shape_index <span class="op">=</span> <span class="fl">0.3</span>,</span>
-<span>                         percent <span class="op">=</span> <span class="fl">70</span>,</span>
+<span>                         percent <span class="op">=</span> <span class="fl">90</span>,</span>
 <span>                         assign_farmers <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>                         assign_mode <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>                         mean_fields_per_farm <span class="op">=</span> <span class="fl">3</span>,</span>
@@ -94,20 +94,6 @@
 <span></span>
 <span><span class="fu"><a href="reference/plot_by_field.html">plot_by_field</a></span><span class="op">(</span><span class="va">output</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-example-1.png" width="100%"></p>
-<p>What is special about using <code>README.Rmd</code> instead of just <code>README.md</code>? You can include R chunks like so:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">cars</span><span class="op">)</span></span>
-<span><span class="co">#&gt;      speed           dist       </span></span>
-<span><span class="co">#&gt;  Min.   : 4.0   Min.   :  2.00  </span></span>
-<span><span class="co">#&gt;  1st Qu.:12.0   1st Qu.: 26.00  </span></span>
-<span><span class="co">#&gt;  Median :15.0   Median : 36.00  </span></span>
-<span><span class="co">#&gt;  Mean   :15.4   Mean   : 42.98  </span></span>
-<span><span class="co">#&gt;  3rd Qu.:19.0   3rd Qu.: 56.00  </span></span>
-<span><span class="co">#&gt;  Max.   :25.0   Max.   :120.00</span></span></code></pre></div>
-<p>You’ll still need to render <code>README.Rmd</code> regularly, to keep <code>README.md</code> up-to-date. <code>devtools::build_readme()</code> is handy for this.</p>
-<p>You can also embed plots, for example:</p>
-<p><img src="reference/figures/README-pressure-1.png" width="100%"></p>
-<p>In that case, don’t forget to commit and push the resulting figure files, so they display on GitHub and CRAN.</p>
 </div>
 </div>
   </div>
