@@ -15,20 +15,13 @@ Suggests:
 Imports: 
     ambient,
     checkmate,
-    cli,
     dismo,
     dplyr,
     gdistance,
-    glue,
     landscapemetrics,
-    lifecycle,
-    magrittr,
     matrixcalc,
     raster,
-    reshape2,
-    rlang,
     sf,
     sp,
     terra,
-    withr
 Config/testthat/edition: 3

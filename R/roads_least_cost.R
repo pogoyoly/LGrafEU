@@ -10,7 +10,9 @@
 #' @import raster sp gdistance rgeos
 #'
 #' @examples
-#'
+#'test<-generate_perlin_noise(200,200,1,2,3,0.005,FALSE, "land_percentage", percetange = 50)
+#'test2<-generate_route_lc(2000,test)
+#'plot(test2)
 #'
 generate_route_lc<-function(road_length,slope){
 
@@ -25,8 +27,17 @@ generate_route_lc<-function(road_length,slope){
   bb <- raster::extent(0, nrow(slope_raster), 0, ncol(slope_raster))
   raster::extent(slope_raster) <- bb
 
-  slope_raster[is.na(slope_raster[])] <- 255
+  slope_raster[is.na(slope_raster[]) == TRUE] <- 255
   slope_raster[slope_raster == 0] <- 255
+  slope_raster[slope_raster < 0] <- 255
+  nrows <- nrow(slope_raster)
+  ncols <- ncol(slope_raster)
+
+  # Set edge values to 100
+  slope_raster[1, ] <- 100        # Top edge
+  slope_raster[nrows, ] <- 100    # Bottom edge
+  slope_raster[, 1] <- 100        # Left edge
+  slope_raster[, ncols] <- 100    # Right edge
 
 
 
@@ -149,14 +160,14 @@ generate_route_lc<-function(road_length,slope){
     trans_geo <- gdistance::geoCorrection(trans, type = "c")
     path <- gdistance::shortestPath(trans_geo, A, B, output = "SpatialLines")
 
-    realized<- realized + rgeos::gLength(path)
+    realized<- realized + sum(sp::SpatialLinesLengths(path, longlat = FALSE))
 
     sl <- rbind(sl, path)
-    plot(sl)
   }
 
-  r <- raster::raster(raster::extent(sl), resolution=c(1, 1))
-  r_path <- raster::rasterize(sl, r, field=1)
+  r <- terra::rast(ext = sl, resolution = c(1, 1))
+  sl_vect <- terra::vect(sl)
+  r_path <- terra::rasterize(sl_vect, r, field = 1)
 
   #bb <- extent(slope)
   #res(r_path) <- res(slope)
