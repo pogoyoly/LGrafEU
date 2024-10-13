@@ -189,11 +189,16 @@ establish_by_dead_leaves <- function(potential_space,
 
   for(i in 2:length(patched_raster)){
 
-    mati <- raster::as.matrix(patched_raster[[i]])
+    mati <- terra::as.matrix(patched_raster[[i]], wide=TRUE)
     dimnames(mati) <- list(x = 1:nrow(mati), y = 1:ncol(mati))
-    mydf <- reshape2::melt(mati)
-    names(mydf) <- c("x", "y", "Z")  # Rename the columns as per your expected output
-    newdata <- mydf[which(is.na(mydf$Z) == FALSE),]
+    #mydf <- reshape2::melt(mati,level = 1, varnames = c("x", "y"))  # Ensure proper names
+    #print(mydf)
+    #names(mydf) <- c("x", "y", "Z")
+    #newdata <- mydf[!is.na(mydf$Z),]  # Filter out NAs
+    newdata <- expand.grid(x = 1:nrow(mati), y = 1:ncol(mati))
+    newdata$Z <- as.vector(mati)
+    newdata <- newdata[!is.na(newdata$Z),]
+
     field_obj <- new("Field", number = (i-1), location = list(newdata$x,newdata$y), farmer = 1)
     field_list<-c(field_list,field_obj)
 
