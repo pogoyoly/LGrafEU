@@ -329,10 +329,14 @@ establish_by_place_conquer<-function(potential_space,
   for(i in 2:length(patched_raster)){
     mati <- raster::as.matrix(patched_raster[[i]])
     dimnames(mati) <- list(x = 1:nrow(mati), y = 1:ncol(mati))
-    print(dim(mati))
-    mydf <- reshape2::melt(mati,level = 1, varnames = c("x", "y"))  # Ensure proper names
-    names(mydf) <- c("x", "y", "Z")
-    newdata <- mydf[!is.na(mydf$Z),]  # Filter out NAs
+    #mydf <- reshape2::melt(mati,level = 1, varnames = c("x", "y"))  # Ensure proper names
+    #print(mydf)
+    #names(mydf) <- c("x", "y", "Z")
+    #newdata <- mydf[!is.na(mydf$Z),]  # Filter out NAs
+    newdata <- expand.grid(x = 1:nrow(mati), y = 1:ncol(mati))
+    newdata$Z <- as.vector(mati)
+    newdata <- newdata[!is.na(newdata$Z),]
+
     field_obj <- new("Field", number = (i-1), location = list(newdata$x,newdata$y), farmer = 1)
     field_list<-c(field_list,field_obj)
 
