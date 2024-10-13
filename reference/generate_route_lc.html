@@ -68,9 +68,8 @@
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">test</span><span class="op">&lt;-</span><span class="fu"><a href="generate_perlin_noise.html">generate_perlin_noise</a></span><span class="op">(</span><span class="fl">200</span>,<span class="fl">200</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">0.005</span>,<span class="cn">FALSE</span>, <span class="st">"land_percentage"</span>, percetange <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">test2</span><span class="op">&lt;-</span><span class="fu">generate_route_lc</span><span class="op">(</span><span class="fl">2000</span>,<span class="va">test</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in Lines(Line(matrix(0, ncol = 2)), ID = NA):</span> could not find function "Lines"</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">test2</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'test2' not found</span>
+<span class="r-in"><span><span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">test2</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="generate_route_lc-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
