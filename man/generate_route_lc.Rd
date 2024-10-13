@@ -20,6 +20,6 @@ A function for generating artificial roads
 \examples{
 test<-generate_perlin_noise(200,200,1,2,3,0.005,FALSE, "land_percentage", percetange = 50)
 test2<-generate_route_lc(2000,test)
-plot(test2)
+raster::plot(test2)
 
 }

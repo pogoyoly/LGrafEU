@@ -11,6 +11,9 @@ plot_by_crop(output_obj, method = 1)
 
 \item{method}{1 is plot directly 2 returns a raster of crop type}
 }
+\value{
+method = 1 plots a raster and method = 2 returns an LGrafEU output object
+}
 \description{
 Plot by crop type
 }

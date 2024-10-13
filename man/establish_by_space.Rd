@@ -47,6 +47,9 @@ establish_by_space(
 
 \item{sd_fields_per_farm}{sd fields per farmer from a long normal distribution}
 }
+\value{
+A LGrafEU output object
+}
 \description{
 Heuristic field establishment based on simple geometries
 }

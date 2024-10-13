@@ -7,7 +7,12 @@
 distrubution_by_percent(output_obj, crops_matrix)
 }
 \arguments{
-\item{crops_matrix}{}
+\item{output_obj}{A LGraf placement output object}
+
+\item{crops_matrix}{A crop matrix indexing each crop and its percentage in the landscape}
+}
+\value{
+A LGraf output object with crops assigned
 }
 \description{
 Title

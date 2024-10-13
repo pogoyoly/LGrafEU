@@ -9,7 +9,7 @@ plot_by_field(output_obj, method = 1)
 \arguments{
 \item{output_obj}{an output object of one of the establish functions}
 
-\item{method}{}
+\item{method}{1 is plot directly 2 returns a raster of crop type}
 }
 \description{
 Plot by field number

@@ -18,7 +18,7 @@
 #' @param mean_fields_per_farm mean fields per farmer from a long normal distribution
 #' @param sd_fields_per_farm sd fields per farmer from a long normal distribution
 #'
-#' @return
+#' @return A LGrafEU output object
 #' @export
 #' @import raster
 #' @import dplyr

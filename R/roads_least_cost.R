@@ -7,12 +7,12 @@
 #'
 #' @return A raster
 #' @export
-#' @import raster sp gdistance rgeos
+#' @import raster sp gdistance
 #'
 #' @examples
 #'test<-generate_perlin_noise(200,200,1,2,3,0.005,FALSE, "land_percentage", percetange = 50)
 #'test2<-generate_route_lc(2000,test)
-#'plot(test2)
+#'raster::plot(test2)
 #'
 generate_route_lc<-function(road_length,slope){
 
@@ -48,7 +48,7 @@ generate_route_lc<-function(road_length,slope){
   realized <- 0
 
   #create a dummay spatial line and then empty it
-  sl <- sp::SpatialLines(LinesList = list(Lines(Line(matrix(0, ncol = 2)), ID = NA)))
+  sl <- sp::SpatialLines(LinesList = list(sp::Lines(sp::Line(matrix(0, ncol = 2)), ID = NA)))
   sl <- sl[0]
 
 
@@ -165,9 +165,8 @@ generate_route_lc<-function(road_length,slope){
     sl <- rbind(sl, path)
   }
 
-  r <- terra::rast(ext = sl, resolution = c(1, 1))
-  sl_vect <- terra::vect(sl)
-  r_path <- terra::rasterize(sl_vect, r, field = 1)
+  r <- raster::raster(sl, resolution = c(1, 1))
+  r_path <- raster::rasterize(sl, r, field = 1)
 
   #bb <- extent(slope)
   #res(r_path) <- res(slope)

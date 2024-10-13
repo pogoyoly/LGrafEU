@@ -1,12 +1,10 @@
 #' Plot by farmer
 #'
 #' @param output_obj and output object of one of the establish functions
-#' @param method
+#' @param method 1 is plot directly 2 returns a raster of crop type
 #'
-#' @return
 #' @export
 #'
-#' @examples
 plot_by_farmer<-function(output_obj, method = 1){
   map<-output_obj$map
   obj_main<-output_obj$field_list
@@ -70,12 +68,10 @@ plot_by_farmer<-function(output_obj, method = 1){
 #' Plot by arable land
 #'
 #' @param output_obj an output object of one of the establish functions
-#' @param method
+#' @param method 1 is plot directly 2 returns a raster of crop type
 #'
-#' @return
 #' @export
 #'
-#' @examples
 plot_by_arable_land<-function(output_obj, method = 1){
   land = matrix(0, nrow(output_obj$map), ncol(output_obj$map))
 
@@ -115,12 +111,10 @@ plot_by_arable_land<-function(output_obj, method = 1){
 #' Plot by field number
 #'
 #' @param output_obj an output object of one of the establish functions
-#' @param method
+#' @param method 1 is plot directly 2 returns a raster of crop type
 #'
-#' @return
 #' @export
 #'
-#' @examples
 plot_by_field<-function(output_obj, method = 1){
   land = matrix(0, nrow(output_obj$map), ncol(output_obj$map))
 
@@ -165,10 +159,9 @@ plot_by_field<-function(output_obj, method = 1){
 #' @param output_obj an output object of one of the establish functions
 #' @param method 1 is plot directly 2 returns a raster of crop type
 #'
-#' @return
+#' @return method = 1 plots a raster and method = 2 returns an LGrafEU output object
 #' @export
 #'
-#' @examples
 plot_by_crop<-function(output_obj, method = 1){
   land = matrix(0, nrow(output_obj$map), ncol(output_obj$map))
 

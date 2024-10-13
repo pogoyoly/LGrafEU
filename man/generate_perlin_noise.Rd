@@ -36,7 +36,7 @@ generate_perlin_noise(
 
 \item{lim}{the slope degree cutoff for portential space where 1 will be potential space and 2 non potential space}
 
-\item{percetange}{}
+\item{percetange}{if cat_method is land_percentage then the percentage of potential space is defined by this arg}
 }
 \description{
 A perlin noise based potential space map generator

@@ -2,10 +2,10 @@
 
 #' Title
 #'
-#' @param output_obj
-#' @param crops_matrix
+#' @param output_obj A LGraf placement output object
+#' @param crops_matrix A crop matrix indexing each crop and its percentage in the landscape
 #'
-#' @return
+#' @return A LGraf output object with crops assigned
 #' @export
 #'
 #' @examples

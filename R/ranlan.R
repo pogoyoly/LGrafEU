@@ -14,9 +14,8 @@
 #' @param categorized TRUE/FLASE tells you if the slope raster returns categorized or smooth
 #' @param cat_method either by slope_lim or land_percentage
 #' @param lim the slope degree cutoff for portential space where 1 will be potential space and 2 non potential space
-#' @param percetange
+#' @param percetange if cat_method is land_percentage then the percentage of potential space is defined by this arg
 #'
-#' @return
 #' @export
 #' @import checkmate ambient raster
 #'
