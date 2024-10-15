@@ -9,6 +9,7 @@
 #' @param mean_field_size mean field size counted by number of cells from a normal distribution
 #' @param sd_field_size sd field size counted by number of cells from a normal distribution
 #' @param distribution either norm or lnorm
+#' @param mean_shape_index mean shape index calculated by a relation between width/length of placement
 #' @param sd_shape_index sd shape index calculated by a relation between width/length of placement
 #' @param percent percent of the potential space to be filled with fields
 #' @param assign_farmers TRUE/FALSE for farmer assignment in model
