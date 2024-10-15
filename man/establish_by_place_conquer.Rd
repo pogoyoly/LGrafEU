@@ -36,6 +36,8 @@ establish_by_place_conquer(
 
 \item{distribution}{either norm or lnorm}
 
+\item{mean_shape_index}{mean shape index calculated by a relation between width/length of placement}
+
 \item{sd_shape_index}{sd shape index calculated by a relation between width/length of placement}
 
 \item{percent}{percent of the potential space to be filled with fields}
