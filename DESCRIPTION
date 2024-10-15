@@ -24,7 +24,6 @@ Imports:
     sf,
     sp,
     terra,
-    rlang, 
     glue,
     lifecycle
 Config/testthat/edition: 3
