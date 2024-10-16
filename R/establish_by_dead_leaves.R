@@ -17,6 +17,7 @@
 #'
 #' @return LGraf object
 #' @export
+#' @importFrom stats na.omit rlnorm rnorm runif setNames
 #'
 #' @examples
 #' r<-raster::raster(matrix(1, nrow=50, ncol=50))

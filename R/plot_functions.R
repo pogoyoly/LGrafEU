@@ -4,6 +4,7 @@
 #' @param method 1 is plot directly 2 returns a raster of crop type
 #'
 #' @export
+#' @importFrom grDevices colors
 #'
 plot_by_farmer<-function(output_obj, method = 1){
   map<-output_obj$map
@@ -71,6 +72,7 @@ plot_by_farmer<-function(output_obj, method = 1){
 #' @param method 1 is plot directly 2 returns a raster of crop type
 #'
 #' @export
+#' @importFrom grDevices colors
 #'
 plot_by_arable_land<-function(output_obj, method = 1){
   land = matrix(0, nrow(output_obj$map), ncol(output_obj$map))
