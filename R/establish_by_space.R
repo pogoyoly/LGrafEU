@@ -21,7 +21,6 @@
 #' @return A LGrafEU output object
 #' @export
 #' @import raster
-#' @import dplyr
 #'
 #' @examples
 #' r<-raster::raster(matrix(1, nrow=50, ncol=50))

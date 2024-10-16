@@ -7,7 +7,7 @@
 #'
 #' @return A raster
 #' @export
-#' @import raster sp gdistance
+#' @import raster sp
 #' @importFrom gdistance transition geoCorrection shortestPath
 #'
 #' @examples

@@ -26,5 +26,6 @@ Imports:
     terra,
     glue,
     lifecycle, 
-    rlang
+    rlang,
+    methods
 Config/testthat/edition: 3
