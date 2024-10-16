@@ -17,7 +17,8 @@
 #' @param percetange if cat_method is land_percentage then the percentage of potential space is defined by this arg
 #'
 #' @export
-#' @import checkmate ambient raster
+#' @import checkmate raster
+#' @importFrom ambient noise_perlin normalise
 #'
 #' @examples
 #' test<-generate_perlin_noise(200,200,1,2,3,0.01,TRUE, "land_percentage", percetange = 75)

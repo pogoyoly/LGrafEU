@@ -8,6 +8,7 @@
 #' @return A raster
 #' @export
 #' @import raster sp gdistance
+#' @importFrom gdistance transition geoCorrection shortestPath
 #'
 #' @examples
 #'test<-generate_perlin_noise(200,200,1,2,3,0.005,FALSE, "land_percentage", percetange = 50)

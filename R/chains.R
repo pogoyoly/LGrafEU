@@ -7,6 +7,8 @@
 #' @param rst a raster of either soil aglim or slope
 #' @param landcover a categorized landcover map
 #'
+#' @importFrom dplyr group_by summarise mutate n arrange
+#'
 #' @export
 #'
 confus<-function(rst,landcover){
