@@ -34,18 +34,18 @@
 #' plot_by_crop(outcome)
 
 
-distrubution_by_percent<-function(output_obj, crops_matrix){
+distrubution_by_percent <- function(output_obj, crops_matrix){
 
   #calculate total arable area
-  total_area<-0
-  fields<-as.data.frame(matrix(ncol = 2, nrow = 0))
-  for(i in 1:length(output_obj$field_list)){
-    obj<-output_obj$field_list[[i]]
-    total_area<- total_area + length(obj@location[[1]])
-    vec<-c(i,length(obj@location[[1]]))
-    fields<-rbind(fields,vec)
+  total_area <- 0
+  fields <- as.data.frame(matrix(ncol = 2, nrow = 0))
+  for (i in 1:length(output_obj$field_list)) {
+    obj <- output_obj$field_list[[i]]
+    total_area <- total_area + length(obj@location[[1]])
+    vec <- c(i,length(obj@location[[1]]))
+    fields <- rbind(fields,vec)
   }
-  colnames(fields)<-c("num","size")
+  colnames(fields) <- c("num","size")
 
 
   #calculate desired area of each crop
@@ -59,9 +59,9 @@ distrubution_by_percent<-function(output_obj, crops_matrix){
   #allocate crops to fields using a greedy allocations approach:
   #  For each field, allocate the crop with the highest remaning desired area,
   #  then remove value from crops_matrix$desired_area and reorder
-  for(i in 1:nrow(fields)){
+  for (i in 1:nrow(fields)) {
     crops_matrix <- crops_matrix[order(-crops_matrix$desired_area),]
-    output_obj$field_list[[fields[i,1]]]@crop<- crops_matrix[1,3]
+    output_obj$field_list[[fields[i,1]]]@crop <- crops_matrix[1,3]
     crops_matrix$desired_area[1] <- crops_matrix$desired_area[1] - fields$size[i]
 
   }

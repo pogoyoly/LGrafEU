@@ -15,7 +15,7 @@
 #'test2<-generate_route_lc(2000,test)
 #'raster::plot(test2)
 #'
-generate_route_lc<-function(road_length,slope){
+generate_route_lc <- function(road_length,slope){
 
   circularState <- function(state, value) {
     nextState <- (state + value - 1) %% 4 + 1
@@ -24,8 +24,8 @@ generate_route_lc<-function(road_length,slope){
 
   #generate a temp raster that has origin and extent that starts from zero || check with antonia if we can do this for everything from start
   slope_raster <- slope
-  slope_raster<-raster::raster(slope_raster)
-  raster::origin(slope_raster)<- 0
+  slope_raster <- raster::raster(slope_raster)
+  raster::origin(slope_raster) <- 0
   bb <- raster::extent(0, nrow(slope_raster), 0, ncol(slope_raster))
   raster::extent(slope_raster) <- bb
 
@@ -54,20 +54,20 @@ generate_route_lc<-function(road_length,slope){
   sl <- sl[0]
 
 
-  while(realized < road_length){
-    start<-sample(1:4, 1)
+  while (realized < road_length) {
+    start <- sample(1:4, 1)
     end <- sample(1:3, 1)
 
     #use the circle state function to make sure start and end are not on the same panel
-    end<-circularState(start,end)
+    end <- circularState(start,end)
 
     #choose start on one of the panels (all next 4 ifelse arguments)
     if ( start == 1) {
       xi <- sample(2:cols, 1)
       yi <- 2
-      while(is.na(slope_raster[xi,yi]) == TRUE | slope_raster[xi,yi] == 255){
+      while (is.na(slope_raster[xi,yi]) == TRUE | slope_raster[xi,yi] == 255) {
         yi <- yi + 3
-        if(yi > rows | yi < 0) {
+        if (yi > rows | yi < 0) {
           stop("Use different method for roads")
         }
 
@@ -75,9 +75,9 @@ generate_route_lc<-function(road_length,slope){
     } else if ( start == 2) {
       xi <- sample(2:cols, 1)
       yi <- rows - 3
-      while(is.na(slope_raster[xi,yi]) == TRUE | slope_raster[xi,yi] == 255){
+      while (is.na(slope_raster[xi,yi]) == TRUE | slope_raster[xi,yi] == 255) {
         yi <- yi - 3
-        if(yi > rows | yi < 0) {
+        if (yi > rows | yi < 0) {
           stop("Use different method for roads")
         }
 
@@ -85,9 +85,9 @@ generate_route_lc<-function(road_length,slope){
     } else if ( start == 3) {
       xi <- 3
       yi <- sample(2:rows, 1)
-      while(is.na(slope_raster[xi,yi]) == TRUE | slope_raster[xi,yi] == 255){
+      while (is.na(slope_raster[xi,yi]) == TRUE | slope_raster[xi,yi] == 255) {
         xi <- xi + 3
-        if(xi > cols | xi < 0) {
+        if (xi > cols | xi < 0) {
           stop("Use different method for roads")
         }
 
@@ -95,23 +95,23 @@ generate_route_lc<-function(road_length,slope){
     } else {
       xi <- cols - 3
       yi <- sample(2:rows, 1)
-      while(is.na(slope_raster[xi,yi]) == TRUE | slope_raster[xi,yi] == 255){
+      while (is.na(slope_raster[xi,yi]) == TRUE | slope_raster[xi,yi] == 255) {
         xi <- xi - 3
-        if(xi > cols | xi < 0) {
+        if (xi > cols | xi < 0) {
           stop("Use different method for roads")
         }
 
       }
 
     }
-    A<-c(xi,yi)
+    A <- c(xi,yi)
 
     if ( end == 1) {
       xii <- sample(2:cols, 1)
       yii <- 3
-      while(is.na(slope_raster[xii,yii]) == TRUE | slope_raster[xii,yii] == 255){
+      while (is.na(slope_raster[xii,yii]) == TRUE | slope_raster[xii,yii] == 255) {
         yii <- yii + 3
-        if(yi > rows | yi < 0) {
+        if (yi > rows | yi < 0) {
           stop("Use different method for roads")
         }
 
@@ -120,9 +120,9 @@ generate_route_lc<-function(road_length,slope){
     } else if ( end  == 2) {
       xii <- sample(2:cols, 1)
       yii <- rows - 3
-      while(is.na(slope_raster[xii,yii]) == TRUE | slope_raster[xii,yii] == 255){
+      while (is.na(slope_raster[xii,yii]) == TRUE | slope_raster[xii,yii] == 255) {
         yii <- yii - 3
-        if(yi > rows | yi < 0) {
+        if (yi > rows | yi < 0) {
           stop("Use different method for roads")
         }
 
@@ -131,9 +131,9 @@ generate_route_lc<-function(road_length,slope){
     } else if ( end == 3) {
       xii <- 2
       yii <- sample(2:rows, 1)
-      while(is.na(slope_raster[xii,yii]) == TRUE | slope_raster[xii,yii] == 255){
+      while (is.na(slope_raster[xii,yii]) == TRUE | slope_raster[xii,yii] == 255) {
         xii <- xii + 1
-        if(xi > cols | xi < 0) {
+        if (xi > cols | xi < 0) {
           stop("Use different method for roads")
         }
 
@@ -142,9 +142,9 @@ generate_route_lc<-function(road_length,slope){
     } else {
       xii <- cols - 1
       yii <- sample(2:rows, 1)
-      while(is.na(slope_raster[xii,yii]) == TRUE | slope_raster[xii,yii] == 255){
+      while (is.na(slope_raster[xii,yii]) == TRUE | slope_raster[xii,yii] == 255) {
         xii <- xii - 1
-        if(xi > cols | xi < 0) {
+        if (xi > cols | xi < 0) {
           stop("Use different method for roads")
         }
 
@@ -152,9 +152,9 @@ generate_route_lc<-function(road_length,slope){
 
     }
 
-    B<-c(xii,yii)
+    B <- c(xii,yii)
 
-    if(any(is.na(slope_raster[])) || any(is.infinite(1/slope_raster[]))) {
+    if (any(is.na(slope_raster[])) || any(is.infinite(1/slope_raster[]))) {
       stop("The raster contains NA or infinite values.")
     }
 
@@ -162,7 +162,7 @@ generate_route_lc<-function(road_length,slope){
     trans_geo <- gdistance::geoCorrection(trans, type = "c")
     path <- gdistance::shortestPath(trans_geo, A, B, output = "SpatialLines")
 
-    realized<- realized + sum(sp::SpatialLinesLengths(path, longlat = FALSE))
+    realized <- realized + sum(sp::SpatialLinesLengths(path, longlat = FALSE))
 
     sl <- rbind(sl, path)
   }
