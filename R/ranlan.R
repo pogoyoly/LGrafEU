@@ -28,104 +28,98 @@
 #'
 #'
 #'
-generate_perlin_noise<-function(width, height,cellSize, frequency, octaves, lacunarity, categorized,cat_method, lim = 0, percetange = 0){
+generate_perlin_noise <- function(width, height, cellSize, frequency, octaves, lacunarity, categorized, cat_method, lim = 0, percetange = 0) {
 
-#check function arguments
-checkmate::assert_count(width, positive = TRUE)
-checkmate::assert_count(height, positive = TRUE)
-checkmate::assert_numeric(cellSize)
-checkmate::assert_numeric(frequency)
-checkmate::assert_numeric(octaves)
-checkmate::assert_numeric(lacunarity)
-checkmate::assert_logical(categorized)
+  # Check function arguments
+  checkmate::assert_count(width, positive = TRUE)
+  checkmate::assert_count(height, positive = TRUE)
+  checkmate::assert_numeric(cellSize)
+  checkmate::assert_numeric(frequency)
+  checkmate::assert_numeric(octaves)
+  checkmate::assert_numeric(lacunarity)
+  checkmate::assert_logical(categorized)
 
   # Set the parameters
-map_width <- width  # Width of the Perlin noise map
-map_height <- height  # Height of the Perlin noise map
-cell_size <- cellSize  # Cell size (distance between neighboring pixels)
+  map_width <- width
+  map_height <- height
+  cell_size <- cellSize
 
-# Generate Perlin noise map
-perlin_map<-ambient::noise_perlin(
-  dim = c(map_width, map_height),
-  frequency = frequency,
-  octaves = octaves,
-  lacunarity = lacunarity,
-)
-perlin_map <-ambient::normalise(perlin_map, from = range(perlin_map), to = c(0, 300))
+  # Generate Perlin noise map
+  perlin_map <- ambient::noise_perlin(
+    dim = c(map_width, map_height),
+    frequency = frequency,
+    octaves = octaves,
+    lacunarity = lacunarity
+  )
+  perlin_map <- ambient::normalise(perlin_map, from = range(perlin_map), to = c(0, 300))
 
-# Function to calculate the slope
-calculate_slope <- function(map, x, y, cell_size) {
-  # Get neighboring pixel values
-  top <- map[x, y - cell_size]
-  bottom <- map[x, y + cell_size]
-  left <- map[x - cell_size, y]
-  right <- map[x + cell_size, y]
+  # Function to calculate the slope
+  calculate_slope <- function(map, x, y, cell_size) {
+    top <- map[x, y - cell_size]
+    bottom <- map[x, y + cell_size]
+    left <- map[x - cell_size, y]
+    right <- map[x + cell_size, y]
 
-  # Calculate height differences
-  dx <- (right - left) / cell_size
-  dy <- (bottom - top) / cell_size
+    dx <- (right - left) / cell_size
+    dy <- (bottom - top) / cell_size
+    slope <- sqrt(dx^2 + dy^2)
 
-  # Calculate slope
-  slope <- sqrt(dx^2 + dy^2)
-
-  return(slope)
-}
-
-# Create a matrix to store slope values
-slope_map <- matrix(NA, nrow = map_width, ncol = map_height)
-
-# Calculate slope for each pixel
-for (i in 2:(map_width-1)) {
-  for (j in 2:(map_height-1)) {
-    slope_map[i, j] <- calculate_slope(perlin_map, i, j, cell_size)
+    return(slope)
   }
-}
+
+  # Create a matrix to store slope values
+  slope_map <- matrix(NA, nrow = map_width, ncol = map_height)
+
+  # Calculate slope for each pixel
+  for (i in 2:(map_width-1)) {
+    for (j in 2:(map_height-1)) {
+      slope_map[i, j] <- calculate_slope(perlin_map, i, j, cell_size)
+    }
+  }
+
+  # Create the raster from the slope matrix
+  rast_data <- terra::rast(slope_map)
+  plot(rast_data)
+  # Create an extent object
+  ext <- terra::ext(0, cell_size * ncol(slope_map), 0, cell_size * nrow(slope_map))
+
+  # Assign the extent to the raster
+  terra::ext(rast_data) <- ext
+
+  # Set resolution (cell size)
+  #terra::res(rast_data) <- cell_size
+  #rast_data <- terra::subst(rast_data, NA, 1)
+  rast_data <- terra::ifel(is.na(rast_data), 1, rast_data)
 
 
-# Set the cell size
-cell_size_x <- 1  # Cell size in the x direction
-cell_size_y <- 1  # Cell size in the y direction
+  # Reclassification based on slope limit
+  if (cat_method == "slope_lim") {
+    m <- c(0, lim, 1,
+           lim, 90, 2)
+    rclmat <- matrix(m, ncol=3, byrow=TRUE)
 
-# Create the raster
-raster_data <- raster::raster(slope_map, xmn = 0, xmx = cell_size_x * ncol(slope_map),
-                      ymn = 0, ymx = cell_size_y * nrow(slope_map))
+    slope_gen <- terra::classify(rast_data, rcl = rclmat, include.lowest = TRUE)
+  }
 
-# Set the cell size
-raster::res(raster_data) <- c(cell_size_x, cell_size_y)
-raster_data[is.na(raster_data[])] <- 1
-
-if(cat_method == "slope_lim"){
-slope_gen <- raster::reclassify(raster_data, c(0,lim,1, lim,90,2), include.lowest=F)
-}
-if(cat_method == "land_percentage"){
-
-
-    # Flatten the slope map to a vector
-    slope_values <- raster::values(raster_data)
-
-    # Remove NA values if any
-    slope_values <- slope_values[!is.na(slope_values)]
-
-    # Sort the slope values in ascending order
+  # Reclassification based on land percentage
+  if (cat_method == "land_percentage") {
+    slope_values <- values(rast_data, na.rm = TRUE)
     sorted_slope_values <- sort(slope_values)
-
-    # Calculate the cutoff index based on the desired percentage
     cutoff_index <- ceiling((percetange / 100) * length(sorted_slope_values))
-
-    # Determine the cutoff slope value
     slope_cutoff <- sorted_slope_values[cutoff_index]
 
-    slope_gen <- raster::reclassify(raster_data, c(0,slope_cutoff,1, slope_cutoff,90,2), include.lowest=F)
-}
+    m <- c(0, slope_cutoff, 1,
+           slope_cutoff, 90, 2)
+    rclmat <- matrix(m, ncol=3, byrow=TRUE)
 
-if(categorized == TRUE){
-  return(slope_gen)
 
-}
-if(categorized == FALSE){
-  return(raster_data)
-}
-}
+    slope_gen <- terra::classify(rast_data, rcl = rclmat, include.lowest = FALSE)
+  }
 
-#test<-LGrafEU::generate_slope(200,200,1,0.01,2,5, TRUE)
-#raster::plot(test)
+  # Return categorized or raw slope raster
+  if (categorized == TRUE) {
+    return(slope_gen)
+  } else {
+    return(rast_data)
+  }
+}

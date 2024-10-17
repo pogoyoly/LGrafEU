@@ -9,7 +9,7 @@
 #'
 #' @importFrom dplyr group_by summarise mutate n arrange
 #'
-#' @export
+#' @noRd
 #'
 confus<-function(rst,landcover){
   #first order only aglim
@@ -84,7 +84,7 @@ confus<-function(rst,landcover){
 #' @param transition the transition matrix from the confus function
 #' @param rst the raster from which the transition occurs
 #'
-#' @export
+#' @noRd
 #'
 #'
 trans<-function(transition,rst){
