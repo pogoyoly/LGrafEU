@@ -24,6 +24,7 @@ generate_route_lc<-function(road_length,slope){
 
   #generate a temp raster that has origin and extent that starts from zero || check with antonia if we can do this for everything from start
   slope_raster <- slope
+  slope_raster<-raster::raster(slope_raster)
   raster::origin(slope_raster)<- 0
   bb <- raster::extent(0, nrow(slope_raster), 0, ncol(slope_raster))
   raster::extent(slope_raster) <- bb
