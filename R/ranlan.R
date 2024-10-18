@@ -71,8 +71,8 @@ generate_perlin_noise <- function(width, height, cellSize, frequency, octaves, l
   slope_map <- matrix(NA, nrow = map_width, ncol = map_height)
 
   # Calculate slope for each pixel
-  for (i in 2:(map_width-1)) {
-    for (j in 2:(map_height-1)) {
+  for (i in 2:(map_width - 1)) {
+    for (j in 2:(map_height - 1)) {
       slope_map[i, j] <- calculate_slope(perlin_map, i, j, cell_size)
     }
   }
@@ -95,21 +95,21 @@ generate_perlin_noise <- function(width, height, cellSize, frequency, octaves, l
   if (cat_method == "slope_lim") {
     m <- c(0, lim, 1,
            lim, 90, 2)
-    rclmat <- matrix(m, ncol=3, byrow=TRUE)
+    rclmat <- matrix(m, ncol = 3, byrow = TRUE)
 
     slope_gen <- terra::classify(rast_data, rcl = rclmat, include.lowest = TRUE)
   }
 
   # Reclassification based on land percentage
   if (cat_method == "land_percentage") {
-    slope_values <- values(rast_data, na.rm = TRUE)
+    slope_values <- terra::values(rast_data, na.rm = TRUE)
     sorted_slope_values <- sort(slope_values)
     cutoff_index <- ceiling((percetange / 100) * length(sorted_slope_values))
     slope_cutoff <- sorted_slope_values[cutoff_index]
 
     m <- c(0, slope_cutoff, 1,
            slope_cutoff, 90, 2)
-    rclmat <- matrix(m, ncol=3, byrow=TRUE)
+    rclmat <- matrix(m, ncol = 3, byrow = TRUE)
 
 
     slope_gen <- terra::classify(rast_data, rcl = rclmat, include.lowest = FALSE)
