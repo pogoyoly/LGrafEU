@@ -79,7 +79,6 @@ generate_perlin_noise <- function(width, height, cellSize, frequency, octaves, l
 
   # Create the raster from the slope matrix
   rast_data <- terra::rast(slope_map)
-  plot(rast_data)
   # Create an extent object
   ext <- terra::ext(0, cell_size * ncol(slope_map), 0, cell_size * nrow(slope_map))
 

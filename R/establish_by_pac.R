@@ -75,6 +75,7 @@ establish_by_place_conquer<-function(potential_space,
 
   #set land raster on which to save the fields
   potential_space[is.na(potential_space[])] <- 0
+  potential_space<-as.matrix(potential_space, wide=TRUE)
   land = matrix(0, nrow(potential_space), ncol(potential_space))
   land_raster<-raster::raster(land)
 
@@ -106,7 +107,7 @@ establish_by_place_conquer<-function(potential_space,
 
       #set field size and shape index
       if(distribution == "norm"){
-      field_size <- max(1, round(rnorm(1, mean=mean_field_size, sd=sd_field_size)))
+        field_size <- max(1, round(rnorm(1, mean=mean_field_size, sd=sd_field_size)))
       }
       if(distribution == "lnorm"){
         mu_N <- log(mean_field_size^2 / sqrt(sd_field_size^2 + mean_field_size^2))
@@ -177,122 +178,126 @@ establish_by_place_conquer<-function(potential_space,
       while(placed_cells < max_size && changes != 2){
         suppressWarnings({
 
-        #create block vectors
-        vec1<- seq(start_row, start_row + field_row_size, by=1)
-        vec2 <- rep(cur_col, field_col_size)
+          #create block vectors
+          vec1<- seq(start_row, start_row + field_row_size, by=1)
+          vec2 <- rep(cur_col, field_col_size)
 
-        #function to check if there is overlap
-        coverlap<-function(a,b){
-          if(is.na(potential_space[a,b]) == TRUE || land[a,b] != 0 ||  potential_space[a,b] != includsion_value){
-            return("overlap")
-          }
-        }
-
-        #count how many overlaps
-        co_vec <- mapply(coverlap, vec1, cur_col, SIMPLIFY = TRUE)
-        num_co <- sum(co_vec == "overlap")
-
-        #if no overlaps place
-        if(num_co == 0){
-          for(i in 1:length(vec1)){
-            land[vec1[i], cur_col] <- field_num
-
-          }
-
-          placed_cells <- placed_cells + length(vec1)
-          cur_col <- cur_col + dir
-
-        }
-        if(num_co > 0){
-          #if there are overlaps we try to move the block left and right to see if we can minimize
-
-          #fist we create a matrix of the possible shift
-          shift_vec<-seq( - field_row_size, field_row_size, by = 1)
-          shift_func <- function(vec, shift) {
-            vec<- vec + shift
-          }
-          shifted_vectors <- mapply(function(shift) shift_func(vec1, shift), shift_vec, SIMPLIFY = FALSE)
-          result_matrix <- do.call(rbind, shifted_vectors)
-
-
-          #count how many overlaps for each possible shifted vector
-          coverlap_test<-function(a){
-            if(is.na(potential_space[a,cur_col]) == TRUE || land[a,cur_col] != 0 ||  potential_space[a,cur_col] != includsion_value){
-              return(1)
-            }
-            else{
-              return(0)
+          #function to check if there is overlap
+          coverlap<-function(a,b){
+            if(a > nrow(potential_space) || b > ncol(potential_space) || a < 1 || b < 1 ||
+               is.na(potential_space[a,b]) == TRUE ||  land[a,b] != 0 ||  potential_space[a,b] != includsion_value){
+              return("overlap")
             }
           }
-          co_vec <- rowSums(apply(FUN = coverlap_test, MARGIN = c(1,2), result_matrix))
 
-          if(sum(co_vec)== 0){
-            dir <- dir * -1
-            cur_col <- start_col + dir
-            changes <- changes + 1
-          }
-          else{
-            #choose the one with the lowest value of co_vec without contributing to the shift
-            find_threshold_with_sapply <- function(n_vector, m_vector) {
-              # Ensure that n_vector and m_vector are sorted in the same order based on the absolute value of n_vector
-              sorted_indices <- order(abs(n_vector))
-              n_vector <- n_vector[sorted_indices]
-              m_vector <- m_vector[sorted_indices]
+          #count how many overlaps
+          co_vec <- mapply(coverlap, vec1, cur_col, SIMPLIFY = TRUE)
+          num_co <- sum(co_vec == "overlap")
 
-              # Find the index where the minimum m value is found
-              min_m_index <- which.min(m_vector)
-
-              # If there are multiple minimum values, find the last occurrence
-              if(length(min_m_index) > 1) {
-                min_m_index <- max(min_m_index)
-              }
-
-              # Return the n value at the threshold point
-              return(n_vector[min_m_index])
-            }
-            #This is the shift that is now choosen
-            threshold_n <- find_threshold_with_sapply(shift_vec, co_vec)
-
-            #shift by the choosen
-            right_vec <- shift_func(vec1,threshold_n)
-            for(i in 1:length(right_vec)){
-              if(right_vec[i] > 0 && right_vec[i] < nrow(land) && cur_col > 0 && cur_col < ncol(land) && potential_space[right_vec[i], cur_col] == includsion_value){
-                land[right_vec[i], cur_col] <- field_num
-              }
+          #if no overlaps place
+          if(num_co == 0){
+            for(i in 1:length(vec1)){
+              land[vec1[i], cur_col] <- field_num
 
             }
 
-            placed_cells <- placed_cells +length(vec1)
-
+            placed_cells <- placed_cells + length(vec1)
             cur_col <- cur_col + dir
 
-            co_vec <- mapply(coverlap, right_vec, cur_col, SIMPLIFY = TRUE)
-            num_co <- sum(co_vec == "overlap")
+          }
+          if(num_co > 0){
+            #if there are overlaps we try to move the block left and right to see if we can minimize
+
+            #fist we create a matrix of the possible shift
+            shift_vec<-seq( - field_row_size, field_row_size, by = 1)
+            shift_func <- function(vec, shift) {
+              vec<- vec + shift
+            }
+            shifted_vectors <- mapply(function(shift) shift_func(vec1, shift), shift_vec, SIMPLIFY = FALSE)
+            result_matrix <- do.call(rbind, shifted_vectors)
 
 
-            if(cur_col >= ncol(land) || num_co == length(right_vec)){
+            #count how many overlaps for each possible shifted vector
+            coverlap_test<-function(a){
+
+              if(a > nrow(potential_space) || cur_col > ncol(potential_space) || a < 1 || cur_col < 1 ||
+                 is.na(potential_space[a,cur_col]) == TRUE || land[a,cur_col] != 0 ||  potential_space[a,cur_col] != includsion_value){
+                return(1)
+              }
+              else{
+                return(0)
+              }
+            }
+
+            co_vec <- rowSums(apply(FUN = coverlap_test, MARGIN = c(1,2), result_matrix))
+
+            if(sum(co_vec)== 0){
               dir <- dir * -1
               cur_col <- start_col + dir
               changes <- changes + 1
+            }
+            else{
+              #choose the one with the lowest value of co_vec without contributing to the shift
+              find_threshold_with_sapply <- function(n_vector, m_vector) {
+                # Ensure that n_vector and m_vector are sorted in the same order based on the absolute value of n_vector
+                sorted_indices <- order(abs(n_vector))
+                n_vector <- n_vector[sorted_indices]
+                m_vector <- m_vector[sorted_indices]
+
+                # Find the index where the minimum m value is found
+                min_m_index <- which.min(m_vector)
+
+                # If there are multiple minimum values, find the last occurrence
+                if(length(min_m_index) > 1) {
+                  min_m_index <- max(min_m_index)
+                }
+
+                # Return the n value at the threshold point
+                return(n_vector[min_m_index])
+              }
+              #This is the shift that is now choosen
+              threshold_n <- find_threshold_with_sapply(shift_vec, co_vec)
+
+              #shift by the choosen
+              right_vec <- shift_func(vec1,threshold_n)
+              for(i in 1:length(right_vec)){
+                if(right_vec[i] > 0 && right_vec[i] < nrow(land) && cur_col > 0 && cur_col < ncol(land) && potential_space[right_vec[i], cur_col] == includsion_value){
+                  land[right_vec[i], cur_col] <- field_num
+                }
+
+              }
+
+              placed_cells <- placed_cells +length(vec1)
+
+              cur_col <- cur_col + dir
+
+              co_vec <- mapply(coverlap, right_vec, cur_col, SIMPLIFY = TRUE)
+              num_co <- sum(co_vec == "overlap")
+
+
+              if(cur_col >= ncol(land) || num_co == length(right_vec)){
+                dir <- dir * -1
+                cur_col <- start_col + dir
+                changes <- changes + 1
+
+              }
+
+
+
 
             }
 
 
 
 
+            #otherwise place field with current shift
+
           }
 
+          #now add to cur_col and start again
 
 
-
-          #otherwise place field with current shift
-
-        }
-
-        #now add to cur_col and start again
-
-
-      })
+        })
 
       }
 
@@ -317,7 +322,13 @@ establish_by_place_conquer<-function(potential_space,
     }
 
     #calculate how much of the space has been filled
-    part_potential <- length(which(raster::values(potential_space) %in% c (includsion_value)))
+    calculate_part_potential <- function(potential_space, inclusion_value) {
+      # Ensure potential_space is a matrix and inclusion_value is a vector or scalar
+      part_potential <- length(which(potential_space %in% inclusion_value))
+      return(part_potential)
+    }
+    part_potential <- calculate_part_potential(potential_space,includsion_value )
+    #part_potential <- length(which(raster::values(potential_space) %in% c (includsion_value)))
     part_filled <- length(land[land > 0])
 
     #part_filled <- length(which(raster::values(land_raster) %in% c (1)))
