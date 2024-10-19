@@ -2,7 +2,7 @@
 % Please edit documentation in R/distribute_crops.R
 \name{distrubution_by_percent}
 \alias{distrubution_by_percent}
-\title{Title}
+\title{A function to distribute crops between fields on an LGrafEU output object}
 \usage{
 distrubution_by_percent(output_obj, crops_matrix)
 }
@@ -15,7 +15,7 @@ distrubution_by_percent(output_obj, crops_matrix)
 A LGraf output object with crops assigned
 }
 \description{
-Title
+A function to distribute crops between fields on an LGrafEU output object
 }
 \examples{
 r<-terra::rast(matrix(1, nrow=50, ncol=50))

@@ -48,9 +48,9 @@ plot_by_farmer<-function(output_obj, method = 1){
 
   #end test
   if(method == 1){
-    polygons <- raster::rasterToPolygons(land_raster, n=8,fun=function(x){x > 0}, na.rm=TRUE, digits=12, dissolve=TRUE)
-    raster::plot(land_raster)
-    raster::plot(polygons, add = TRUE, border = "black", lwd = 1)
+    polygons <- terra::as.polygons(land_raster, n=8,fun=function(x){x > 0}, na.rm=TRUE, digits=12, dissolve=TRUE)
+    terra::plot(land_raster, legend = FALSE)
+    terra::plot(polygons, add = TRUE, border = "black", lwd = 1)
 
   }
   if(method == 2){
@@ -93,13 +93,13 @@ plot_by_arable_land<-function(output_obj, method = 1){
 
   }
 
-  land_raster<-raster::raster(land)
-  raster::extent(land_raster)<-raster::extent(output_obj$map)
+  land_raster<-terra::rast(land)
+  terra::ext(land_raster)<-terra::ext(output_obj$map)
 
   if(method == 1){
-    polygons <- raster::rasterToPolygons(land_raster, n=8,fun=function(x){x > 0}, na.rm=TRUE, digits=12, dissolve=TRUE)
-    raster::plot(land_raster)
-    raster::plot(polygons, add = TRUE, border = "black", lwd = 1)
+    polygons <- terra::as.polygons(land_raster, n=8,fun=function(x){x > 0}, na.rm=TRUE, digits=12, dissolve=TRUE)
+    terra::plot(land_raster, legend = FALSE)
+    terra::plot(polygons, add = TRUE, border = "black", lwd = 1)
   }
   if(method == 2){
     return(land_raster)
@@ -136,13 +136,13 @@ plot_by_field<-function(output_obj, method = 1){
 
   }
 
-  land_raster<-raster::raster(land)
-  raster::extent(land_raster)<-raster::extent(output_obj$map)
+  land_raster<-terra::rast(land)
+  terra::ext(land_raster)<-terra::ext(output_obj$map)
 
   if(method == 1){
-    polygons <- raster::rasterToPolygons(land_raster, n=8,fun=function(x){x > 0}, na.rm=TRUE, digits=12, dissolve=TRUE)
-    raster::plot(land_raster, legend = FALSE)
-    raster::plot(polygons, add = TRUE, border = "black", lwd = 1)
+    polygons <- terra::as.polygons(land_raster, n=8,fun=function(x){x > 0}, na.rm=TRUE, digits=12, dissolve=TRUE)
+    terra::plot(land_raster, legend = FALSE)
+    terra::plot(polygons, add = TRUE, border = "black", lwd = 1)
   }
   if(method == 2){
     return(land_raster)
@@ -185,13 +185,13 @@ plot_by_crop<-function(output_obj, method = 1){
 
   }
 
-  land_raster<-raster::raster(land)
-  raster::extent(land_raster)<-raster::extent(output_obj$map)
+  land_raster<-terra::rast(land)
+  terra::ext(land_raster)<-terra::ext(output_obj$map)
 
   if(method == 1){
-    polygons <- raster::rasterToPolygons(land_raster, n=8,fun=function(x){x > 0}, na.rm=TRUE, digits=12, dissolve=TRUE)
-    raster::plot(land_raster)
-    raster::plot(polygons, add = TRUE, border = "black", lwd = 1)
+    polygons <- terra::as.polygons(land_raster, n=8,fun=function(x){x > 0}, na.rm=TRUE, digits=12, dissolve=TRUE)
+    terra::plot(land_raster, legend = FALSE)
+    terra::plot(polygons, add = TRUE, border = "black", lwd = 1)
   }
   if(method == 2){
     return(land_raster)

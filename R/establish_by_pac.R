@@ -23,7 +23,7 @@
 #' @importFrom methods new
 #'
 #' @examples
-#' r<-raster::raster(matrix(1, nrow=50, ncol=50))
+#' r<-terra::rast(matrix(1, nrow=50, ncol=50))
 #' output<-establish_by_place_conquer(potential_space= r,
 #'                          cell_size=1,
 #'                          includsion_value = 1,
@@ -77,7 +77,7 @@ establish_by_place_conquer<-function(potential_space,
   potential_space[is.na(potential_space[])] <- 0
   potential_space<-as.matrix(potential_space, wide=TRUE)
   land = matrix(0, nrow(potential_space), ncol(potential_space))
-  land_raster<-raster::raster(land)
+  land_raster<-terra::rast(land)
 
   #setup place holders
   achieved_percent <- 0
@@ -92,7 +92,7 @@ establish_by_place_conquer<-function(potential_space,
   }
   if(is.na(additional_lim) == TRUE){
     road_inside = matrix(0, nrow(potential_space), ncol(potential_space))
-    road_inside<-raster::raster(road_inside)
+    road_inside<-terra::rast(road_inside)
 
   }
 
@@ -336,7 +336,7 @@ establish_by_place_conquer<-function(potential_space,
 
   }
 
-  land_raster <- raster::raster(land)
+  land_raster <- terra::rast(land)
   patched_raster <- landscapemetrics::get_patches(land_raster)[[1]]
 
 
@@ -425,7 +425,7 @@ establish_by_place_conquer<-function(potential_space,
   }
 
   #make sure the output extent is defined by cell size and has origin in 00
-  raster::extent(land_raster)<-c(0, cell_size*ncol(land_raster), 0, cell_size*nrow(land_raster))
+  terra::ext(land_raster)<-c(0, cell_size*ncol(land_raster), 0, cell_size*nrow(land_raster))
 
   #unify resutls in list
   result<-list(map = land_raster, field_list = field_list)

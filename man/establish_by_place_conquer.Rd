@@ -57,7 +57,7 @@ LGraf object
 Establish landscape by place and conquer
 }
 \examples{
-r<-raster::raster(matrix(1, nrow=50, ncol=50))
+r<-terra::rast(matrix(1, nrow=50, ncol=50))
 output<-establish_by_place_conquer(potential_space= r,
                          cell_size=1,
                          includsion_value = 1,
