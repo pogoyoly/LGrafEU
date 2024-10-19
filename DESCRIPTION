@@ -21,7 +21,6 @@ Imports:
     landscapemetrics,
     matrixcalc,
     raster,
-    sf,
     sp,
     terra,
     glue,

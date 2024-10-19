@@ -37,6 +37,9 @@ confus<-function(rst,landcover){
   #dplyr::arrange(desc(freq)) %>%
   #dplyr::mutate(lc_points = as.factor(lc_points))
 
+  #set empty global variables
+  cnt <- NULL
+
   # Group by soil_points and lc_points
   grouped_points <- dplyr::group_by(all_points, soil_points, lc_points)
 
@@ -47,7 +50,7 @@ confus<-function(rst,landcover){
   mutated_points <- dplyr::mutate(summarized_points, freq = round(cnt / sum(cnt), 3))
 
   # Arrange by descending frequency
-  arranged_points <- dplyr::arrange(mutated_points, desc(freq))
+  arranged_points <- dplyr::arrange(mutated_points, dplyr::desc(freq))
 
   # Mutate to convert lc_points to factor
   confusion_matrix <- dplyr::mutate(arranged_points, lc_points = as.factor(lc_points))
@@ -189,9 +192,10 @@ for(valii in vals2){
   nsa[nsa == 0] <- NA
 
   #print(nsa)
+
   #do the transofmr matrix on raster
-  con_nsa<-LGrafEU::confus(nsa,landcov)
-  nsa_trans<-LGrafEU::trans(con_nsa,nsa)
+  con_nsa<-confus(nsa,landcov)
+  nsa_trans<-trans(con_nsa,nsa)
 
 
   #merge with empty raster
