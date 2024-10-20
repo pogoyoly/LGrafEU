@@ -37,5 +37,5 @@ jobs:
 
 rules:
   line-length:
-    max: 100
+    max: 140
 
