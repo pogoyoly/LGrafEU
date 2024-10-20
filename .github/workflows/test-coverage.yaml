@@ -12,6 +12,10 @@ name: test-coverage.yaml
 
 permissions: read-all
 
+env:
+  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+
 jobs:
   test-coverage:
     runs-on: ubuntu-latest
