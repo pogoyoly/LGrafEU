@@ -21,8 +21,7 @@
 #' @importFrom methods new
 #'
 #' @examples
-#' r<-raster::raster(matrix(1, nrow=50, ncol=50))
-#' raster::extent(r)<-c(0,100,0,100)
+#' r<-terra::rast(matrix(1, nrow=100, ncol=100))
 #' output <- establish_by_dead_leaves(potential_space = r,
 #'                                                 cell_size = 1,
 #'                                                 includsion_value = 1,
@@ -31,7 +30,7 @@
 #'                                                 distribution = "norm",
 #'                                                 mean_shape_index = .5,
 #'                                                 sd_shape_index = .1,
-#'                                                 percent = 0.75,
+#'                                                 percent = 0.95,
 #'                                                 assign_farmers = TRUE,
 #'                                                 assign_mode = 2,
 #'                                                 mean_fields_per_farm = 4,
@@ -71,7 +70,7 @@ establish_by_dead_leaves <- function(potential_space,
 
   #setup matrix to be filled
   canvas <- matrix(0, nrow = nrow(potential_space), ncol = ncol(potential_space))
-  potential_space_matrix <- raster::as.matrix(potential_space)
+  potential_space_matrix <- terra::as.matrix(potential_space, wide=TRUE)
   potential_space_matrix[potential_space_matrix != includsion_value] <- 0
   potential_space_matrix[potential_space_matrix == includsion_value] <- 1
 
@@ -180,7 +179,7 @@ establish_by_dead_leaves <- function(potential_space,
 
 
   #convert to raster format to be used with landscape metrics tools
-  dead_leves_rast <- raster::raster(output)
+  dead_leves_rast <- terra::rast(output)
 
 
   #remove small patches till you reach the percentage that needs to be filled
@@ -189,7 +188,7 @@ establish_by_dead_leaves <- function(potential_space,
   # patchedf<- patchedf %>% arrange(value)
   patchedf <- patchedf[order(patchedf$value), ]
 
-  unique_list <- raster::unique(dead_leves_rast)
+  unique_list <- terra::unique(dead_leves_rast)
   realized_patches <- length(dead_leves_rast[dead_leves_rast > 0])
   to_be_filled <- realized_patches * percent
 
@@ -197,7 +196,8 @@ establish_by_dead_leaves <- function(potential_space,
   while (realized_patches > to_be_filled) {
     val <- patchedf[1,1]
     val <- as.numeric(val)
-    dead_leves_rast[dead_leves_rast == unique_list[val]] <- 0
+    replacement_value <- as.numeric(unique_list[val,1])
+    dead_leves_rast[dead_leves_rast == replacement_value] <- 0
     realized_patches <- length(dead_leves_rast[dead_leves_rast > 0])
     patchedf <- patchedf[-1,]
   }
@@ -205,7 +205,7 @@ establish_by_dead_leaves <- function(potential_space,
   #reindex
   #sapply(unique_list, function(unique_list) dead_leves_rast[dead_leves_rast == unique_list] <- unique_list)
   for (j in 1:length(unique_list)) {
-    dead_leves_rast[dead_leves_rast == unique_list[j]] <- j
+    dead_leves_rast[dead_leves_rast == unique_list[j,1]] <- j
 
   }
 
@@ -311,16 +311,10 @@ establish_by_dead_leaves <- function(potential_space,
   }
 
   #set extent by input raster
-  raster::extent(dead_leves_rast) <- c(0, cell_size*ncol(dead_leves_rast), 0, cell_size*nrow(dead_leves_rast))
+  terra::ext(dead_leves_rast) <- c(0, cell_size*ncol(dead_leves_rast), 0, cell_size*nrow(dead_leves_rast))
 
   #finalize result into single object
   result <- list(map = dead_leves_rast, field_list = field_list)
 
   return(result)
 }
-
-
-
-
-setClass("Field", slots = list(number = "numeric",location = "list",farmer = "numeric", crop = "numeric"))
-

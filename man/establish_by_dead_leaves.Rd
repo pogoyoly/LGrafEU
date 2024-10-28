@@ -54,8 +54,7 @@ LGraf object
 Field establishment based on a dead leave algorithm
 }
 \examples{
-r<-raster::raster(matrix(1, nrow=50, ncol=50))
-raster::extent(r)<-c(0,100,0,100)
+r<-terra::rast(matrix(1, nrow=100, ncol=100))
 output <- establish_by_dead_leaves(potential_space = r,
                                                 cell_size = 1,
                                                 includsion_value = 1,
@@ -64,7 +63,7 @@ output <- establish_by_dead_leaves(potential_space = r,
                                                 distribution = "norm",
                                                 mean_shape_index = .5,
                                                 sd_shape_index = .1,
-                                                percent = 0.75,
+                                                percent = 0.95,
                                                 assign_farmers = TRUE,
                                                 assign_mode = 2,
                                                 mean_fields_per_farm = 4,

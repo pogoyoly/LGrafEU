@@ -328,10 +328,7 @@ establish_by_place_conquer<-function(potential_space,
       return(part_potential)
     }
     part_potential <- calculate_part_potential(potential_space,includsion_value )
-    #part_potential <- length(which(raster::values(potential_space) %in% c (includsion_value)))
     part_filled <- length(land[land > 0])
-
-    #part_filled <- length(which(raster::values(land_raster) %in% c (1)))
     achieved_percent <- (part_filled / part_potential) * 100
 
   }
@@ -343,10 +340,6 @@ establish_by_place_conquer<-function(potential_space,
   for(i in 2:length(patched_raster)){
     mati <- terra::as.matrix(patched_raster[[i]], wide=TRUE)
     dimnames(mati) <- list(x = 1:nrow(mati), y = 1:ncol(mati))
-    #mydf <- reshape2::melt(mati,level = 1, varnames = c("x", "y"))  # Ensure proper names
-    #print(mydf)
-    #names(mydf) <- c("x", "y", "Z")
-    #newdata <- mydf[!is.na(mydf$Z),]  # Filter out NAs
     newdata <- expand.grid(x = 1:nrow(mati), y = 1:ncol(mati))
     newdata$Z <- as.vector(mati)
     newdata <- newdata[!is.na(newdata$Z),]
