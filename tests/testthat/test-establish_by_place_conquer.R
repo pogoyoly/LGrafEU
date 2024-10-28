@@ -15,8 +15,8 @@ output <- establish_by_place_conquer(potential_space= r,
                                    mean_fields_per_farm = 3,
                                    sd_fields_per_farm = 3)
 
-test_obj1 <- plot_by_arable_land(output, method = 2)
-test_obj2 <- plot_by_field(output, method = 2)
+test_obj1 <- return_by_arable_land(output, method = 2)
+test_obj2 <- return_by_field(output, method = 2)
 
 test_that("basic placment works", {
 

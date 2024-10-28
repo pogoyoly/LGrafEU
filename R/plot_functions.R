@@ -1,4 +1,4 @@
-#' Plot by farmer
+#' return by farmer
 #'
 #' @param output_obj and output object of one of the establish functions
 #' @param method 1 is plot directly 2 returns a raster of crop type
@@ -6,7 +6,7 @@
 #' @export
 #' @importFrom grDevices colors
 #'
-plot_by_farmer<-function(output_obj, method = 1){
+return_by_farmer<-function(output_obj, method = 1){
   map<-output_obj$map
   obj_main<-output_obj$field_list
   land = matrix(0, nrow(map), ncol(map))
@@ -66,7 +66,7 @@ plot_by_farmer<-function(output_obj, method = 1){
 
 
 
-#' Plot by arable land
+#' return by arable land
 #'
 #' @param output_obj an output object of one of the establish functions
 #' @param method 1 is plot directly 2 returns a raster of crop type
@@ -74,7 +74,7 @@ plot_by_farmer<-function(output_obj, method = 1){
 #' @export
 #' @importFrom grDevices colors
 #'
-plot_by_arable_land<-function(output_obj, method = 1){
+return_by_arable_land<-function(output_obj, method = 1){
   land = matrix(0, nrow(output_obj$map), ncol(output_obj$map))
 
   for(i in 1:length(output_obj$field_list)){
@@ -117,7 +117,7 @@ plot_by_arable_land<-function(output_obj, method = 1){
 #'
 #' @export
 #'
-plot_by_field<-function(output_obj, method = 1){
+return_by_field<-function(output_obj, method = 1){
   land = matrix(0, nrow(output_obj$map), ncol(output_obj$map))
 
   for(i in 1:length(output_obj$field_list)){
@@ -164,7 +164,7 @@ plot_by_field<-function(output_obj, method = 1){
 #' @return method = 1 plots a raster and method = 2 returns an LGrafEU output object
 #' @export
 #'
-plot_by_crop<-function(output_obj, method = 1){
+return_by_crop<-function(output_obj, method = 1){
   land = matrix(0, nrow(output_obj$map), ncol(output_obj$map))
 
   for(i in 1:length(output_obj$field_list)){

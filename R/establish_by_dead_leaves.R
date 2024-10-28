@@ -35,7 +35,7 @@
 #'                                                 assign_mode = 2,
 #'                                                 mean_fields_per_farm = 4,
 #'                                                 sd_fields_per_farm = 4)
-#' plot_by_field(output)
+#' return_by_field(output)
 
 
 establish_by_dead_leaves <- function(potential_space,

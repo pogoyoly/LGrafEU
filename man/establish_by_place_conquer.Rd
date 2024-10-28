@@ -73,5 +73,5 @@ output<-establish_by_place_conquer(potential_space= r,
                          sd_fields_per_farm = 3)
 
 
-plot_by_field(output)
+return_by_field(output)
 }

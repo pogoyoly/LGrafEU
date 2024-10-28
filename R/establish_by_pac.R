@@ -39,7 +39,7 @@
 #'                          sd_fields_per_farm = 3)
 #'
 #'
-#' plot_by_field(output)
+#' return_by_field(output)
 
 
 establish_by_place_conquer<-function(potential_space,
