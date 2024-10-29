@@ -31,7 +31,7 @@
 #'
 #' outcome<-distrubution_by_percent(map,crops_matrix)
 #'
-#' plot_by_crop(outcome)
+#' return_by_crop(outcome)
 
 
 distrubution_by_percent <- function(output_obj, crops_matrix){

@@ -40,5 +40,5 @@ crops_matrix <- data.frame(crop = c("Wheat", "Corn", "Soybean"),
 
 outcome<-distrubution_by_percent(map,crops_matrix)
 
-plot_by_crop(outcome)
+return_by_crop(outcome)
 }
