@@ -12,23 +12,22 @@
 #' @noRd
 #'
 confus <- function(rst, landcover) {
-  #first order only aglim
-  trf_val <- ncol(rst) * nrow(rst)
-  points <- dismo::randomPoints(rst, trf_val, tryf = 10)
+  # Calculate the number of random points
+  trf_val <- ncol(rst) * nrow(rst) / 10
+  points <- terra::spatSample(rst, size = trf_val, method = "random", as.points = TRUE)
 
-  # Extract at test points the value of the soil map
-  soil_points <- raster::extract(rst, points)
-  soil_points <- unlist(soil_points)
-  soil_points <- as.data.frame(soil_points)
+  # Extract soil and landcover values at the sampled points
+  soil_points <- terra::extract(rst, points)
+  soil_points <- soil_points[2]
+  lc_points <- terra::extract(landcover, points)
+  lc_points <- lc_points[2]
 
-  # using the same points on the landcover map
-  lc_points <- raster::extract(landcover, points)
-  lc_points <- unlist(lc_points)
-  lc_points <- as.data.frame(lc_points)
+  # Combine extracted points into a data frame and remove any rows with NA values
+  all_points <- data.frame(soil_points = soil_points, lc_points = lc_points)
 
-  #combine both to a df
-  all_points <- cbind(soil_points, lc_points)
+  all_points <-na.omit(all_points)
 
+  colnames(all_points) <- c("soil_points", "lc_points")
 
   #set empty global variables
   cnt <- freq <- NULL
@@ -37,7 +36,7 @@ confus <- function(rst, landcover) {
   grouped_points <- dplyr::group_by(all_points, soil_points, lc_points)
 
   # Summarize to get the count
-  summarized_points <- dplyr::summarise(grouped_points, cnt = dplyr::n())
+  summarized_points <- dplyr::summarise(grouped_points, cnt = dplyr::n(), .groups = "drop")
 
   # Mutate to calculate the frequency
   mutated_points <- dplyr::mutate(summarized_points,
@@ -51,24 +50,31 @@ confus <- function(rst, landcover) {
 
 
   # results
-  confusion_matrix$lc_points <- factor(confusion_matrix$lc_points, levels = c(1, 2, 3, 4, 5))
-
-
+  confusion_matrix$lc_points <- factor(confusion_matrix$lc_points, levels = c( 1, 2, 3, 4, 5))
+  # Prepare the transition matrix
   transition2 <- matrix(0, nrow = 13, ncol = 5, dimnames = list(1:13, 1:5))
 
+  # Create the main confusion matrix (matrix `a`)
+  # Filter out NA values and get unique sorted levels for soil_points and lc_points
+  soil_levels <- sort(unique(confusion_matrix$soil_points))
+  lc_levels <- sort(unique(confusion_matrix$lc_points))
 
-  a <- matrix(0, nrow = length(na.omit(unique(confusion_matrix$soil_points))),
-            ncol = length(na.omit(unique(confusion_matrix$lc_points))),
-            dimnames = list(sort(unique(confusion_matrix$soil_points)),
-                            sort(unique(confusion_matrix$lc_points))))
+  # Create the matrix with correct dimensions and dimnames
+  a <- matrix(0,
+              nrow = length(soil_levels),
+              ncol = length(lc_levels),
+              dimnames = list(soil_levels, lc_levels))
 
-  a[cbind(as.numeric(factor(na.omit(confusion_matrix$soil_points))),
-        as.numeric(factor(na.omit(confusion_matrix$lc_points))))] <- confusion_matrix$freq
+  # Assign frequency values to matrix `a`
+  soil_indices <- na.omit(as.numeric(factor(confusion_matrix$soil_points, levels = rownames(a))))
+  lc_indices <- na.omit(as.numeric(factor(confusion_matrix$lc_points, levels = colnames(a))))
+  a[cbind(soil_indices, lc_indices)] <- confusion_matrix$freq
 
-
+  # Map `a` values into `transition2` based on matching rows and columns
   cols <- colnames(transition2)[colnames(transition2) %in% colnames(a)]
   rows <- rownames(transition2)[rownames(transition2) %in% rownames(a)]
   transition2[rows, cols] <- a[rows, cols]
+
   return(transition2)
 }
 
@@ -81,120 +87,104 @@ confus <- function(rst, landcover) {
 #' @noRd
 #'
 #'
-trans <- function(transition,rst) {
-#transition function
-tran <- transition
-transform <- function(x) {
-  z <- 0
-  tranz <- 0
-  if (is.na(x) == FALSE) {
-    dice <- runif(1, min = 0, max = 1)
-    for (i in 1:ncol(tran)) {
-      if (isTRUE(dice >= tranz)) {
-        tranz <- tranz + tran[x,i]
+trans <- function(transition, rst) {
+  tran <- transition
+
+  transform <- function(x) {
+    # Initialize result vector
+    result <- numeric(nrow(x))
+
+    for (j in 1:nrow(x)) {
+      cell_value <- x[j, 1]
+      z <- 0
+      tranz <- 0
+
+      if (!is.na(cell_value)) {
+        dice <- runif(1, min = 0, max = 1)
+        for (i in 1:ncol(tran)) {
+          if (isTRUE(dice >= tranz)) {
+            tranz <- tranz + tran[cell_value, i]
+          }
+          if (isTRUE(dice < tranz)) {
+            z <- i
+            tranz <- -1
+            break
+          }
+        }
       }
-      if (isTRUE(dice < tranz)) {
-        z <- i
-        tranz <- -1
-      }
-      }
+
+      # Store the result for this cell
+      result[j] <- z
     }
-   return(z)
+
+    return(result)
   }
 
+  # Apply the transform function, which now handles blocks
+  transformed_reclassify <- terra::app(rst, fun = transform)
 
-#run apply function
-  transformed <- raster::calc(rst, transform)
-  transformed_reclassify <- raster::reclassify(transformed, cbind(0, NA), right = FALSE)
   return(transformed_reclassify)
-
 }
 
-#' A one layer transformation
+
+#' A one layer transformation that allows the expansion of the potential space to
+#' areas with submoptimal landscapes based on a co-variant probability
 #'
 #' @param rast A type feature raster
 #' @param landcover A landcover raster
 #' @param aggregation A number that defines how aggregated he potential space will be
 #'
+#' @export
+#'
+#'@examples
+#'original_potential_space<-generate_perlin_noise(200,200,1,2,3,0.02,TRUE, "land_percentage", percetange = 75)
+#'corresponding_fields<-establish_by_place_conquer(potential_space= original_potential_space,
+#'                                                 cell_size=1,
+#'                                                 includsion_value = 1,
+#'                                                 mean_field_size = 200,
+#'                                                 sd_field_size = 100,
+#'                                                 distribution = "norm",
+#'                                                 mean_shape_index = 3,
+#'                                                 sd_shape_index = 0.3,
+#'                                                 percent = 90,
+#'                                                 assign_farmers = TRUE,
+#'                                                 assign_mode = 2,
+#'                                                 mean_fields_per_farm = 3,
+#'                                                 sd_fields_per_farm = 3)
+#'
+#'map<-return_by_arable_land(corresponding_fields, method =2)
+#'result<-LGrafEU::trans_1lr(map,original_potential_space,4)
+#'par(mfrow=c(1,2))
+#'
+#'terra::plot(original_potential_space, main = "original space")
+#'terra::plot(result, main = "modified space")
 #'
 trans_1lr <- function(rast, landcover, aggregation) {
+  # Calculate the confusion matrix (assuming `confus` is a function defined elsewhere)
   con_mat <- confus(rast, landcover)
+
+  # Apply the transition function (assuming `trans` is defined elsewhere)
   trans_rast <- trans(con_mat, rast)
-  trans_rast <- raster::aggregate(trans_rast, fact = aggregation, fun = modal, na.rm = FALSE)
-  trans_rast <- raster::disaggregate(trans_rast, fact = aggregation)
-  raster::extent(trans_rast) <- raster::extent(rast)
-  return(trans_rast)
+
+  # Aggregate the raster with modal function in terra
+  trans_rast <- terra::aggregate(trans_rast, fact = aggregation, fun = "max", na.rm = FALSE)
+
+  # Disaggregate to return to original resolution
+  trans_rast <- terra::disagg(trans_rast, fact = aggregation)
+
+  # Ensure extents match
+  terra::ext(trans_rast) <- terra::ext(rast)
+
+  rcl_matrix <- matrix(c(
+    -Inf, 0, 2,  # Values <= 0 become 2
+    0, Inf, 1    # Values > 0 become 1
+  ), ncol = 3, byrow = TRUE)
+
+  reclassified_rast <- terra::classify(trans_rast, rcl = rcl_matrix)
+
+  return(reclassified_rast)
 }
 
 
 
 
-#######################################
-
-
-
-
-#' A three layer transformation
-#'
-#' @param texture A soil texture raster
-#' @param slope A categorized slope raster
-#' @param aglim A agricultural limitation raster
-#' @param landcov A categorized landcover raster
-#' @param aggregation factor for lc aggregation
-#'
-trans_3lr <- function(texture, slope, aglim, landcov, aggregation) {
-
-
-#get stratified points
-vals1 <- raster::unique(slope)
-vals2 <- raster::unique(texture) # Get all classes
-
-
-res1 <- raster::res(aglim)[1]
-res2 <- raster::res(aglim)[2]
-er <- terra::rast(terra::ext(aglim), resolution = c(res1,res2), vals = 0)
-er <- raster::raster(er)
-
-for (vali in vals1) {
-for (valii in vals2) {
-
-  #transform to 0 anything that isnt val and transform val to 1
-  myFun1 <- function(x) {ifelse(x == vali,1,0)}
-  nr1 <- raster::calc(slope, myFun1)
-
-  myFun2 <- function(x) {ifelse (x == valii, 1, 0)}
-  nr2 <- raster::calc(texture, myFun2)
-
-  #multiply new raster with aglim raster
-  nsa <- aglim * nr1 * nr2
-  n <- freq(nsa, useNA = "no")
-
-
-  if (nrow(n) > 1) {
-
-  #turn all 0 in aglim raster to value where no caluclation happens
-  nsa[nsa == 0] <- NA
-
-
-  #do the transofmr matrix on raster
-  con_nsa <- confus(nsa, landcov)
-  nsa_trans <- trans(con_nsa, nsa)
-
-
-  #merge with empty raster
-  allrasters <- raster::stack(er, nsa_trans)
-  er <- raster::calc(allrasters, fun = sum, na.rm = T)
-  }
-
-
-}
-}
-#plot(er)
-#first aggregate based on majority rule
-er_majority <- raster::aggregate(er, fact = aggregation, fun = modal, na.rm = FALSE)
-er_majority <- raster::disaggregate(er_majority, fact = aggregation)
-er_majority2 <- raster::reclassify(er_majority, cbind(-Inf, 0.5, NA), right = FALSE)
-return(er_majority2)
-
-
-}

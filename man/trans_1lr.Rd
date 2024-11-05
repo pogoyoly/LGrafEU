@@ -2,7 +2,8 @@
 % Please edit documentation in R/chains.R
 \name{trans_1lr}
 \alias{trans_1lr}
-\title{A one layer transformation}
+\title{A one layer transformation that allows the expansion of the potential space to
+areas with submoptimal landscapes based on a co-variant probability}
 \usage{
 trans_1lr(rast, landcover, aggregation)
 }
@@ -14,5 +15,30 @@ trans_1lr(rast, landcover, aggregation)
 \item{aggregation}{A number that defines how aggregated he potential space will be}
 }
 \description{
-A one layer transformation
+A one layer transformation that allows the expansion of the potential space to
+areas with submoptimal landscapes based on a co-variant probability
+}
+\examples{
+original_potential_space<-generate_perlin_noise(200,200,1,2,3,0.02,TRUE, "land_percentage", percetange = 75)
+corresponding_fields<-establish_by_place_conquer(potential_space= original_potential_space,
+                                                cell_size=1,
+                                                includsion_value = 1,
+                                                mean_field_size = 200,
+                                                sd_field_size = 100,
+                                                distribution = "norm",
+                                                mean_shape_index = 3,
+                                                sd_shape_index = 0.3,
+                                                percent = 90,
+                                                assign_farmers = TRUE,
+                                                assign_mode = 2,
+                                                mean_fields_per_farm = 3,
+                                                sd_fields_per_farm = 3)
+
+map<-return_by_arable_land(corresponding_fields, method =2)
+result<-LGrafEU::trans_1lr(map,original_potential_space,4)
+par(mfrow=c(1,2))
+
+terra::plot(original_potential_space, main = "original space")
+terra::plot(result, main = "modified space")
+
 }
