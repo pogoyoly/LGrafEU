@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/pogoyoly/LGrafEU/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/pogoyoly/LGrafEU/actions/workflows/R-CMD-check.yaml)
 [![Codecov test coverage](https://codecov.io/gh/pogoyoly/LGrafEU/branch/master/graph/badge.svg)](https://app.codecov.io/gh/pogoyoly/LGrafEU?branch=master)
+[![CircleCI build status](https://circleci.com/gh/pogoyoly/LGrafEU.svg?style=svg)](https://circleci.com/gh/pogoyoly/LGrafEU)
 <!-- badges: end -->
 
 LGrafEU is an artificial landcover generator that is designed to ease the integration of artificial agricultural landcover maps in the work flow of ecological modellers. The package is designed to generate landscapes using different algorithms, and then store the information in an output file that includes both a raster layer, and a list containing all information of the fields. This package allows to  generate landscapes in a systematic reproducable  way while controlling for different variables.  

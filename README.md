@@ -8,6 +8,8 @@
 [![R-CMD-check](https://github.com/pogoyoly/LGrafEU/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/pogoyoly/LGrafEU/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/pogoyoly/LGrafEU/branch/master/graph/badge.svg)](https://app.codecov.io/gh/pogoyoly/LGrafEU?branch=master)
+[![CircleCI build
+status](https://circleci.com/gh/pogoyoly/LGrafEU.svg?style=svg)](https://circleci.com/gh/pogoyoly/LGrafEU)
 <!-- badges: end -->
 
 LGrafEU is an artificial landcover generator that is designed to ease
