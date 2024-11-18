@@ -132,7 +132,7 @@ trans <- function(transition, rst) {
 #' @param rast A type feature raster
 #' @param landcover A landcover raster
 #' @param aggregation A number that defines how aggregated he potential space will be
-#' @param arabel_val
+#' @param arabel_val the value of arable fields in your landcover raster
 #'
 #' @export
 #'

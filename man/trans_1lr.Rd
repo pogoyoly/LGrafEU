@@ -14,7 +14,7 @@ trans_1lr(rast, landcover, aggregation, arabel_val = 1)
 
 \item{aggregation}{A number that defines how aggregated he potential space will be}
 
-\item{arabel_val}{}
+\item{arabel_val}{the value of arable fields in your landcover raster}
 }
 \description{
 A one layer transformation that allows the expansion of the potential space to
