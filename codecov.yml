@@ -10,6 +10,9 @@ after_success:
 
 - Rscript -e 'covr::codecov()'
 
+codecov:
+  token: f5ef932d-5b1e-4b30-acc4-064e78838d61
+
 
 coverage:
   status:
