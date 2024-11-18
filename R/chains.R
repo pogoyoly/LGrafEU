@@ -89,7 +89,6 @@ confus <- function(rst, landcover) {
 #'
 trans <- function(transition, rst) {
   tran <- transition
-
   transform <- function(x) {
     # Initialize result vector
     result <- numeric(nrow(x))
@@ -133,11 +132,13 @@ trans <- function(transition, rst) {
 #' @param rast A type feature raster
 #' @param landcover A landcover raster
 #' @param aggregation A number that defines how aggregated he potential space will be
+#' @param arabel_val
 #'
 #' @export
 #'
 #'@examples
-#'original_potential_space<-generate_perlin_noise(200,200,1,2,3,0.02,TRUE, "land_percentage", percetange = 75)
+#'set.seed(123)
+#'original_potential_space<-generate_perlin_noise(200,200,1,4,3,0.001,TRUE, "land_percentage", percetange = 50)
 #'corresponding_fields<-establish_by_place_conquer(potential_space= original_potential_space,
 #'                                                 cell_size=1,
 #'                                                 includsion_value = 1,
@@ -153,15 +154,25 @@ trans <- function(transition, rst) {
 #'                                                 sd_fields_per_farm = 3)
 #'
 #'map<-return_by_arable_land(corresponding_fields, method =2)
-#'result<-LGrafEU::trans_1lr(map,original_potential_space,4)
+#'set.seed(123)
+#'modified_potential_space<-generate_perlin_noise(200,200,1,4,3,0.001,TRUE, "land_percentage", percetange = 30)
+#'
+#'result<-LGrafEU::trans_1lr(modified_potential_space,map,4, arabel_val = 1)
 #'par(mfrow=c(1,2))
+#'terra::plot(original_potential_space)
+#'terra::plot(result)
 #'
-#'terra::plot(original_potential_space, main = "original space")
-#'terra::plot(result, main = "modified space")
 #'
-trans_1lr <- function(rast, landcover, aggregation) {
+trans_1lr <- function(rast, landcover, aggregation, arabel_val = 1) {
+
+
+  target_value <- arabel_val
+
+  classified_landcover <- terra::app(landcover, function(x) ifelse(x == target_value, 1, 0))
+
+
   # Calculate the confusion matrix (assuming `confus` is a function defined elsewhere)
-  con_mat <- confus(rast, landcover)
+  con_mat <- confus(rast, classified_landcover)
 
   # Apply the transition function (assuming `trans` is defined elsewhere)
   trans_rast <- trans(con_mat, rast)
@@ -175,14 +186,14 @@ trans_1lr <- function(rast, landcover, aggregation) {
   # Ensure extents match
   terra::ext(trans_rast) <- terra::ext(rast)
 
-  rcl_matrix <- matrix(c(
-    -Inf, 0, 2,  # Values <= 0 become 2
-    0, Inf, 1    # Values > 0 become 1
-  ), ncol = 3, byrow = TRUE)
+  #rcl_matrix <- matrix(c(
+  #  -Inf, 0, 2,  # Values <= 0 become 2
+  #  0, Inf, 1    # Values > 0 become 1
+  #), ncol = 3, byrow = TRUE)
+  #
+  # reclassified_rast <- terra::classify(trans_rast, rcl = rcl_matrix)
 
-  reclassified_rast <- terra::classify(trans_rast, rcl = rcl_matrix)
-
-  return(reclassified_rast)
+  return(trans_rast)
 }
 
 
