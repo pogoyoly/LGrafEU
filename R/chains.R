@@ -138,7 +138,8 @@ trans <- function(transition, rst) {
 #'
 #'@examples
 #'set.seed(123)
-#'original_potential_space<-generate_perlin_noise(200,200,1,4,3,0.001,TRUE, "land_percentage", percetange = 50)
+#'original_potential_space<-generate_perlin_noise(200,200,1,4,3,0.001,TRUE,
+#'"land_percentage", percetange = 50)
 #'corresponding_fields<-establish_by_place_conquer(potential_space= original_potential_space,
 #'                                                 cell_size=1,
 #'                                                 includsion_value = 1,
@@ -155,7 +156,8 @@ trans <- function(transition, rst) {
 #'
 #'map<-return_by_arable_land(corresponding_fields, method =2)
 #'set.seed(123)
-#'modified_potential_space<-generate_perlin_noise(200,200,1,4,3,0.001,TRUE, "land_percentage", percetange = 30)
+#'modified_potential_space<-generate_perlin_noise(200,200,1,4,3,0.001,TRUE,
+#' "land_percentage", percetange = 30)
 #'
 #'result<-LGrafEU::trans_1lr(modified_potential_space,map,4, arabel_val = 1)
 #'par(mfrow=c(1,2))
