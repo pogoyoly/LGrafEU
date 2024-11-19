@@ -1,11 +1,16 @@
 Package: LGrafEU
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Agricultural landscape generator
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Author: Eyal Goldstein, Antonia Deutcher, Eamon O'keeffe, Sebastian Hanss 
+Maintainer: Eyal Goldstein <pogoyoly@gmail.com>
+Description: Generates artificial agricultural landscapes 
+    <link to publicationn>
+    Artificial agricultural landscape generators are designed to 
+    systematically and realistically produce artificial maps of 
+    agricutltural dominated landscapes, which are meant to be used 
+    as an input for ecological models. 
+    
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
@@ -27,3 +32,4 @@ Imports:
     rlang,
     methods
 Config/testthat/edition: 3
+BugReports: https://github.com/pogoyoly/LGrafEU/issues
