@@ -28,7 +28,8 @@
 #'                                 sd_fields_per_farm = 3)
 #'
 #'
-#' outcome<-distrubution_by_farmer(map,assign_mode = 1, mean_fields_per_farm =10, sd_fields_per_farm = 5, distribution = "norm")
+#' outcome<-distrubution_by_farmer(map,assign_mode = 1, mean_fields_per_farm =10,
+#'  sd_fields_per_farm = 5, distribution = "norm")
 #'
 #' return_by_farmer(outcome)
 distrubution_by_farmer <- function(output_obj, assign_mode = 1, mean_fields_per_farm, sd_fields_per_farm, distribution

@@ -46,7 +46,8 @@ map<-establish_by_place_conquer(potential_space= r,
                                 sd_fields_per_farm = 3)
 
 
-outcome<-distrubution_by_farmer(map,assign_mode = 1, mean_fields_per_farm =10, sd_fields_per_farm = 5, distribution = "norm")
+outcome<-distrubution_by_farmer(map,assign_mode = 1, mean_fields_per_farm =10,
+ sd_fields_per_farm = 5, distribution = "norm")
 
 return_by_farmer(outcome)
 }
