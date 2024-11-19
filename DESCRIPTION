@@ -2,15 +2,18 @@ Package: LGrafEU
 Type: Package
 Title: Agricultural landscape generator
 Version: 0.1.0
-Author: Eyal Goldstein, Antonia Deutcher, Eamon O'keeffe, Sebastian Hanss 
+Authors@R: c(
+    person("Eyal", "Goldstein", email = "pogoyoly@gmai.com",  role = c("aut", "cre")),
+    person("Antonia", "Deutcher", email = "antdeutscher@gmail.com", role = "ctb"),
+    person("Eamon", "O'keeffe", email = "eamon.okeeffe@stud.uni-goettingen.de", role = "ctb"),
+    person("Sebastian", "Hanss", email = "shanss@uni-goettingen.de", role = "ctb"))
 Maintainer: Eyal Goldstein <pogoyoly@gmail.com>
-Description: Generates artificial agricultural landscapes 
+Description: Generates artificial agricultural landscapes
     <link to publicationn>
     Artificial agricultural landscape generators are designed to 
     systematically and realistically produce artificial maps of 
     agricutltural dominated landscapes, which are meant to be used 
     as an input for ecological models. 
-    
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
