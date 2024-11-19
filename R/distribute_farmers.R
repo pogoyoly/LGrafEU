@@ -109,7 +109,7 @@ distrubution_by_farmer <- function(output_obj, assign_mode = 1, mean_fields_per_
         # Assign the first field randomly if the farmer has no fields yet
         if (length(farmer_fields[farmer_num]) == 1) {
           obj$field_list[[k]]@farmer <- farmer_num
-          farmer_fields[farmer_num] <- obj$field_list[[k]]  # Store the first assigned field
+          farmer_fields[farmer_num] <- list(obj$field_list[[k]])  # Store the first assigned field
         } else {
           # Find the centroid of the last assigned field
           last_field <- farmer_fields[farmer_num]
