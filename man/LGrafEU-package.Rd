@@ -4,8 +4,26 @@
 \name{LGrafEU-package}
 \alias{LGrafEU}
 \alias{LGrafEU-package}
-\title{LGrafEU: What the Package Does (Title Case)}
+\title{LGrafEU: Agricultural landscape generator}
 \description{
-More about what it does (maybe more than one line) Use four spaces when indenting paragraphs within the Description.
+Generates artificial agricultural landscapes <link to publicationn> Artificial agricultural landscape generators are designed to systematically and realistically produce artificial maps of agricutltural dominated landscapes, which are meant to be used as an input for ecological models.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item Report bugs at \url{https://github.com/pogoyoly/LGrafEU/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Eyal Goldstein \email{pogoyoly@gmai.com}
+
+Other contributors:
+\itemize{
+  \item Antonia Deutcher \email{antdeutscher@gmail.com} [contributor]
+  \item Eamon O'keeffe \email{eamon.okeeffe@stud.uni-goettingen.de} [contributor]
+  \item Sebastian Hanss \email{shanss@uni-goettingen.de} [contributor]
+}
+
 }
 \keyword{internal}

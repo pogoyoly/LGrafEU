@@ -11,7 +11,7 @@
 #'
 #' @noRd
 #'
-confus <- function(rst, landcover) {
+confuslr <- function(rst, landcover) {
   # Calculate the number of random points
   trf_val <- ncol(rst) * nrow(rst) / 10
   points <- terra::spatSample(rst, size = trf_val, method = "random", as.points = TRUE)
@@ -87,7 +87,7 @@ confus <- function(rst, landcover) {
 #' @noRd
 #'
 #'
-trans <- function(transition, rst) {
+translr <- function(transition, rst) {
   tran <- transition
   transform <- function(x) {
     # Initialize result vector
@@ -174,10 +174,10 @@ trans_1lr <- function(rast, landcover, aggregation, arabel_val = 1) {
 
 
   # Calculate the confusion matrix (assuming `confus` is a function defined elsewhere)
-  con_mat <- confus(rast, classified_landcover)
+  con_mat <- confuslr(rast, classified_landcover)
 
   # Apply the transition function (assuming `trans` is defined elsewhere)
-  trans_rast <- trans(con_mat, rast)
+  trans_rast <- translr(con_mat, rast)
 
   # Aggregate the raster with modal function in terra
   trans_rast <- terra::aggregate(trans_rast, fact = aggregation, fun = "max", na.rm = FALSE)
