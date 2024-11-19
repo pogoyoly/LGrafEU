@@ -42,7 +42,7 @@ r<-generate_perlin_noise(200,200,1,2,3,0.01,TRUE, "land_percentage", percetange 
 output<-establish_by_place_conquer(potential_space= r,
                          cell_size=1,
                          includsion_value = 1,
-                         mean_field_size = 300,
+                         mean_field_size = 500,
                          sd_field_size = 100,
                          distribution = "norm",
                          mean_shape_index = 1,
