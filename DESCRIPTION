@@ -14,7 +14,7 @@ Description: Generates artificial agricultural landscapes
     systematically and realistically produce artificial maps of 
     agricutltural dominated landscapes, which are meant to be used 
     as an input for ecological models. 
-License: GPL (>= 3)
+License: GPL (>= 3) + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.2
