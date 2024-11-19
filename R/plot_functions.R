@@ -28,8 +28,8 @@ return_by_farmer<-function(output_obj, method = 1){
 
   }
 
-  land_raster<-raster::raster(land)
-  raster::extent(land_raster)<-raster::extent(map)
+  land_raster<-terra::rast(land)
+  terra::ext(land_raster)<-terra::ext(map)
 
   ##test
   unique_values <- unique(values(land_raster))
