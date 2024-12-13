@@ -45,7 +45,7 @@
 establish_by_place_conquer<-function(potential_space,
                                      cell_size,
                                      includsion_value,
-                                     additional_lim = NA,
+                                     additional_lim = NULL,
                                      mean_field_size,
                                      sd_field_size,
                                      distribution = "norm",
@@ -73,6 +73,14 @@ establish_by_place_conquer<-function(potential_space,
   checkmate::assert_numeric(sd_fields_per_farm)
 
 
+  if(is.null(additional_lim) == FALSE){
+    #make sure all rasters are the same size
+    additional_lim <- terra::rast(additional_lim)
+    template <- potential_space
+    additional_lim <- terra::resample(additional_lim, template, method = "bilinear") # Use "near" for categorical data
+  }
+
+
   #set land raster on which to save the fields
   potential_space[is.na(potential_space[])] <- 0
   potential_space<-as.matrix(potential_space, wide=TRUE)
@@ -86,13 +94,17 @@ establish_by_place_conquer<-function(potential_space,
 
 
   #add any additional limitations to a seperate raster
-  if(is.na(additional_lim) == FALSE){
+  if(is.null(additional_lim) == FALSE){
+
+    #denote the unaccecable land
+    additional_lim[which(is.na(additional_lim[]) == FALSE)] <- 255
     additional_lim[is.na(additional_lim[])] <- 0
-    road_inside<-additional_lim
-  }
-  if(is.na(additional_lim) == TRUE){
-    road_inside = matrix(0, nrow(potential_space), ncol(potential_space))
-    road_inside<-terra::rast(road_inside)
+
+
+    additional_lim<-as.matrix(additional_lim, wide=TRUE)
+
+    #add the roats to the potential space limiter
+    potential_space <- potential_space + additional_lim
 
   }
 
