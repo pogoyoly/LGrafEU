@@ -79,8 +79,8 @@ areas with submoptimal landscapes based on a co-variant probability</p>
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">original_potential_space</span><span class="op">&lt;-</span><span class="fu"><a href="generate_perlin_noise.html">generate_perlin_noise</a></span><span class="op">(</span><span class="fl">200</span>,<span class="fl">200</span>,<span class="fl">1</span>,<span class="fl">4</span>,<span class="fl">3</span>,<span class="fl">0.001</span>,<span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span><span class="st">"land_percentage"</span>, percetange <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">original_potential_space</span><span class="op">&lt;-</span><span class="fu"><a href="generate_perlin_noise.html">generate_perlin_noise</a></span><span class="op">(</span><span class="fl">200</span>,<span class="fl">200</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">0.002</span>,<span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>                                               <span class="st">"land_percentage"</span>, percetange <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">corresponding_fields</span><span class="op">&lt;-</span><span class="fu"><a href="establish_by_place_conquer.html">establish_by_place_conquer</a></span><span class="op">(</span>potential_space<span class="op">=</span> <span class="va">original_potential_space</span>,</span></span>
 <span class="r-in"><span>                                                cell_size<span class="op">=</span><span class="fl">1</span>,</span></span>
 <span class="r-in"><span>                                                includsion_value <span class="op">=</span> <span class="fl">1</span>,</span></span>
@@ -89,7 +89,7 @@ areas with submoptimal landscapes based on a co-variant probability</p>
 <span class="r-in"><span>                                                distribution <span class="op">=</span> <span class="st">"norm"</span>,</span></span>
 <span class="r-in"><span>                                                mean_shape_index <span class="op">=</span> <span class="fl">3</span>,</span></span>
 <span class="r-in"><span>                                                sd_shape_index <span class="op">=</span> <span class="fl">0.3</span>,</span></span>
-<span class="r-in"><span>                                                percent <span class="op">=</span> <span class="fl">90</span>,</span></span>
+<span class="r-in"><span>                                                percent <span class="op">=</span> <span class="fl">95</span>,</span></span>
 <span class="r-in"><span>                                                assign_farmers <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>                                                assign_mode <span class="op">=</span> <span class="fl">2</span>,</span></span>
 <span class="r-in"><span>                                                mean_fields_per_farm <span class="op">=</span> <span class="fl">3</span>,</span></span>
@@ -97,14 +97,33 @@ areas with submoptimal landscapes based on a co-variant probability</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">map</span><span class="op">&lt;-</span><span class="fu"><a href="return_by_arable_land.html">return_by_arable_land</a></span><span class="op">(</span><span class="va">corresponding_fields</span>, method <span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">modified_potential_space</span><span class="op">&lt;-</span><span class="fu"><a href="generate_perlin_noise.html">generate_perlin_noise</a></span><span class="op">(</span><span class="fl">200</span>,<span class="fl">200</span>,<span class="fl">1</span>,<span class="fl">4</span>,<span class="fl">3</span>,<span class="fl">0.001</span>,<span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span><span class="st">"land_percentage"</span>, percetange <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">modified_potential_space</span><span class="op">&lt;-</span><span class="fu"><a href="generate_perlin_noise.html">generate_perlin_noise</a></span><span class="op">(</span><span class="fl">200</span>,<span class="fl">200</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">0.002</span>,<span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>                                               <span class="st">"land_percentage"</span>, percetange <span class="op">=</span> <span class="fl">48</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">result</span><span class="op">&lt;-</span><span class="fu">LGrafEU</span><span class="fu">::</span><span class="fu">trans_1lr</span><span class="op">(</span><span class="va">modified_potential_space</span>,<span class="va">map</span>,<span class="fl">4</span>, arabel_val <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">original_potential_space</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">result</span><span class="op">&lt;-</span><span class="fu">LGrafEU</span><span class="fu">::</span><span class="fu">trans_1lr</span><span class="op">(</span><span class="va">modified_potential_space</span>,<span class="va">map</span>,<span class="fl">2</span>, arabel_val <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             0          1 2 3 4 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0  0.00000000 0.00000000 0 0 0 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  0.04612159 0.95387841 0 0 0 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  0.95977011 0.04022989 0 0 0 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  0.00000000 0.00000000 0 0 0 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  0.00000000 0.00000000 0 0 0 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  0.00000000 0.00000000 0 0 0 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6  0.00000000 0.00000000 0 0 0 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7  0.00000000 0.00000000 0 0 0 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8  0.00000000 0.00000000 0 0 0 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9  0.00000000 0.00000000 0 0 0 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10 0.00000000 0.00000000 0 0 0 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11 0.00000000 0.00000000 0 0 0 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12 0.00000000 0.00000000 0 0 0 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13 0.00000000 0.00000000 0 0 0 0</span>
 <span class="r-plt img"><img src="trans_1lr-1.png" alt="" width="700" height="433"></span>
+<span class="r-plt img"><img src="trans_1lr-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">original_potential_space</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">modified_potential_space</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="trans_1lr-3.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
