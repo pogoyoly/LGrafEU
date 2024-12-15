@@ -211,9 +211,6 @@ trans_1lr <- function(rast, landcover, aggregation, arabel_val = 1) {
   # Apply the transition function (assuming `trans` is defined elsewhere)
   trans_rast <- translr(con_mat, rast, arabel_val)
 
-  print(con_mat)
-  plot(trans_rast)
-
   # Aggregate the raster with modal function in terra
   #trans_rast <- terra::aggregate(trans_rast, fact = aggregation, fun = "max", na.rm = FALSE)
 
