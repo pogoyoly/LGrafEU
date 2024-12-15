@@ -50,9 +50,9 @@ confuslr <- function(rst, landcover) {
 
 
   # results
-  confusion_matrix$lc_points <- factor(confusion_matrix$lc_points, levels = c( 1, 2, 3, 4, 5))
+  confusion_matrix$lc_points <- factor(confusion_matrix$lc_points, levels = c( 0, 1, 2, 3, 4, 5))
   # Prepare the transition matrix
-  transition2 <- matrix(0, nrow = 13, ncol = 5, dimnames = list(1:13, 1:5))
+  transition2 <- matrix(0, nrow = 14, ncol = 6, dimnames = list(0:13, 0:5))
 
   # Create the main confusion matrix (matrix `a`)
   # Filter out NA values and get unique sorted levels for soil_points and lc_points
@@ -75,6 +75,25 @@ confuslr <- function(rst, landcover) {
   rows <- rownames(transition2)[rownames(transition2) %in% rownames(a)]
   transition2[rows, cols] <- a[rows, cols]
 
+  scale_rows_to_one <- function(mat) {
+    if (!is.matrix(mat)) {
+      stop("Input must be a matrix.")
+    }
+
+    # Compute row sums
+    row_sums <- rowSums(mat)
+
+    # Avoid division by zero
+    row_sums[row_sums == 0] <- 1
+
+    # Scale rows to sum to 1
+    scaled_mat <- mat / row_sums
+
+    return(scaled_mat)
+  }
+
+  transition2 <- scale_rows_to_one(transition2)
+
   return(transition2)
 }
 
@@ -83,11 +102,13 @@ confuslr <- function(rst, landcover) {
 #'
 #' @param transition the transition matrix from the confus function
 #' @param rst the raster from which the transition occurs
+#' @param arabel_val value of arable fields
+#'
 #'
 #' @noRd
 #'
 #'
-translr <- function(transition, rst) {
+translr <- function(transition, rst, arabel_val) {
   tran <- transition
   transform <- function(x) {
     # Initialize result vector
@@ -102,11 +123,20 @@ translr <- function(transition, rst) {
         dice <- runif(1, min = 0, max = 1)
         for (i in 1:ncol(tran)) {
           if (isTRUE(dice >= tranz)) {
-            tranz <- tranz + tran[cell_value, i]
+            tranz <- tranz + tran[cell_value + 1, i]
           }
           if (isTRUE(dice < tranz)) {
-            z <- i
-            tranz <- -1
+            val <- i - 1
+            if(val == arabel_val){
+              z <- 1
+
+            }
+            else{
+              z <- 0
+            }
+
+            tranz <- - 1
+            # <- 1
             break
           }
         }
@@ -138,8 +168,8 @@ translr <- function(transition, rst) {
 #'
 #'@examples
 #'set.seed(123)
-#'original_potential_space<-generate_perlin_noise(200,200,1,4,3,0.001,TRUE,
-#'"land_percentage", percetange = 50)
+#'original_potential_space<-generate_perlin_noise(200,200,1,2,3,0.002,TRUE,
+#'                                                "land_percentage", percetange = 50)
 #'corresponding_fields<-establish_by_place_conquer(potential_space= original_potential_space,
 #'                                                 cell_size=1,
 #'                                                 includsion_value = 1,
@@ -148,7 +178,7 @@ translr <- function(transition, rst) {
 #'                                                 distribution = "norm",
 #'                                                 mean_shape_index = 3,
 #'                                                 sd_shape_index = 0.3,
-#'                                                 percent = 90,
+#'                                                 percent = 95,
 #'                                                 assign_farmers = TRUE,
 #'                                                 assign_mode = 2,
 #'                                                 mean_fields_per_farm = 3,
@@ -156,13 +186,15 @@ translr <- function(transition, rst) {
 #'
 #'map<-return_by_arable_land(corresponding_fields, method =2)
 #'set.seed(123)
-#'modified_potential_space<-generate_perlin_noise(200,200,1,4,3,0.001,TRUE,
-#' "land_percentage", percetange = 30)
+#'modified_potential_space<-generate_perlin_noise(200,200,1,2,3,0.002,TRUE,
+#'                                                "land_percentage", percetange = 48)
 #'
-#'result<-LGrafEU::trans_1lr(modified_potential_space,map,4, arabel_val = 1)
-#'par(mfrow=c(1,2))
+#'result<-LGrafEU::trans_1lr(modified_potential_space,map,2, arabel_val = 1)
+#'par(mfrow=c(2,1))
 #'terra::plot(original_potential_space)
-#'terra::plot(result)
+#'terra::plot(modified_potential_space)
+#'
+#'
 #'
 #'
 trans_1lr <- function(rast, landcover, aggregation, arabel_val = 1) {
@@ -177,25 +209,38 @@ trans_1lr <- function(rast, landcover, aggregation, arabel_val = 1) {
   con_mat <- confuslr(rast, classified_landcover)
 
   # Apply the transition function (assuming `trans` is defined elsewhere)
-  trans_rast <- translr(con_mat, rast)
+  trans_rast <- translr(con_mat, rast, arabel_val)
+
+  print(con_mat)
+  plot(trans_rast)
 
   # Aggregate the raster with modal function in terra
-  trans_rast <- terra::aggregate(trans_rast, fact = aggregation, fun = "max", na.rm = FALSE)
+  #trans_rast <- terra::aggregate(trans_rast, fact = aggregation, fun = "max", na.rm = FALSE)
 
   # Disaggregate to return to original resolution
-  trans_rast <- terra::disagg(trans_rast, fact = aggregation)
+  #trans_rast <- terra::disagg(trans_rast, fact = aggregation)
 
   # Ensure extents match
   terra::ext(trans_rast) <- terra::ext(rast)
 
-  #rcl_matrix <- matrix(c(
-  #  -Inf, 0, 2,  # Values <= 0 become 2
-  #  0, Inf, 1    # Values > 0 become 1
-  #), ncol = 3, byrow = TRUE)
-  #
-  # reclassified_rast <- terra::classify(trans_rast, rcl = rcl_matrix)
+  majority_rule <- function(values) {
+    # Exclude NA values and get the most frequent value
+    if (all(is.na(values))) return(NA)
+    return(as.numeric(names(which.max(table(values, useNA = "no")))))
+  }
 
-  return(trans_rast)
+  is_odd <- aggregation %% 2 == 1
+  if(is_odd == FALSE){
+    aggregation <- aggregation + 1
+  }
+
+  terra::plot(trans_rast)
+  fac2 <- aggregation * 2 -1
+  # Apply the majority rule using a 3x3 moving window
+  r_majority <- terra::focal(trans_rast, w = matrix(1, fac2, fac2), fun = majority_rule)
+  r_majority <- terra::focal(r_majority, w = matrix(1, aggregation, aggregation), fun = max)
+
+  return(r_majority)
 }
 
 

@@ -156,8 +156,8 @@ establish_by_place_conquer<-function(potential_space,
       check<-999
       check2 <- 1
       while(check != includsion_value || check2 != 0){
-        start_row <- sample(1:ncol(potential_space), 1)
-        start_col <- sample(1:nrow(potential_space), 1)
+        start_col <- sample(1:ncol(potential_space), 1)
+        start_row <- sample(1:nrow(potential_space), 1)
         if(is.na(potential_space[start_row,start_col]) == FALSE){
           check<-potential_space[start_row,start_col]
           check2<-land[start_row,start_col]

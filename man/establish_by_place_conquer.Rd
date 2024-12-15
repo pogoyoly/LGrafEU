@@ -8,7 +8,7 @@ establish_by_place_conquer(
   potential_space,
   cell_size,
   includsion_value,
-  additional_lim = NA,
+  additional_lim = NULL,
   mean_field_size,
   sd_field_size,
   distribution = "norm",
