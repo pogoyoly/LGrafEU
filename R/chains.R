@@ -231,7 +231,6 @@ trans_1lr <- function(rast, landcover, aggregation, arabel_val = 1) {
     aggregation <- aggregation + 1
   }
 
-  terra::plot(trans_rast)
   fac2 <- aggregation * 2 -1
   # Apply the majority rule using a 3x3 moving window
   r_majority <- terra::focal(trans_rast, w = matrix(1, fac2, fac2), fun = majority_rule)
