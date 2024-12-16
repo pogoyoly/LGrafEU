@@ -132,7 +132,7 @@ translr <- function(transition, rst, arabel_val) {
 
             }
             else{
-              z <- 0
+              z <- 2
             }
 
             tranz <- - 1
@@ -169,7 +169,7 @@ translr <- function(transition, rst, arabel_val) {
 #'@examples
 #'set.seed(123)
 #'original_potential_space<-generate_perlin_noise(200,200,1,2,3,0.002,TRUE,
-#'                                                "land_percentage", percetange = 50)
+#'                                                "land_percentage", percetange = 30)
 #'corresponding_fields<-establish_by_place_conquer(potential_space= original_potential_space,
 #'                                                 cell_size=1,
 #'                                                 includsion_value = 1,
@@ -187,12 +187,13 @@ translr <- function(transition, rst, arabel_val) {
 #'map<-return_by_arable_land(corresponding_fields, method =2)
 #'set.seed(123)
 #'modified_potential_space<-generate_perlin_noise(200,200,1,2,3,0.002,TRUE,
-#'                                                "land_percentage", percetange = 48)
+#'                                                "land_percentage", percetange = 50)
 #'
-#'result<-LGrafEU::trans_1lr(modified_potential_space,map,2, arabel_val = 1)
-#'par(mfrow=c(2,1))
+#'result<-LGrafEU::trans_1lr(modified_potential_space,map,5, arabel_val = 1)
+#'par(mfrow=c(1,2))
 #'terra::plot(original_potential_space)
-#'terra::plot(modified_potential_space)
+#'terra::plot(result)
+#'
 #'
 #'
 #'
@@ -234,7 +235,7 @@ trans_1lr <- function(rast, landcover, aggregation, arabel_val = 1) {
   fac2 <- aggregation * 2 -1
   # Apply the majority rule using a 3x3 moving window
   r_majority <- terra::focal(trans_rast, w = matrix(1, fac2, fac2), fun = majority_rule)
-  r_majority <- terra::focal(r_majority, w = matrix(1, aggregation, aggregation), fun = max)
+  r_majority <- terra::focal(r_majority, w = matrix(1, aggregation, aggregation), fun = min)
 
   return(r_majority)
 }
